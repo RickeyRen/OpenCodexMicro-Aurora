@@ -41,10 +41,30 @@
     .runtime { color: #c7d3e2; }
     .signature-note { color: #e3b971; }
     .version { margin-top: 7px; color: #777e87; font-size: 11px; text-align: right; }
+    [hidden] { display: none !important; }
+    .conversation { margin-bottom: 18px; }
+    .conversation-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 7px; }
+    .conversation-head h2 { margin: 0; font-size: 14px; font-weight: 650; }
+    .conversation-number { border: 1px solid rgba(255,255,255,.16); border-radius: 5px; padding: 2px 6px; color: #c4cfdd; font-variant-numeric: tabular-nums; }
+    .conversation-title { margin: 0 0 10px; color: #bdc5d0; font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; user-select: text; }
+    .alias-label { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 5px; color: #d6dbe2; }
+    .alias-count { color: #89929f; font-variant-numeric: tabular-nums; }
+    textarea { display: block; width: 100%; min-height: 58px; max-height: 110px; padding: 8px 9px; resize: vertical; border: 1px solid rgba(255,255,255,.19); border-radius: 6px; background: rgba(0,0,0,.2); color: #fff; font: inherit; line-height: 1.4; }
+    textarea:focus { outline: 2px solid #418bdb; outline-offset: 1px; }
+    textarea:disabled { opacity: .5; }
+    .conversation .message { font-size: 12px; margin-bottom: 0; }
   </style>
 </head>
 <body>
   <main>
+    <section id="conversationSection" class="conversation" hidden>
+      <div class="conversation-head"><h2 id="conversationHeading"></h2><span id="conversationNumber" class="conversation-number">—</span></div>
+      <p id="conversationTitle" class="conversation-title"></p>
+      <label class="alias-label" for="conversationAlias"><span id="conversationAliasLabel"></span><span id="conversationAliasCount" class="alias-count">0 / 16</span></label>
+      <textarea id="conversationAlias" rows="2" disabled spellcheck="false"></textarea>
+      <div class="actions"><button id="saveConversationAlias" class="primary" disabled></button><button id="resetConversationAlias" disabled></button></div>
+      <p id="conversationLabelMessage" class="message" role="status"></p>
+    </section>
     <h1 id="title"></h1>
     <p id="intro" class="intro"></p>
     <section class="panel">
@@ -83,9 +103,9 @@
   </main>
   <script>
     const TEXT = {
-      en: { title:"Codex Bridge Setup", intro:"Install, launch, and check the local Codex connection.", app:"Codex Bridge.app", service:"Bridge service", cdp:"CDP connection", checking:"Checking…", installed:"Installed", update:"Update available", notInstalled:"Not installed", online:"Online", offline:"Offline", connected:"Connected", disconnected:"Disconnected", install:"Install / Repair", installing:"Installing…", launch:"Launch Codex Bridge", launching:"Launching…", uninstall:"Uninstall Codex Bridge", uninstalling:"Uninstalling…", refresh:"Check again", guide:"Installation guide", ready:"Codex Micro is ready.", needInstall:"Install Codex Bridge to continue.", needLaunch:"Launch Codex through Codex Bridge.app.", serviceOffline:"The Bridge service is offline. Use Install / Repair.", installDone:"Codex Bridge was installed. Launch it to connect CDP.", launchDone:"Codex Bridge was launched. Waiting for CDP…", uninstallDone:"Codex Bridge was uninstalled. The Ulanzi plugin and Codex Desktop were kept.", failed:"Operation failed", unsupported:"Automatic installation is available on macOS only.", confirm:"Install or repair Codex Bridge in your user Applications folder?", uninstallConfirm:"Uninstall Codex Bridge and its background service? The Ulanzi plugin and Codex Desktop will not be removed.", bridgeAppInfoTitle:"What is Codex Bridge.app?", bridgeAppDescription:"Codex Bridge.app is a local launcher. If Codex is already running, it asks Codex to quit, then starts the official Codex Desktop executable with these loopback-only CDP arguments:", bridgeAppSafety:"The launcher does not modify Codex Desktop, accounts, projects, or user files, and it does not expose CDP outside this Mac. It performs no other privileged or destructive operation. The separate Bridge service handles local status and Action communication.", backgroundTitle:"Background activity and Node.js", launchAgentDescription:"The LaunchAgent starts the local Codex Bridge service when you sign in and restarts it if it exits. The service listens only on this Mac through a loopback address.", nodeSelectionStrategy:"Install / Repair first selects a system Node.js 20 or later from your login environment, PATH, Homebrew, or common install paths. It uses Ulanzi Studio's bundled Node only as a fallback.", nodeInstallRecommendation:"Recommended: install the latest Node.js from Terminal, then run Install / Repair again:", ulanziNodeSignatureNotice:"If the Ulanzi Studio Node fallback is used, macOS Background Items may show an activity carrying the Ulanzi Studio signature. This is the Codex Bridge service running with Ulanzi Studio's Node executable.", currentNode:"Current runtime: {runtime} {version}", systemNode:"System Node.js", ulanziNode:"Ulanzi Studio Node", unknownNode:"Not installed or not recorded", version:"Installed {installed} · Bundled {bundled}" },
-      zh_CN: { title:"Codex Bridge 设置", intro:"安装、启动并检查本机 Codex 连接。", app:"Codex Bridge.app", service:"Bridge 后台服务", cdp:"CDP 连接", checking:"正在检测…", installed:"已安装", update:"可更新", notInstalled:"未安装", online:"在线", offline:"离线", connected:"已连接", disconnected:"未连接", install:"安装 / 修复", installing:"正在安装…", launch:"启动 Codex Bridge", launching:"正在启动…", uninstall:"卸载 Codex Bridge", uninstalling:"正在卸载…", refresh:"重新检测", guide:"安装说明", ready:"Codex Micro 已可使用。", needInstall:"请先安装 Codex Bridge。", needLaunch:"请通过 Codex Bridge.app 启动 Codex。", serviceOffline:"Bridge 后台服务离线，请使用“安装 / 修复”。", installDone:"Codex Bridge 已安装，请启动以连接 CDP。", launchDone:"Codex Bridge 已启动，正在等待 CDP…", uninstallDone:"Codex Bridge 已卸载，Ulanzi 插件和 Codex Desktop 保留不变。", failed:"操作失败", unsupported:"自动安装仅支持 macOS。", confirm:"是否将 Codex Bridge 安装或修复到用户 Applications 目录？", uninstallConfirm:"是否卸载 Codex Bridge 及其后台服务？不会删除 Ulanzi 插件和 Codex Desktop。", bridgeAppInfoTitle:"什么是 Codex Bridge.app？", bridgeAppDescription:"Codex Bridge.app 是一个本地启动器。如果 Codex 已在运行，它会先请求 Codex 正常退出，再使用以下仅限本机回环地址的 CDP 启动参数打开官方 Codex Desktop 可执行文件：", bridgeAppSafety:"该启动器不会修改 Codex Desktop、账户、项目或用户文件，也不会把 CDP 开放到本机之外；它不执行其他提权或破坏性操作。独立的 Bridge 服务负责本地状态和 Action 通信。", backgroundTitle:"后台活动与 Node.js", launchAgentDescription:"LaunchAgent 会在用户登录时启动本机 Codex Bridge 服务，并在服务退出后自动重启。该服务只通过回环地址在本机监听，不向外部网络开放。", nodeSelectionStrategy:"“安装 / 修复”会优先从登录环境、PATH、Homebrew 和常见安装路径选择系统 Node.js 20 或更高版本，仅在找不到合适版本时使用 Ulanzi Studio 内置 Node。", nodeInstallRecommendation:"建议通过 Terminal 安装最新 Node.js，然后再次执行“安装 / 修复”：", ulanziNodeSignatureNotice:"如果降级使用 Ulanzi Studio Node，macOS“后台项目”中可能显示一个携带 Ulanzi Studio 签名的活动。这是 Codex Bridge 服务正在使用 Ulanzi Studio 的 Node 可执行文件。", currentNode:"当前运行环境：{runtime} {version}", systemNode:"系统 Node.js", ulanziNode:"Ulanzi Studio Node", unknownNode:"未安装或未记录", version:"已安装 {installed} · 内置 {bundled}" },
-      zh_HK: { title:"Codex Bridge 設定", intro:"安裝、啟動並檢查本機 Codex 連線。", app:"Codex Bridge.app", service:"Bridge 背景服務", cdp:"CDP 連線", checking:"正在檢查…", installed:"已安裝", update:"有可用更新", notInstalled:"未安裝", online:"在線", offline:"離線", connected:"已連線", disconnected:"未連線", install:"安裝 / 修復", installing:"正在安裝…", launch:"啟動 Codex Bridge", launching:"正在啟動…", refresh:"重新檢查", guide:"安裝說明", ready:"Codex Micro 已可使用。", needInstall:"請先安裝 Codex Bridge。", needLaunch:"請透過 Codex Bridge.app 啟動 Codex。", serviceOffline:"Bridge 背景服務離線，請使用「安裝 / 修復」。", installDone:"Codex Bridge 已安裝，請啟動以連接 CDP。", launchDone:"Codex Bridge 已啟動，正在等待 CDP…", failed:"操作失敗", unsupported:"自動安裝僅支援 macOS。", confirm:"是否將 Codex Bridge 安裝或修復到使用者 Applications 目錄？", version:"已安裝 {installed} · 內置 {bundled}" },
+      en: { title:"Codex Bridge Setup", intro:"Install, launch, and check the local Codex connection.", app:"Codex Bridge.app", service:"Bridge service", cdp:"CDP connection", checking:"Checking…", installed:"Installed", update:"Update available", notInstalled:"Not installed", online:"Online", offline:"Offline", connected:"Connected", disconnected:"Disconnected", install:"Install / Repair", installing:"Installing…", launch:"Launch Codex Bridge", launching:"Launching…", uninstall:"Uninstall Codex Bridge", uninstalling:"Uninstalling…", refresh:"Check again", guide:"Installation guide", ready:"Codex Micro is ready.", needInstall:"Install Codex Bridge to continue.", needLaunch:"Launch Codex through Codex Bridge.app.", serviceOffline:"The Bridge service is offline. Use Install / Repair.", installDone:"Codex Bridge was installed. Launch it to connect CDP.", launchDone:"Codex Bridge was launched. Waiting for CDP…", uninstallDone:"Codex Bridge was uninstalled. The Ulanzi plugin and Codex Desktop were kept.", failed:"Operation failed", unsupported:"Automatic installation is available on macOS only.", confirm:"Install or repair Codex Bridge in your user Applications folder?", uninstallConfirm:"Uninstall Codex Bridge and its background service? The Ulanzi plugin and Codex Desktop will not be removed.", bridgeAppInfoTitle:"What is Codex Bridge.app?", bridgeAppDescription:"Codex Bridge.app is a local launcher. It refuses to start another instance while Codex is running. Save your work and quit Codex manually, then launch Codex Bridge.app to start the official Codex Desktop executable with loopback-only CDP arguments. CDP arguments are shown below:", bridgeAppSafety:"The launcher leaves the Codex Desktop app bundle on disk unchanged and limits CDP to this Mac's loopback interface. The Bridge uses CDP to read and change Codex's Micro runtime state and forward control actions.", backgroundTitle:"Background activity and Node.js", launchAgentDescription:"The LaunchAgent starts the local Codex Bridge service when you sign in and restarts it if it exits. The service listens only on this Mac through a loopback address.", nodeSelectionStrategy:"Install / Repair first selects a system Node.js 20 or later from your login environment, PATH, Homebrew, or common install paths. It uses Ulanzi Studio's bundled Node only as a fallback.", nodeInstallRecommendation:"Recommended: install the latest Node.js from Terminal, then run Install / Repair again:", ulanziNodeSignatureNotice:"If the Ulanzi Studio Node fallback is used, macOS Background Items may show an activity carrying the Ulanzi Studio signature. This is the Codex Bridge service running with Ulanzi Studio's Node executable.", currentNode:"Current runtime: {runtime} {version}", systemNode:"System Node.js", ulanziNode:"Ulanzi Studio Node", unknownNode:"Not installed or not recorded", version:"Installed {installed} · Bundled {bundled}" },
+      zh_CN: { title:"Codex Bridge 设置", intro:"安装、启动并检查本机 Codex 连接。", app:"Codex Bridge.app", service:"Bridge 后台服务", cdp:"CDP 连接", checking:"正在检测…", installed:"已安装", update:"可更新", notInstalled:"未安装", online:"在线", offline:"离线", connected:"已连接", disconnected:"未连接", install:"安装 / 修复", installing:"正在安装…", launch:"启动 Codex Bridge", launching:"正在启动…", uninstall:"卸载 Codex Bridge", uninstalling:"正在卸载…", refresh:"重新检测", guide:"安装说明", ready:"Codex Micro 已可使用。", needInstall:"请先安装 Codex Bridge。", needLaunch:"请通过 Codex Bridge.app 启动 Codex。", serviceOffline:"Bridge 后台服务离线，请使用“安装 / 修复”。", installDone:"Codex Bridge 已安装，请启动以连接 CDP。", launchDone:"Codex Bridge 已启动，正在等待 CDP…", uninstallDone:"Codex Bridge 已卸载，Ulanzi 插件和 Codex Desktop 保留不变。", failed:"操作失败", unsupported:"自动安装仅支持 macOS。", confirm:"是否将 Codex Bridge 安装或修复到用户 Applications 目录？", uninstallConfirm:"是否卸载 Codex Bridge 及其后台服务？不会删除 Ulanzi 插件和 Codex Desktop。", bridgeAppInfoTitle:"什么是 Codex Bridge.app？", bridgeAppDescription:"Codex Bridge.app 是一个本地启动器。Codex 正在运行时，它会拒绝再次启动。请先保存工作并手动退出 Codex，再启动 Codex Bridge.app；它会使用仅限本机回环地址的 CDP 参数打开官方 Codex Desktop 可执行文件。CDP 参数如下：", bridgeAppSafety:"启动器保留磁盘上的 Codex Desktop 应用包文件不变，并将 CDP 限定在本机回环接口。Bridge 通过 CDP 读取并操作 Codex 的 Micro 运行时状态，并转发控制操作。", backgroundTitle:"后台活动与 Node.js", launchAgentDescription:"LaunchAgent 会在用户登录时启动本机 Codex Bridge 服务，并在服务退出后自动重启。该服务只通过回环地址在本机监听，不向外部网络开放。", nodeSelectionStrategy:"“安装 / 修复”会优先从登录环境、PATH、Homebrew 和常见安装路径选择系统 Node.js 20 或更高版本，仅在找不到合适版本时使用 Ulanzi Studio 内置 Node。", nodeInstallRecommendation:"建议通过 Terminal 安装最新 Node.js，然后再次执行“安装 / 修复”：", ulanziNodeSignatureNotice:"如果降级使用 Ulanzi Studio Node，macOS“后台项目”中可能显示一个携带 Ulanzi Studio 签名的活动。这是 Codex Bridge 服务正在使用 Ulanzi Studio 的 Node 可执行文件。", currentNode:"当前运行环境：{runtime} {version}", systemNode:"系统 Node.js", ulanziNode:"Ulanzi Studio Node", unknownNode:"未安装或未记录", version:"已安装 {installed} · 内置 {bundled}" },
+      zh_HK: { title:"Codex Bridge 設定", intro:"安裝、啟動並檢查本機 Codex 連線。", app:"Codex Bridge.app", service:"Bridge 背景服務", cdp:"CDP 連線", checking:"正在檢查…", installed:"已安裝", update:"有可用更新", notInstalled:"未安裝", online:"在線", offline:"離線", connected:"已連線", disconnected:"未連線", install:"安裝 / 修復", installing:"正在安裝…", launch:"啟動 Codex Bridge", launching:"正在啟動…", refresh:"重新檢查", guide:"安裝說明", ready:"Codex Micro 已可使用。", needInstall:"請先安裝 Codex Bridge。", needLaunch:"請透過 Codex Bridge.app 啟動 Codex。", serviceOffline:"Bridge 背景服務離線，請使用「安裝 / 修復」。", installDone:"Codex Bridge 已安裝，請啟動以連接 CDP。", launchDone:"Codex Bridge 已啟動，正在等待 CDP…", failed:"操作失敗", unsupported:"自動安裝僅支援 macOS。", confirm:"是否將 Codex Bridge 安裝或修復到使用者 Applications 目錄？", bridgeAppDescription:"Codex Bridge.app 是本機啟動器。Codex 正在執行時，它會拒絕再次啟動。請先儲存工作並手動結束 Codex，再啟動 Codex Bridge.app；它會使用僅限本機迴環位址的 CDP 參數開啟官方 Codex Desktop 執行檔。CDP 參數如下：", bridgeAppSafety:"啟動器保留磁碟上的 Codex Desktop 應用程式套件檔案不變，並將 CDP 限定於本機迴環介面。Bridge 透過 CDP 讀取並操作 Codex 的 Micro 執行階段狀態，以及轉送控制操作。", version:"已安裝 {installed} · 內置 {bundled}" },
       ja: { title:"Codex Bridge 設定", intro:"ローカルの Codex 接続をインストール、起動、確認します。", app:"Codex Bridge.app", service:"Bridge サービス", cdp:"CDP 接続", checking:"確認中…", installed:"インストール済み", update:"更新あり", notInstalled:"未インストール", online:"オンライン", offline:"オフライン", connected:"接続済み", disconnected:"未接続", install:"インストール / 修復", installing:"インストール中…", launch:"Codex Bridge を起動", launching:"起動中…", refresh:"再確認", guide:"インストールガイド", ready:"Codex Micro を使用できます。", needInstall:"Codex Bridge をインストールしてください。", needLaunch:"Codex Bridge.app から Codex を起動してください。", serviceOffline:"Bridge サービスがオフラインです。インストール / 修復を実行してください。", installDone:"Codex Bridge をインストールしました。CDP 接続のため起動してください。", launchDone:"Codex Bridge を起動しました。CDP を待機中です…", failed:"操作に失敗しました", unsupported:"自動インストールは macOS のみ対応しています。", confirm:"Codex Bridge をユーザーの Applications フォルダにインストールまたは修復しますか？", version:"インストール済み {installed} · 内蔵 {bundled}" },
       de: { title:"Codex Bridge einrichten", intro:"Lokale Codex-Verbindung installieren, starten und prüfen.", app:"Codex Bridge.app", service:"Bridge-Dienst", cdp:"CDP-Verbindung", checking:"Wird geprüft…", installed:"Installiert", update:"Update verfügbar", notInstalled:"Nicht installiert", online:"Online", offline:"Offline", connected:"Verbunden", disconnected:"Nicht verbunden", install:"Installieren / Reparieren", installing:"Wird installiert…", launch:"Codex Bridge starten", launching:"Wird gestartet…", refresh:"Erneut prüfen", guide:"Installationsanleitung", ready:"Codex Micro ist bereit.", needInstall:"Installieren Sie zuerst Codex Bridge.", needLaunch:"Starten Sie Codex über Codex Bridge.app.", serviceOffline:"Der Bridge-Dienst ist offline. Verwenden Sie Installieren / Reparieren.", installDone:"Codex Bridge wurde installiert. Starten Sie es für die CDP-Verbindung.", launchDone:"Codex Bridge wurde gestartet. CDP wird erwartet…", failed:"Vorgang fehlgeschlagen", unsupported:"Die automatische Installation ist nur unter macOS verfügbar.", confirm:"Codex Bridge im Benutzerordner Applications installieren oder reparieren?", version:"Installiert {installed} · Enthalten {bundled}" },
       ko: { title:"Codex Bridge 설정", intro:"로컬 Codex 연결을 설치하고 실행한 뒤 확인합니다.", app:"Codex Bridge.app", service:"Bridge 서비스", cdp:"CDP 연결", checking:"확인 중…", installed:"설치됨", update:"업데이트 가능", notInstalled:"설치되지 않음", online:"온라인", offline:"오프라인", connected:"연결됨", disconnected:"연결되지 않음", install:"설치 / 복구", installing:"설치 중…", launch:"Codex Bridge 실행", launching:"실행 중…", refresh:"다시 확인", guide:"설치 안내", ready:"Codex Micro를 사용할 수 있습니다.", needInstall:"먼저 Codex Bridge를 설치하세요.", needLaunch:"Codex Bridge.app을 통해 Codex를 실행하세요.", serviceOffline:"Bridge 서비스가 오프라인입니다. 설치 / 복구를 사용하세요.", installDone:"Codex Bridge가 설치되었습니다. CDP 연결을 위해 실행하세요.", launchDone:"Codex Bridge를 실행했습니다. CDP를 기다리는 중…", failed:"작업 실패", unsupported:"자동 설치는 macOS에서만 지원됩니다.", confirm:"사용자 Applications 폴더에 Codex Bridge를 설치하거나 복구할까요?", version:"설치됨 {installed} · 내장 {bundled}" },
@@ -93,10 +113,21 @@
       es: { title:"Configuración de Codex Bridge", intro:"Instala, inicia y comprueba la conexión local de Codex.", app:"Codex Bridge.app", service:"Servicio Bridge", cdp:"Conexión CDP", checking:"Comprobando…", installed:"Instalado", update:"Actualización disponible", notInstalled:"No instalado", online:"En línea", offline:"Sin conexión", connected:"Conectado", disconnected:"Desconectado", install:"Instalar / Reparar", installing:"Instalando…", launch:"Iniciar Codex Bridge", launching:"Iniciando…", refresh:"Comprobar de nuevo", guide:"Guía de instalación", ready:"Codex Micro está listo.", needInstall:"Instala primero Codex Bridge.", needLaunch:"Inicia Codex mediante Codex Bridge.app.", serviceOffline:"El servicio Bridge está sin conexión. Usa Instalar / Reparar.", installDone:"Codex Bridge se ha instalado. Inícialo para conectar CDP.", launchDone:"Codex Bridge se ha iniciado. Esperando CDP…", failed:"La operación ha fallado", unsupported:"La instalación automática solo está disponible en macOS.", confirm:"¿Instalar o reparar Codex Bridge en la carpeta Applications del usuario?", version:"Instalado {installed} · Incluido {bundled}" }
     };
 
+    const LABEL_TEXT = {
+      en: { heading:"Conversation label", alias:"Short name on key", placeholder:"e.g. API fix or Website", save:"Save name", reset:"Use automatic name", hint:"Up to 16 characters, two lines. Aim for 3 CJK characters or 8 Latin letters per line; longer text is shortened. The number stays with the conversation.", empty:"No conversation is assigned to this key.", saved:"Short name saved.", resetDone:"Automatic name restored.", invalid:"Use at most 16 characters on two lines, without control characters.", stale:"This key now shows a different conversation. Check the title and try again.", storage:"The name could not be saved locally. Check the connection and try again.", capacity:"The label limit has been reached. Existing conversation numbers were kept.", timeout:"No reply yet. Check the connection, then try again." },
+      zh_CN: { heading:"对话标识", alias:"按键上的短名称", placeholder:"例如：修 API、网站改版", save:"保存名称", reset:"恢复自动名称", hint:"最多 16 字、两行。每行建议 3 个汉字或 8 个英文字母；超长会缩写。编号始终跟随对话。", empty:"这个按键尚未分配对话。", saved:"短名称已保存。", resetDone:"已恢复自动名称。", invalid:"请使用最多 16 个字符、两行，且不含控制字符。", stale:"这个按键已切换到另一个对话，请核对标题后重试。", storage:"无法在本机保存名称，请检查连接后重试。", capacity:"对话标识数量已达上限，现有编号已保留。", timeout:"暂未收到回复，请检查连接后重试。" },
+      zh_HK: { heading:"對話標識", alias:"按鍵上的短名稱", placeholder:"例如：修 API、網站改版", save:"儲存名稱", reset:"恢復自動名稱", hint:"最多 16 字、兩行。每行建議 3 個漢字或 8 個英文字母；過長會縮寫。編號始終跟隨對話。", empty:"這個按鍵尚未分配對話。", saved:"短名稱已儲存。", resetDone:"已恢復自動名稱。", invalid:"請使用最多 16 個字元、兩行，且不含控制字元。", stale:"這個按鍵已切換至另一個對話，請核對標題後重試。", storage:"無法在本機儲存名稱，請檢查連線後重試。", capacity:"對話標識數量已達上限，現有編號已保留。", timeout:"暫未收到回覆，請檢查連線後重試。" },
+      ja: { heading:"会話ラベル", alias:"キーに表示する短い名前", placeholder:"例：API 修正、サイト更新", save:"名前を保存", reset:"自動の名前に戻す", hint:"最大 16 文字、2 行。1 行に全角 3 文字か英字 8 文字が目安です。長い表示は省略され、番号は会話に固定されます。", empty:"このキーに会話は割り当てられていません。", saved:"短い名前を保存しました。", resetDone:"自動の名前に戻しました。", invalid:"制御文字を使わず、2 行、16 文字以内で入力してください。", stale:"このキーは別の会話に切り替わりました。タイトルを確認して再試行してください。", storage:"名前をローカルに保存できません。接続を確認して再試行してください。", capacity:"ラベル数が上限に達しました。既存の会話番号は保持されています。", timeout:"応答がありません。接続を確認して再試行してください。" },
+      de: { heading:"Chat-Beschriftung", alias:"Kurzer Name auf der Taste", placeholder:"z. B. API-Fix oder Website", save:"Namen speichern", reset:"Automatischen Namen nutzen", hint:"Maximal 16 Zeichen in zwei Zeilen. Empfohlen: 3 CJK-Zeichen oder 8 lateinische Buchstaben pro Zeile. Längerer Text wird gekürzt; die Nummer bleibt beim Chat.", empty:"Dieser Taste ist kein Chat zugeordnet.", saved:"Kurzname gespeichert.", resetDone:"Automatischer Name wiederhergestellt.", invalid:"Maximal 16 Zeichen in zwei Zeilen, ohne Steuerzeichen.", stale:"Die Taste zeigt jetzt einen anderen Chat. Titel prüfen und erneut versuchen.", storage:"Der Name konnte nicht lokal gespeichert werden. Verbindung prüfen und erneut versuchen.", capacity:"Das Beschriftungslimit ist erreicht. Bestehende Chat-Nummern bleiben erhalten.", timeout:"Noch keine Antwort. Verbindung prüfen und erneut versuchen." },
+      ko: { heading:"대화 표시 이름", alias:"키에 표시할 짧은 이름", placeholder:"예: API 수정, 웹사이트", save:"이름 저장", reset:"자동 이름 사용", hint:"최대 16자, 두 줄입니다. 한 줄에 전각 3자 또는 영문 8자를 권장합니다. 긴 표시는 축약되며 번호는 대화에 고정됩니다.", empty:"이 키에 지정된 대화가 없습니다.", saved:"짧은 이름을 저장했습니다.", resetDone:"자동 이름으로 복원했습니다.", invalid:"제어 문자 없이 최대 16자, 두 줄로 입력하세요.", stale:"이 키가 다른 대화로 바뀌었습니다. 제목을 확인하고 다시 시도하세요.", storage:"이름을 로컬에 저장할 수 없습니다. 연결을 확인하고 다시 시도하세요.", capacity:"표시 이름 수가 한도에 도달했습니다. 기존 대화 번호는 유지됩니다.", timeout:"응답이 없습니다. 연결을 확인하고 다시 시도하세요." },
+      pt: { heading:"Nome da conversa", alias:"Nome curto na tecla", placeholder:"Ex.: API ou Website", save:"Guardar nome", reset:"Usar nome automático", hint:"Até 16 caracteres em duas linhas. Recomendado: 3 caracteres CJK ou 8 letras latinas por linha. O texto longo é abreviado; o número acompanha a conversa.", empty:"Não existe uma conversa atribuída a esta tecla.", saved:"Nome curto guardado.", resetDone:"Nome automático restaurado.", invalid:"Use até 16 caracteres em duas linhas, sem caracteres de controlo.", stale:"A tecla mostra agora outra conversa. Verifique o título e tente novamente.", storage:"Não foi possível guardar o nome localmente. Verifique a ligação e tente novamente.", capacity:"Foi atingido o limite de nomes. Os números existentes foram mantidos.", timeout:"Sem resposta. Verifique a ligação e tente novamente." },
+      es: { heading:"Etiqueta de conversación", alias:"Nombre corto en la tecla", placeholder:"Ej.: API o Sitio web", save:"Guardar nombre", reset:"Usar nombre automático", hint:"Hasta 16 caracteres en dos líneas. Se recomiendan 3 caracteres CJK u 8 letras latinas por línea. El texto largo se abrevia; el número permanece con la conversación.", empty:"No hay una conversación asignada a esta tecla.", saved:"Nombre corto guardado.", resetDone:"Nombre automático restaurado.", invalid:"Usa hasta 16 caracteres en dos líneas, sin caracteres de control.", stale:"La tecla muestra ahora otra conversación. Comprueba el título e inténtalo de nuevo.", storage:"No se pudo guardar el nombre localmente. Comprueba la conexión e inténtalo de nuevo.", capacity:"Se alcanzó el límite de etiquetas. Se conservaron los números existentes.", timeout:"Sin respuesta. Comprueba la conexión e inténtalo de nuevo." }
+    };
     const query = new URLSearchParams(location.search);
-    const rawLanguage = query.get("language") || "en-US";
+    const rawLanguage = (query.get("language") || "en-US").replace(/_/g, "-");
     const locale = rawLanguage.startsWith("zh-HK") || rawLanguage.startsWith("zh-TW") ? "zh_HK" : rawLanguage.startsWith("zh") ? "zh_CN" : rawLanguage.split(/[-_]/)[0];
     const t = { ...TEXT.en, ...(TEXT[locale] || {}) };
+    const labelText = LABEL_TEXT[locale] || LABEL_TEXT.en;
     const connection = {
       address: query.get("address") || "127.0.0.1",
       port: query.get("port") || "3906",
@@ -108,6 +139,12 @@
     let latestStatus;
     let busy = false;
     let pollTimer;
+    const conversationLabelsEnabled = /\.(?:task(?:[1-9]|1[0-3])|navigate)$/.test(connection.uuid);
+    const aliasSegmenter = new Intl.Segmenter(undefined, { granularity:"grapheme" });
+    let currentConversation = null;
+    let aliasDirty = false;
+    let pendingAliasWrite = null;
+    let aliasWriteTimer;
 
     async function loadLocalizedResources() {
       const resource = { en:"en", zh_CN:"zh_CN", zh_HK:"zh_HK", ja:"ja_JP", de:"de_DE", ko:"ko_KR", pt:"pt_PT", es:"es_ES" }[locale] || "en";
@@ -157,6 +194,80 @@
       if (socket?.readyState !== WebSocket.OPEN) return;
       socket.send(JSON.stringify({ cmd:"sendToPlugin", uuid:connection.uuid, actionid:connection.actionid, key:connection.key, payload:{ type:"bridgeSetup", action } }));
     }
+    function normalizedAlias() { return document.getElementById("conversationAlias").value.replace(/\r\n?/g, "\n").trim(); }
+    function validAlias(value) { return [...aliasSegmenter.segment(value)].length <= 16 && value.split("\n").length <= 2 && !/[\p{Cc}\u2028\u2029]/u.test(value.replace(/\n/g, "")); }
+    function labelMessage(value, level = "") {
+      text("conversationLabelMessage", value);
+      document.getElementById("conversationLabelMessage").className = `message ${level}`;
+    }
+    function conversationLabelError(payload) {
+      const translation = {
+        STALE_CONVERSATION:labelText.stale,
+        LABEL_STORAGE_ERROR:labelText.storage,
+        INVALID_CONVERSATION_LABEL:labelText.invalid,
+        LABEL_CAPACITY_REACHED:labelText.capacity
+      }[payload.errorCode];
+      return typeof translation === "string" ? translation : payload.error ? `${t.failed}: ${payload.error}` : "";
+    }
+    function updateAliasControls() {
+      const field = document.getElementById("conversationAlias");
+      const alias = normalizedAlias();
+      const valid = validAlias(alias);
+      text("conversationAliasCount", `${[...aliasSegmenter.segment(alias)].length} / 16`);
+      field.disabled = !currentConversation?.threadKey || Boolean(pendingAliasWrite);
+      document.getElementById("saveConversationAlias").disabled = field.disabled || !aliasDirty || !valid;
+      document.getElementById("resetConversationAlias").disabled = field.disabled || !(currentConversation?.alias || field.value);
+      if (!valid) labelMessage(labelText.invalid, "error");
+    }
+    function sendConversationLabel(action) {
+      if (!conversationLabelsEnabled || socket?.readyState !== WebSocket.OPEN) return;
+      const payload = { type:"conversationLabel", action };
+      if (action !== "status") {
+        if (!currentConversation?.threadKey) return;
+        if (action === "save" && !validAlias(normalizedAlias())) return;
+        payload.threadKey = currentConversation.threadKey;
+        if (action === "save") payload.alias = normalizedAlias();
+        pendingAliasWrite = { threadKey:payload.threadKey, alias:action === "reset" ? "" : payload.alias, action };
+        clearTimeout(aliasWriteTimer);
+        aliasWriteTimer = setTimeout(() => {
+          pendingAliasWrite = null;
+          updateAliasControls();
+          labelMessage(labelText.timeout, "error");
+        }, 8000);
+        updateAliasControls();
+        labelMessage(t.checking);
+      }
+      socket.send(JSON.stringify({ cmd:"sendToPlugin", uuid:connection.uuid, actionid:connection.actionid, key:connection.key, payload }));
+    }
+    function renderConversationLabel(payload) {
+      if (!conversationLabelsEnabled) return;
+      const errorMessage = conversationLabelError(payload);
+      const previousKey = currentConversation?.threadKey;
+      const changedConversation = previousKey !== payload.threadKey;
+      currentConversation = { threadKey:payload.threadKey || null, title:String(payload.title || ""), identifier:String(payload.identifier || ""), alias:String(payload.alias || "") };
+      text("conversationTitle", currentConversation.threadKey ? currentConversation.title || "—" : labelText.empty);
+      text("conversationNumber", currentConversation.identifier ? `#${currentConversation.identifier}` : "—");
+      if (changedConversation || !aliasDirty) {
+        document.getElementById("conversationAlias").value = currentConversation.alias;
+        aliasDirty = false;
+      }
+      if (errorMessage || changedConversation && pendingAliasWrite) {
+        pendingAliasWrite = null;
+        clearTimeout(aliasWriteTimer);
+      }
+      let completedAction;
+      if (pendingAliasWrite?.threadKey === currentConversation.threadKey && pendingAliasWrite.alias === currentConversation.alias) {
+        completedAction = pendingAliasWrite.action;
+        document.getElementById("conversationAlias").value = currentConversation.alias;
+        pendingAliasWrite = null;
+        aliasDirty = false;
+        clearTimeout(aliasWriteTimer);
+      }
+      updateAliasControls();
+      if (errorMessage) labelMessage(errorMessage, "error");
+      else if (completedAction) labelMessage(completedAction === "reset" ? labelText.resetDone : labelText.saved, "success");
+      else if (!aliasDirty && !pendingAliasWrite) labelMessage(labelText.hint);
+    }
     function render(status, payload = {}) {
       latestStatus = status;
       busy = Boolean(payload.busy);
@@ -190,12 +301,14 @@
       socket.addEventListener("open", () => {
         socket.send(JSON.stringify({ code:0, cmd:"connected", uuid:connection.uuid }));
         send("status");
+        sendConversationLabel("status");
         clearInterval(pollTimer);
-        pollTimer = setInterval(() => send("status"), 2000);
+        pollTimer = setInterval(() => { send("status"); sendConversationLabel("status"); }, 2000);
       });
       socket.addEventListener("message", event => {
         const message = JSON.parse(event.data);
         if (message.cmd === "sendToPropertyInspector" && message.payload?.type === "bridgeSetupStatus") render(message.payload.status, message.payload);
+        if (message.cmd === "sendToPropertyInspector" && message.payload?.type === "conversationLabelStatus") renderConversationLabel(message.payload);
       });
       socket.addEventListener("close", () => {
         clearInterval(pollTimer);
@@ -205,6 +318,17 @@
 
     async function start() {
       await loadLocalizedResources();
+      document.getElementById("conversationSection").hidden = !conversationLabelsEnabled;
+      text("conversationHeading", labelText.heading); text("conversationAliasLabel", labelText.alias); text("conversationTitle", t.checking);
+      text("saveConversationAlias", labelText.save); text("resetConversationAlias", labelText.reset); labelMessage(labelText.hint);
+      document.getElementById("conversationAlias").placeholder = labelText.placeholder;
+      document.getElementById("conversationAlias").addEventListener("input", () => {
+        aliasDirty = normalizedAlias() !== (currentConversation?.alias || "");
+        labelMessage(labelText.hint);
+        updateAliasControls();
+      });
+      document.getElementById("saveConversationAlias").addEventListener("click", () => sendConversationLabel("save"));
+      document.getElementById("resetConversationAlias").addEventListener("click", () => sendConversationLabel("reset"));
       text("title", t.title); text("intro", t.intro); text("appLabel", t.app); text("serviceLabel", t.service); text("cdpLabel", t.cdp);
       text("bridgeAppInfoTitle", t.bridgeAppInfoTitle); text("bridgeAppDescription", t.bridgeAppDescription); text("bridgeAppSafety", t.bridgeAppSafety); text("backgroundTitle", t.backgroundTitle); text("launchAgentDescription", t.launchAgentDescription); text("nodeSelectionStrategy", t.nodeSelectionStrategy); text("nodeInstallRecommendation", t.nodeInstallRecommendation); text("ulanziNodeSignatureNotice", t.ulanziNodeSignatureNotice); text("currentNodeRuntime", format(t.currentNode, { runtime:t.unknownNode }));
       text("install", t.install); text("launch", t.launch); text("uninstall", t.uninstall); text("refresh", t.refresh); text("guide", t.guide); text("message", t.checking);

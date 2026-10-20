@@ -2,6 +2,8 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import WebSocket from "ws";
 import { localThreadKey } from "./thread-key.mjs";
+import { normalizeUsageWindow } from "./usage-window.mjs";
+import { DASHBOARD_SLOT_COUNT, NATIVE_SLOT_COUNT, mergeDashboardSlots, readSidebarThreads } from "./sidebar-slots.mjs";
 
 const execFileAsync = promisify(execFile);
 const USAGE_REFRESH_MS = Math.max(
@@ -283,24 +285,7 @@ const SNAPSHOT_EXPRESSION = `(async () => {
       const data = query?.state?.data;
       const rateLimit = data?.rate_limit;
       if (!rateLimit || typeof rateLimit !== "object") continue;
-      const normalizeWindow = (window, role) => {
-        if (!window || typeof window !== "object") return null;
-        const usedPercent = Number(window.used_percent);
-        if (!Number.isFinite(usedPercent)) return null;
-        const seconds = Number(window.limit_window_seconds);
-        const minutes = Number.isFinite(seconds) && seconds > 0 ? seconds / 60 : null;
-        const kind = minutes != null && Math.abs(minutes - 300) <= 1 ? "five-hour"
-          : minutes != null && Math.abs(minutes - 10080) <= 1 ? "weekly"
-            : "other";
-        const used = Math.min(100, Math.max(0, usedPercent));
-        return {
-          id: kind === "other" ? role : kind,
-          kind,
-          usedPercent: used,
-          remainingPercent: 100 - used,
-          resetsAt: Number(window.reset_at) || null
-        };
-      };
+      const normalizeWindow = ${normalizeUsageWindow.toString()};
       usage = {
         windows: [
           normalizeWindow(rateLimit.primary_window, "primary"),
@@ -318,8 +303,21 @@ const SNAPSHOT_EXPRESSION = `(async () => {
     ?? active?.getAttribute("data-app-action-sidebar-thread-id")
     ?? null;
   const normalizeThreadKey = (value) => String(value ?? "").replace(/^local:/, "");
+  let sidebarThreads = [];
+  let sidebarError = null;
+  try {
+    const urls = [...new Set([
+      ...[...document.querySelectorAll("link[href],script[src]")].map((element) => element.href || element.src),
+      ...performance.getEntriesByType("resource").map((entry) => entry.name)
+    ])].filter((url) => url.includes("/assets/") && url.endsWith(".js"));
+    sidebarThreads = await (${readSidebarThreads.toString()})(source, { urls });
+  } catch (error) {
+    sidebarError = error.message;
+  }
   return {
     activeThreadKey,
+    sidebarThreads,
+    sidebarError,
     slots: found.map((slot) => ({
       id: slot.id,
       threadKey: slot.threadKey ?? null,
@@ -353,12 +351,22 @@ async function fetchJson(url, timeout = 1200) {
   return response.json();
 }
 
+export function codexDebugPorts(processList) {
+  const ports = new Set();
+  for (const line of String(processList).split("\n")) {
+    // Other Electron apps and browsers may also expose CDP. Only the binary
+    // launched by Codex Bridge may receive our renderer integration.
+    if (!/^\s*\/Applications\/ChatGPT\.app\/Contents\/MacOS\/ChatGPT(?:\s|$)/.test(line)) continue;
+    if (!/(?:^|\s)--remote-debugging-address=127\.0\.0\.1(?:\s|$)/.test(line)) continue;
+    const port = Number(line.match(/(?:^|\s)--remote-debugging-port(?:=|\s+)(\d+)(?:\s|$)/)?.[1]);
+    if (Number.isInteger(port) && port > 0 && port <= 65535) ports.add(port);
+  }
+  return [...ports];
+}
+
 async function discoverDebugPort() {
-  const { stdout } = await execFileAsync("/bin/ps", ["-axo", "command="], { timeout: 4000 });
-  for (const line of stdout.split("\n")) {
-    if (!line.includes("--remote-debugging-address=127.0.0.1")) continue;
-    const port = Number(line.match(/--remote-debugging-port(?:=|\s+)(\d+)/)?.[1]);
-    if (!Number.isInteger(port)) continue;
+  const { stdout } = await execFileAsync("/bin/ps", ["-axo", "command="], { timeout: 4000, maxBuffer: 4 * 1024 * 1024 });
+  for (const port of codexDebugPorts(stdout)) {
     try {
       await fetchJson(`http://127.0.0.1:${port}/json/version`, 500);
       return port;
@@ -394,7 +402,12 @@ export class CodexCdpClient {
   async snapshot() {
     await this.connect();
     try {
-      this.lastSnapshot = await this.evaluate(SNAPSHOT_EXPRESSION);
+      const snapshot = await this.evaluate(SNAPSHOT_EXPRESSION);
+      const { sidebarThreads = [], ...state } = snapshot;
+      this.lastSnapshot = {
+        ...state,
+        slots: mergeDashboardSlots(snapshot.slots, sidebarThreads, this.lastSnapshot?.slots, snapshot.activeThreadKey)
+      };
       return this.lastSnapshot;
     } catch (error) {
       this.disconnect();
@@ -403,19 +416,38 @@ export class CodexCdpClient {
   }
 
   async clickAgent(slot) {
+    if (!Number.isInteger(slot) || slot < 0 || slot >= DASHBOARD_SLOT_COUNT) {
+      throw new Error("Invalid Codex dashboard slot");
+    }
     await this.connect();
     const snapshot = this.lastSnapshot ?? await this.snapshot();
     const agent = snapshot.slots[slot];
     if (!agent?.threadKey) throw new Error(`Agent slot ${slot + 1} is empty`);
-    return this.clickThreadKey(agent.threadKey, slot);
+    return this.clickThreadKey(agent.threadKey, slot, agent.hostId);
   }
 
   async clickThread(threadId, slot = 0) {
     await this.connect();
-    return this.clickThreadKey(localThreadKey(threadId), slot);
+    const key = localThreadKey(threadId);
+    const assigned = this.lastSnapshot?.slots?.[slot];
+    if (slot >= NATIVE_SLOT_COUNT && assigned?.threadKey !== key) {
+      throw new Error("Codex dashboard assignment changed; refresh before opening this chat");
+    }
+    return this.clickThreadKey(key, slot, assigned?.hostId);
   }
 
-  async clickThreadKey(threadKey, slot) {
+  async clickThreadKey(threadKey, slot, hostId = null) {
+    if (!Number.isInteger(slot) || slot < 0 || slot >= DASHBOARD_SLOT_COUNT) {
+      throw new Error("Invalid Codex dashboard slot");
+    }
+    if (slot >= NATIVE_SLOT_COUNT) {
+      if (hostId !== "local" || !threadKey.startsWith("local:")) {
+        throw new Error("Extended dashboard navigation is available only for verified local chats");
+      }
+      // Extra display slots are not native Micro key codes. Never dispatch
+      // AG06..AG12, which the official six-slot handler cannot safely route.
+      return this.activateThread(threadKey, true);
+    }
     // Use the same native HID path as Codex Micro. The DOM click introduced
     // perceptible navigation scheduling; it is now only a non-blocking fallback.
     try {
@@ -522,7 +554,7 @@ export class CodexCdpClient {
     })()`);
   }
 
-  async activateThread(threadKey) {
+  async activateThread(threadKey, requireUnique = false) {
     return this.evaluate(`(async () => {
       const key = ${JSON.stringify(threadKey)};
       const normalize = (value) => String(value ?? "").replace(/^local:/, "");
@@ -530,10 +562,17 @@ export class CodexCdpClient {
         ?.getAttribute("data-above-composer-conversation-id")
         ?? document.querySelector("[data-app-action-sidebar-thread-id][data-app-action-sidebar-thread-active=true]")
           ?.getAttribute("data-app-action-sidebar-thread-id");
-      if (normalize(current()) === normalize(key)) return true;
-      const item = [...document.querySelectorAll("[data-app-action-sidebar-thread-id]")]
-        .find((el) => normalize(el.getAttribute("data-app-action-sidebar-thread-id")) === normalize(key));
+      if (!${JSON.stringify(requireUnique)} && normalize(current()) === normalize(key)) return true;
+      const items = [...document.querySelectorAll("[data-app-action-sidebar-thread-id]")]
+        .filter((el) => normalize(el.getAttribute("data-app-action-sidebar-thread-id")) === normalize(key));
+      if (${JSON.stringify(requireUnique)} && items.length !== 1) {
+        throw new Error("Chat must have one visible sidebar navigation row before it can be opened");
+      }
+      const item = items[0];
       if (!item) throw new Error("Task is not loaded in the Codex sidebar");
+      if (${JSON.stringify(requireUnique)} && item.offsetParent === null) {
+        throw new Error("Chat must be visible in the sidebar before it can be opened");
+      }
       const pinLabels = new Set(${JSON.stringify(PIN_ACTION_LABELS)});
       const isPinControl = (element) =>
         element.matches(

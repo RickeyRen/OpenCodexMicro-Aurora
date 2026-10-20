@@ -1,0 +1,48 @@
+name: Build and verify
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos-arm64:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            integration/com.ulanzi.codexmicro.ulanziPlugin/package-lock.json
+      - name: Install build dependencies
+        run: |
+          npm ci
+          npm --prefix integration/com.ulanzi.codexmicro.ulanziPlugin ci
+      - name: Check and build without installing or launching apps
+        run: npm run check
+      - name: Package audited release inputs
+        run: npm run package:release
+      - name: Verify archive checksum
+        working-directory: release
+        run: shasum -a 256 -c SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OpenCodexMicro-Aurora-macos-arm64
+          path: |
+            release/*.zip
+            release/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 14

@@ -9,6 +9,7 @@ import {
   createBridgeInstaller,
   selectBridgeNodeRuntime
 } from "../integration/com.ulanzi.codexmicro.ulanziPlugin/plugin/bridge-installer.js";
+import { bridgeLauncher } from "../integration/com.ulanzi.codexmicro.ulanziPlugin/plugin/bridge-launcher.js";
 
 const pluginRoot = fileURLToPath(new URL(
   "../integration/com.ulanzi.codexmicro.ulanziPlugin/",
@@ -57,12 +58,18 @@ test("bundled installer creates and launches Codex Bridge without a repository p
     assert.equal(installed.installed, true);
     assert.equal(installed.installedVersion, "9.8.7");
     await access(join(home, "Applications", "Codex Bridge.app", "Contents", "MacOS", "Codex Bridge"));
+    assert.equal(await readFile(
+      join(home, "Applications", "Codex Bridge.app", "Contents", "MacOS", "Codex Bridge"),
+      "utf8"
+    ), bridgeLauncher);
     await access(join(home, "Library", "Application Support", "OpenCodexMicro", "bridge.mjs"));
     const plist = await readFile(
       join(home, "Library", "LaunchAgents", "io.opencodexmicro.bridge.plist"),
       "utf8"
     );
     assert.match(plist, new RegExp(resolvedSystemNode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    assert.match(plist, /<string>[^<]+\/OpenCodexMicro\/bridge\.mjs<\/string>/);
+    assert.doesNotMatch(plist, /Codex Bridge\.app|\/ChatGPT\.app|\b(?:open|osascript|kill|pkill)\b/);
     const metadata = JSON.parse(await readFile(
       join(home, "Library", "Application Support", "OpenCodexMicro", "install.json"),
       "utf8"
@@ -71,6 +78,11 @@ test("bundled installer creates and launches Codex Bridge without a repository p
     assert.equal(metadata.nodeVersion, "22.14.0");
     assert.equal(metadata.nodeSource, "system");
     assert.ok(commands.some(([command, args]) => command === "/bin/launchctl" && args[0] === "bootstrap"));
+    assert.deepEqual(commands.filter(([command]) => command === "/usr/bin/codesign"), [[
+      "/usr/bin/codesign",
+      ["--force", "--deep", "--sign", "-", join(home, "Applications", "Codex Bridge.app")]
+    ]]);
+    assert.ok(commands.every(([command]) => command !== "/usr/bin/security"));
 
     await installer.launch();
     assert.ok(commands.some(([command]) => command === "/usr/bin/open"));

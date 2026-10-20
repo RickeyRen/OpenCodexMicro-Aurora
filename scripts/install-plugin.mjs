@@ -60,6 +60,15 @@ for (const action of manifest.Actions || []) {
   }
 }
 for (const relative of [
+  "assets/neon/task-working.gif",
+  "assets/neon/task-attention.gif",
+  "assets/neon/task-error.gif",
+  "assets/neon/task-idle.png",
+  "assets/neon/task-complete.png",
+  "assets/neon/task-offline.png",
+  "assets/neon/task-empty.png",
+  "assets/neon/task-unknown.png",
+  "runtime/key-glyph-renderer",
   "installer/bridge.mjs",
   "installer/CodexBridge.png",
   "installer/LICENSE",
@@ -88,6 +97,8 @@ for (const relative of [
   "manifest.json",
   ...localizationFiles,
   "assets/icons",
+  "assets/neon",
+  "runtime",
   "dist",
   "installer",
   "property-inspector"

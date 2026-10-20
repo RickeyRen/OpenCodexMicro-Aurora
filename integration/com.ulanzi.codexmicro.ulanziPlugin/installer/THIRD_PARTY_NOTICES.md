@@ -65,3 +65,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Sharp and libvips (build time only)
+
+- Sharp: https://github.com/lovell/sharp — Apache License 2.0.
+- libvips: https://github.com/libvips/libvips — LGPL-2.1-or-later.
+- Use: generate PNG/GIF artwork and rendered demos during development. Neither Sharp, libvips nor their native libraries are included in the installed plugin or this release archive. Their packages are fetched by npm for development and retain their own license files.
+
+The installed glyph helper is original project code linked to macOS system frameworks; no third-party font or rendering library is bundled in it.

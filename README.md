@@ -1,151 +1,117 @@
-# OpenCodexMicro
+# OpenCodexMicro · Aurora
 
-**Control Codex Desktop from an Ulanzi D200 Series through Ulanzi Studio.**
+### A live Codex dashboard for your desk.
 
-[中文说明](README_zh.md)
+Thirteen conversations. State-driven Aurora animation. Remaining usage and AI activity on the wide display. Turn your **Ulanzi Deck Dock D200H** into a glanceable companion for Codex Desktop.
 
-OpenCodexMicro exposes Codex's live Micro state through a loopback Bridge and
-turns it into a native Ulanzi Studio plugin. It shows recent tasks, switches to
-the exact task displayed on a key, and provides Fast, Usage, Pin, New, Fork,
-Steer, Mic, Submit, and Latest Task & Scroll Encoder actions.
+[中文](README_zh.md) · [Get started](#get-started) · [Releases](https://github.com/RickeyRen/OpenCodexMicro-Aurora/releases) · [Report a problem](https://github.com/RickeyRen/OpenCodexMicro-Aurora/issues)
 
-![OpenCodexMicro on an Ulanzi D200 Series](docs/images/codex-keyboard-hero.png)
+![Aurora dashboard with thirteen conversation keys and a wide usage display](docs/images/aurora-hero.png)
 
-## What it does
+*Rendered demo with sample conversations and example usage. The artwork uses the same renderers as the device.*
 
-| Feature | Behavior |
+## See what needs you
+
+Keep working without repeatedly checking thirteen chats. A flowing blue key means work is running. Amber needs your attention. Green marks a finished, unread response. Press a key to open that exact conversation.
+
+![Aurora status animations, rendered with sample conversations](docs/images/aurora-demo.gif)
+
+| On your desk | What you get |
 | --- | --- |
-| Five live task actions | Show Codex's Most Recent tasks with idle, working, complete, attention, or error state |
-| Exact task switching | Route the selected thread through Codex's own Micro event bus |
-| Codex controls | Fast, Usage, Pin, New, Fork, Steer, Mic, and Submit |
-| Encoder navigation | Press to open task 1; turn left/right to scroll up/down through Ulanzi Studio's hotkey protocol |
-| Live usage | Draw the remaining Codex allowance directly on the key; press to return to Codex |
-| Ulanzi Studio integration | Let Ulanzi Studio own the device and manage the key layout |
-| Local-only transport | Bind CDP and the Bridge API to loopback addresses only |
+| **13 independent conversation keys** | Actual chat titles, two readable lines, persistent conversation numbers and optional local short names |
+| **Aurora Silk motion** | Original animated light ribbons; the same state always uses the same color |
+| **A separate wide overview** | Large remaining-usage percentage, reset countdown and running / waiting / error counts, without using a conversation key |
+| **Exact conversation switching** | Native Micro routing for slots 1–6 and a verified sidebar adapter for slots 7–13 |
+| **Optional extra controls** | Fast, Usage, Pin, New, Fork, Steer, Mic, Submit and encoder scrolling on another page |
+| **Local connection** | Ulanzi Studio owns the device; a loopback Bridge connects the official desktop app |
 
-This Ulanzi-maintained project is an unofficial integration with Codex Desktop
-for **macOS, Ulanzi Studio, and Ulanzi D200 Series**. It is not affiliated with or
-endorsed by OpenAI. The entire project was vibe-coded with Codex.
+| Blue | Amber | Green | Red | Dim neutral |
+| --- | --- | --- | --- | --- |
+| Running | Waiting for input / approval | Completed, unread | Error | Idle |
 
-Ulanzi's implementation and maintenance scope is limited to
-`integration/com.ulanzi.codexmicro.ulanziPlugin/`. The plugin only consumes
-state and action interfaces exposed through the existing local Bridge; Ulanzi
-did not participate in the design, specification, development, or maintenance
-of CDP or Codex's CDP implementation. See [NOTICE.md](NOTICE.md) for the full
-responsibility boundary.
+This is **RickeyRen's independent MIT-licensed fork** of [UlanziTechnology/OpenCodexMicro](https://github.com/UlanziTechnology/OpenCodexMicro), originally created by [Nian Liu](https://github.com/He11oLiu). It is unofficial and is not endorsed or supported by OpenAI or Ulanzi. [Attribution and responsibility](NOTICE.md).
 
-## Installation
+## Compatibility
 
-### Installation environment
+| Component | First Aurora release |
+| --- | --- |
+| Computer | macOS 13+ on **Apple Silicon**; bundled glyph helper is arm64 |
+| Hardware | **Ulanzi Deck Dock D200H**, tested on a physical device |
+| Ulanzi Studio | **3.4.4**; the native wide-panel route deliberately disables itself on other versions |
+| Desktop app | Official ChatGPT/Codex desktop app exposing Micro state; verified with 26.1013.40934 |
+| Manual install / development | Node.js 20+; Node 22 recommended |
 
-- macOS 13 or later;
-- Codex Desktop;
-- Ulanzi Studio 3.0.1 or later;
-- Ulanzi D200 Series connected to Ulanzi Studio;
-- Node.js 20 or newer only for repository-based manual installation.
+The desktop adapter uses internal interfaces, so app updates can require changes here. Intel Macs, other devices, Windows and Linux are not validated by this release. The wide panel is an opt-in compatibility feature. [Details and limitations](docs/configuration.md).
 
-### 1. LLM / Agent installation
+## Get started
 
-An LLM or coding agent must follow these steps:
+### Install the plugin and Bridge
 
-1. Read [AGENTS.md](AGENTS.md) and inspect the installed Ulanzi Studio plugin
-   manifests under `~/Library/Application Support/Ulanzi/UlanziDeck/Plugins/`.
-2. Treat Codex Micro as installed only when manifest UUID
-   `com.ulanzi.ulanzistudio.codexmicro` is present and its `CodePath` exists.
-3. If it is missing or invalid, load
-   [`$install-ulanzi-studio-plugin`](skills/install-ulanzi-studio-plugin/SKILL.md),
-   install the plugin, and verify its manifest and entry point.
-4. After the plugin is verified, load
-   [`$setup-codex-bridge`](skills/setup-codex-bridge/SKILL.md), install or repair
-   `Codex Bridge.app` and its sidecar, and verify the local health endpoint.
-5. Report plugin installation and Bridge connectivity separately. Do not
-   reinstall a valid plugin unless an update or repair was requested.
-
-### 2. Install Bridge from Ulanzi Studio
-
-After installing the Codex Micro plugin, drag any Codex Micro action onto a
-key and select it. Its shared **Codex Bridge Setup** page can:
-
-- show whether `Codex Bridge.app`, the Bridge service, and CDP are available;
-- install or repair the bundled Bridge without a repository or npm directory;
-- launch `~/Applications/Codex Bridge.app`; and
-- recheck the connection or open the full installation guide.
-
-The installer writes only to the current user's Applications, Application
-Support, and LaunchAgents directories and does not require `sudo`.
-
-### 3. Manual installation
+Save your work and **quit Ulanzi Studio normally** before replacing its plugin. Clone this repository, or extract the macOS arm64 ZIP from [Releases](https://github.com/RickeyRen/OpenCodexMicro-Aurora/releases), then run from its folder:
 
 ```bash
-git clone https://github.com/UlanziTechnology/OpenCodexMicro.git
-cd OpenCodexMicro
-npm install
+git clone https://github.com/RickeyRen/OpenCodexMicro-Aurora.git
+cd OpenCodexMicro-Aurora
+npm ci
 npm run install:plugin
 npm run setup
 ```
 
-Quit Ulanzi Studio before running `npm run install:plugin`. The command
-validates and atomically installs the prebuilt plugin. `npm run setup` builds
-the loopback Bridge sidecar, registers its user LaunchAgent, and installs
-`Codex Bridge.app` in `~/Applications`.
+The repository includes the prebuilt plugin. Installation needs no `sudo`. It installs `~/Applications/Codex Bridge.app`, its own sidecar LaunchAgent and the Studio plugin. The plugin keeps the upstream UUID, so Aurora **replaces an existing Codex Micro plugin** rather than installing beside it. Export your Studio profile before switching editions.
 
-Reopen Ulanzi Studio. Quit Codex Desktop, then open
-`~/Applications/Codex Bridge.app`; the wrapper starts Codex with a
-loopback-only CDP endpoint. Confirm the connection with:
+Reopen Studio. Save work and **quit the normally launched ChatGPT/Codex app**, then open:
 
 ```bash
-curl http://127.0.0.1:17373/health
-curl http://127.0.0.1:17373/state
+open "$HOME/Applications/Codex Bridge.app"
+npm run doctor -- --lang en
 ```
 
-In Ulanzi Studio, drag the Codex Micro actions onto the desired keys. See
-[Setup and operations](docs/setup-and-operations.md) for installed paths,
-diagnostics, updates, and uninstall instructions.
+**Why a launcher?** It starts the official installed app with a loopback-only debugger connection. It does not patch the official app, replace its updater, or supply a modified ChatGPT build. It refuses to interrupt an already-running instance. Launch through the Bridge when you want the dashboard; normal app launch does not enable the connection.
 
-> **Important:** When using Codex Micro, always launch Codex through
-> `~/Applications/Codex Bridge.app`. Do not open Codex Desktop directly.
->
-> Launch command:
->
-> ```bash
-> open ~/Applications/Codex\ Bridge.app
-> ```
+### Fill the thirteen small keys
 
-## Configure
+In Studio, find **Codex Micro · Aurora**. Drag **Codex Task 1–13** onto the thirteen small keys of one D200H page. Leave the bottom-right native wide window in place. Open existing conversations in the desktop app; unused slots stay empty.
 
-The physical layout is managed in Ulanzi Studio. The plugin ships these
-actions: Codex Task 1–5, Fast, Usage, Pin, New, Fork, Steer, Mic, Submit, and
-Latest Task & Scroll for Encoder controls.
-No separate device daemon or shortcut mapping is required.
+Select a key to edit its **short name** if the automatic title is hard to tell apart. This changes only the local device label. Its small number follows the conversation when the key order changes.
 
-Select any configured action to open the shared **Codex Bridge Setup** page.
-It shows Bridge installation, service, and CDP status and provides Install /
-Repair and Launch controls.
+### Enable the wide overview
 
-On macOS, enable Ulanzi Studio in **System Settings > Privacy & Security >
-Accessibility** so Encoder rotation can send mouse-wheel events.
+Select the native bottom-right window in Studio. Choose **Pure background** (纯背景) and clear its image, then run:
 
-See [Configuration](docs/configuration.md) for action behavior and layout
-guidance.
+```bash
+npm run setup:overview -- --enable --lang en
+```
 
-The repository includes two reusable Codex skills:
+The command discovers your page and validates its thirteen task bindings, native window and Studio version. It writes only a local opt-in file; it never edits your Studio profile. Multiple matching pages require an explicit `--profile` path. See [wide-panel setup](docs/configuration.md#native-wide-overview) for troubleshooting and disabling.
 
-| Skill | Purpose |
-| --- | --- |
-| [`setup-codex-bridge`](skills/setup-codex-bridge/SKILL.md) | Install, update, verify, or repair `Codex Bridge.app` and its sidecar |
-| [`install-ulanzi-studio-plugin`](skills/install-ulanzi-studio-plugin/SKILL.md) | Install the repository's prebuilt plugin directory into Ulanzi Studio |
+Status updates follow the Bridge; usage refresh defaults to **30 seconds**, subject to the desktop app's own caching. Only usage windows actually returned by the app are shown. Missing, stale or disconnected usage is clearly marked instead of becoming a fabricated balance.
 
-## Documentation
+### 1. LLM / Agent installation
 
-- [Configuration](docs/configuration.md)
-- [Setup and operations](docs/setup-and-operations.md)
-- [Architecture](docs/architecture.md)
-- [Engineering constraints](docs/errors.md)
+You can also ask a coding agent to install this repository. The agent must read [AGENTS.md](AGENTS.md), inspect installed plugin manifests, then use [install-ulanzi-studio-plugin](skills/install-ulanzi-studio-plugin/SKILL.md) if needed and [setup-codex-bridge](skills/setup-codex-bridge/SKILL.md). Report plugin and Bridge verification separately. Never stop or change the launch mode of ChatGPT without the user's explicit authorization.
 
-## License
+## Privacy and safety
 
-Project-authored code is released under the [MIT License](LICENSE). See the
-[modification and responsibility notice](NOTICE.md) for upstream attribution,
-material changes, Ulanzi maintainership, independence from OpenAI, and
-responsibility boundaries. Bundled and build-time dependencies are documented in
-[third-party notices](THIRD_PARTY_NOTICES.md).
+No API key or hosted backend is required. The Bridge binds to `127.0.0.1`; this project does not add a cloud data-upload service. Your existing ChatGPT/Codex network behavior still applies.
+
+CDP can inspect and control the desktop app. **Loopback is not an authentication boundary against other local processes.** Do not expose either port through a tunnel, reverse proxy or LAN binding. Browser-origin requests and browser Fetch Metadata are rejected before routes execute; the Node fetch default is supported. Read [SECURITY.md](SECURITY.md) before deployment or redistributing a modified Bridge.
+
+## Develop and contribute
+
+```bash
+npm ci
+npm --prefix integration/com.ulanzi.codexmicro.ulanziPlugin ci
+npm run check
+npm run build:media
+npm run package:release
+```
+
+`check` builds and tests the Bridge, native helper, artwork and plugin using isolated test fixtures. It does not install anything or restart your running apps. Building the native glyph helper needs Apple's Command Line Tools on macOS. The release bundle targets arm64; Intel source builds are experimental.
+
+Useful links: [configuration](docs/configuration.md), [operations / updates / uninstall](docs/setup-and-operations.md), [architecture](docs/architecture.md), [changelog](CHANGELOG.md), [contributing](CONTRIBUTING.md), [security](SECURITY.md).
+
+If Aurora earns a place on your desk, a star helps other Codex users find it. Hardware reports and focused pull requests help make it easier for the next person to install.
+
+## License and credits
+
+[MIT](LICENSE). Original OpenCodexMicro copyright 2026 Nian Liu; inherited Ulanzi Studio integration and Aurora modifications retain their attribution in [NOTICE.md](NOTICE.md). [Third-party notices](THIRD_PARTY_NOTICES.md). Codex, ChatGPT and Ulanzi product names belong to their respective owners.

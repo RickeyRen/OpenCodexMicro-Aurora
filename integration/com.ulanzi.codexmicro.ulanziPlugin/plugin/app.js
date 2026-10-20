@@ -2,22 +2,31 @@ import WebSocket from "ws";
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { createBridgeInstaller } from "./bridge-installer.js";
+import { formatTaskLabel, untitledTaskLabel } from "./key-title.js";
+import { createConversationLabels } from "./conversation-labels.js";
+import { actionVisual, DEFAULT_KEY_THEME, taskVisual, usageVisual } from "./key-art.js";
+import { createTaskArtwork } from "./task-artwork.js";
+import { createTaskDisplay } from "./task-display.js";
+import { createOverviewDisplay } from "./overview-display.js";
+import { resolveNativeOverviewTarget } from "./native-overview-target.js";
 
 const PLUGIN_UUID = "com.ulanzi.ulanzistudio.codexmicro";
 const BRIDGE_URL = process.env.CODEX_BRIDGE_URL || "http://127.0.0.1:17373";
-const [address = "127.0.0.1", port = "3906"] = process.argv.slice(2);
+const [address = "127.0.0.1", port = "3906", language = "en-US", studioVersion = ""] = process.argv.slice(2);
+const UNTITLED = untitledTaskLabel(language);
 const HOST_URL = `ws://${address}:${port}`;
 const instances = new Map();
 const PLUGIN_ROOT = resolve(dirname(resolve(process.argv[1])), "..");
 const MANIFEST = JSON.parse(readFileSync(resolve(PLUGIN_ROOT, "manifest.json"), "utf8"));
+const taskArtwork = createTaskArtwork({ pluginRoot: PLUGIN_ROOT, theme: DEFAULT_KEY_THEME });
+const conversationLabels = createConversationLabels({ filePath: process.env.CODEX_MICRO_LABELS_FILE });
+const setTaskDisplay = createTaskDisplay({ theme: DEFAULT_KEY_THEME, artwork: taskArtwork, send,
+  isCurrent: instance => instances.get(contextOf(instance)) === instance });
 const bridgeSetup = createBridgeInstaller({
   pluginRoot: PLUGIN_ROOT,
   bridgeUrl: BRIDGE_URL,
   version: MANIFEST.Version
 });
-const USAGE_BASE64 = readFileSync(
-  resolve(PLUGIN_ROOT, "assets/icons/usage-base.png")
-).toString("base64");
 const ACTION_LABELS = Object.freeze({
   fast: "FAST",
   usage: "USAGE",
@@ -29,13 +38,6 @@ const ACTION_LABELS = Object.freeze({
   mic: "MIC",
   submit: "SUBMIT"
 });
-const TASK_ICON_PATHS = Object.freeze({
-  idle: "assets/icons/task-idle.png",
-  working: "assets/icons/task-working.png",
-  complete: "assets/icons/task-complete.png",
-  attention: "assets/icons/task-attention.png",
-  error: "assets/icons/task-error.png"
-});
 
 let socket;
 let reconnectTimer;
@@ -43,13 +45,19 @@ let pollTimer;
 let pollInFlight = false;
 let latestState = null;
 let setupOperation = null;
+let labelStorageError = null;
+let overviewDisplay = null;
+let overviewTargetKey = null;
+let overviewCheckedAt = -Infinity;
+let overviewSetupError = null;
+let overviewRuntimeError = null;
 
 function contextOf(message) {
   return String(message.actionid || `${message.uuid}___${message.key}`);
 }
 
 function taskSlot(uuid) {
-  const match = String(uuid || "").match(/\.task([1-5])$/);
+  const match = String(uuid || "").match(/\.task([1-9]|1[0-3])$/);
   return match ? Number(match[1]) - 1 : null;
 }
 
@@ -65,39 +73,6 @@ function usageRemaining(usage) {
   return Number.isFinite(remaining)
     ? Math.max(0, Math.min(100, Math.round(remaining)))
     : null;
-}
-
-function usageIconData(usage) {
-  const remaining = usageRemaining(usage);
-  const progress = remaining === null
-    ? "#858c8f"
-    : remaining >= 50
-      ? "#2fbd7f"
-      : remaining >= 20
-        ? "#e89b2d"
-        : "#e45861";
-  const circumference = 2 * Math.PI * 57;
-  const filled = circumference * (remaining ?? 0) / 100;
-  const value = remaining === null ? "—" : String(remaining);
-  const percent = remaining === null ? "" : "%";
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="196" height="196" viewBox="0 0 196 196">
-    <defs>
-      <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="4.5" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-    <image width="196" height="196" href="data:image/png;base64,${USAGE_BASE64}" xlink:href="data:image/png;base64,${USAGE_BASE64}"/>
-    <g fill="none" transform="rotate(-90 98 94)">
-      <circle cx="98" cy="94" r="58.5" stroke="#ffffff" stroke-opacity=".57" stroke-width="2.4"/>
-      <circle cx="98" cy="94" r="57" stroke="#5e6c68" stroke-opacity=".57" stroke-width="16"/>
-      <circle cx="98" cy="94" r="57" stroke="#a0aca9" stroke-width="12"/>
-      <circle cx="98" cy="94" r="57" stroke="#cdd6d3" stroke-width="6"/>
-      ${remaining === null ? "" : `<circle cx="98" cy="94" r="57" stroke="${progress}" stroke-opacity=".5" stroke-width="18" stroke-linecap="butt" stroke-dasharray="${filled} ${circumference - filled}" filter="url(#glow)"/><circle cx="98" cy="94" r="57" stroke="${progress}" stroke-width="10" stroke-linecap="butt" stroke-dasharray="${filled} ${circumference - filled}"/>`}
-    </g>
-    <text x="98" y="105" fill="#303638" font-family="-apple-system,BlinkMacSystemFont,Arial,sans-serif" font-size="36" font-weight="700" text-anchor="middle">${value}${percent ? `<tspan dx="2" dy="-2" font-size="18">${percent}</tspan>` : ""}</text>
-  </svg>`;
-  return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 }
 
 function send(message) {
@@ -128,6 +103,48 @@ function sendToInspector(message, payload) {
   });
 }
 
+function inspectorTask(message) {
+  const slot = taskSlot(message.uuid) ?? (actionName(message.uuid) === "navigate" ? 0 : null);
+  return slot === null ? null : latestState?.slots?.[slot];
+}
+
+async function syncConversationLabels(state) {
+  try {
+    await conversationLabels.ensure((state?.slots || []).map(task => task?.threadKey).filter(Boolean));
+    labelStorageError = null;
+  } catch (error) {
+    if (labelStorageError !== error.message) send({ cmd: "logMessage", uuid: PLUGIN_UUID,
+      level: "error", message: `Conversation labels: ${error.message}` });
+    labelStorageError = error.message;
+  }
+}
+
+async function handleConversationLabelMessage(message) {
+  let error = null;
+  let errorCode = null;
+  try {
+    const action = message.payload?.action || "status";
+    if (!["status", "save", "reset"].includes(action)) throw new Error("Unknown label action");
+    if (action !== "status") {
+      const task = inspectorTask(message);
+      if (!task?.threadKey || message.payload?.threadKey !== task.threadKey) {
+        throw Object.assign(new Error("The conversation on this key changed. Check its name and try again."), { code: "STALE_CONVERSATION" });
+      }
+      await conversationLabels.setAlias(task.threadKey, action === "reset" ? "" : message.payload.alias);
+      renderAll();
+    }
+  } catch (failure) {
+    error = failure.message;
+    errorCode = ["STALE_CONVERSATION", "INVALID_CONVERSATION_LABEL", "LABEL_CAPACITY_REACHED"].includes(failure.code)
+      ? failure.code : "LABEL_STORAGE_ERROR";
+  }
+  const task = inspectorTask(message);
+  const label = task?.threadKey ? conversationLabels.get(task.threadKey) : null;
+  sendToInspector(message, { type: "conversationLabelStatus", threadKey: task?.threadKey || null,
+    title: task?.threadKey ? task.title || UNTITLED : "", identifier: label?.identifier || "", alias: label?.alias || "",
+    error: error || labelStorageError, errorCode: errorCode || (labelStorageError ? "LABEL_STORAGE_ERROR" : null) });
+}
+
 async function sendBridgeSetupStatus(message, extra = {}) {
   const status = await bridgeSetup.status();
   sendToInspector(message, {
@@ -144,7 +161,7 @@ async function handleBridgeSetupMessage(message) {
   if (action === "openGuide") {
     send({
       cmd: "openurl",
-      url: "https://github.com/UlanziTechnology/OpenCodexMicro#1-llm--agent-installation",
+      url: "https://github.com/RickeyRen/OpenCodexMicro-Aurora#1-llm--agent-installation",
       local: false
     });
     await sendBridgeSetupStatus(message);
@@ -188,63 +205,7 @@ async function handleBridgeSetupMessage(message) {
   await sendBridgeSetupStatus(message, { result, error: failure });
 }
 
-function taskIconPath(status) {
-  const value = String(status || "").toLowerCase();
-  if (["working", "thinking", "running", "in_progress"].includes(value)) return TASK_ICON_PATHS.working;
-  if (["unread", "complete", "completed", "done", "success"].includes(value)) return TASK_ICON_PATHS.complete;
-  if (["attention", "notification", "input", "approval", "waiting_input", "needs_input"].includes(value)) return TASK_ICON_PATHS.attention;
-  if (["error", "failed", "failure"].includes(value)) return TASK_ICON_PATHS.error;
-  return TASK_ICON_PATHS.idle;
-}
-
-function shortTitle(value) {
-  const title = String(value || "Untitled").replace(/\s+/g, " ").trim();
-  return title.length > 18 ? `${title.slice(0, 17)}…` : title;
-}
-
-function setDisplay(instance, state, text) {
-  const digest = `${state}:${text}`;
-  if (!instance.active || instance.lastDisplay === digest) return;
-  instance.lastDisplay = digest;
-  send({
-    cmd: "state",
-    param: {
-      statelist: [{
-        uuid: instance.uuid,
-        actionid: instance.actionid,
-        key: instance.key,
-        type: 0,
-        state,
-        showtext: true,
-        textdata: text
-      }]
-    }
-  });
-}
-
-function setTaskDisplay(instance, path, text) {
-  const digest = `path:${path}:${text}`;
-  if (!instance.active || instance.lastDisplay === digest) return;
-  instance.lastDisplay = digest;
-  send({
-    cmd: "state",
-    param: {
-      statelist: [{
-        uuid: instance.uuid,
-        actionid: instance.actionid,
-        key: instance.key,
-        type: 2,
-        path,
-        showtext: true,
-        textdata: text
-      }]
-    }
-  });
-}
-
-function setUsageDisplay(instance, usage) {
-  const remaining = usageRemaining(usage);
-  const digest = `usage:${remaining ?? "unknown"}`;
+function setArtworkDisplay(instance, data, digest) {
   if (!instance.active || instance.lastDisplay === digest) return;
   instance.lastDisplay = digest;
   send({
@@ -255,12 +216,17 @@ function setUsageDisplay(instance, usage) {
         actionid: instance.actionid,
         key: instance.key,
         type: 1,
-        data: usageIconData(usage),
-        showtext: true,
-        textdata: ACTION_LABELS.usage
+        data,
+        showtext: false,
+        textdata: ""
       }]
     }
   });
+}
+
+function shortTaskLabel(task, label) {
+  if (label?.alias) return formatTaskLabel(label.alias, { preserveLines: true });
+  return formatTaskLabel(task.title || UNTITLED);
 }
 
 function renderInstance(instance) {
@@ -268,43 +234,73 @@ function renderInstance(instance) {
   if (slot === null) {
     const action = actionName(instance.uuid);
     if (!latestState?.connected) {
-      if (action === "navigate") {
-        setTaskDisplay(instance, TASK_ICON_PATHS.idle, "Bridge Offline");
-      } else {
-        setDisplay(instance, 0, "Bridge Offline");
-      }
+      setArtworkDisplay(instance, taskVisual("offline", "×"), "offline");
       return;
     }
     if (action === "usage") {
-      setUsageDisplay(instance, latestState.usage);
+      const remaining = usageRemaining(latestState.usage);
+      setArtworkDisplay(instance, usageVisual(remaining), `usage:${remaining ?? "unknown"}`);
       return;
     }
     if (action === "navigate") {
       const task = latestState.slots?.[0];
-      if (!task?.threadKey) {
-        setTaskDisplay(instance, TASK_ICON_PATHS.idle, "Latest Task");
-        return;
-      }
-      setTaskDisplay(instance, taskIconPath(task.status), shortTitle(task.title));
+      const label = task?.threadKey ? conversationLabels.get(task.threadKey) : null;
+      setTaskDisplay(instance, task?.threadKey ? task.status : "empty",
+        task?.threadKey ? shortTaskLabel(task, label) : "·", label?.identifier || "");
       return;
     }
-    setDisplay(instance, 0, ACTION_LABELS[action] || "CODEX");
+    setArtworkDisplay(instance, actionVisual(action), `action:${action}`);
     return;
   }
   if (!latestState?.connected) {
-    setTaskDisplay(instance, TASK_ICON_PATHS.idle, "Bridge Offline");
+    setTaskDisplay(instance, "offline", "×");
     return;
   }
   const task = latestState.slots?.[slot];
   if (!task?.threadKey) {
-    setTaskDisplay(instance, TASK_ICON_PATHS.idle, `Task ${slot + 1}`);
+    setTaskDisplay(instance, "empty", "·");
     return;
   }
-  setTaskDisplay(instance, taskIconPath(task.status), shortTitle(task.title));
+  const label = conversationLabels.get(task.threadKey);
+  setTaskDisplay(instance, task.status, shortTaskLabel(task, label), label?.identifier || "");
 }
 
 function renderAll() {
   for (const instance of instances.values()) renderInstance(instance);
+}
+
+async function syncOverview() {
+  const now = Date.now();
+  if (now < overviewCheckedAt || now - overviewCheckedAt >= 5000) {
+    overviewCheckedAt = now;
+    try {
+      const target = await resolveNativeOverviewTarget({ studioVersion });
+      const targetKey = target ? JSON.stringify(target) : null;
+      if (targetKey !== overviewTargetKey) {
+        overviewDisplay?.dispose();
+        overviewDisplay = null;
+        overviewTargetKey = targetKey;
+        if (target) {
+          const display = createOverviewDisplay({
+            send, target, language,
+            isCurrent: () => overviewDisplay === display && socket?.readyState === WebSocket.OPEN,
+            onError: error => send({ cmd: "logMessage", uuid: PLUGIN_UUID,
+              level: "error", message: `Native overview: ${error.message}` })
+          });
+          overviewDisplay = display;
+        }
+      }
+      overviewSetupError = null;
+    } catch (error) {
+      overviewDisplay?.dispose();
+      overviewDisplay = null;
+      overviewTargetKey = null;
+      if (overviewSetupError !== error.message) send({ cmd: "logMessage", uuid: PLUGIN_UUID,
+        level: "error", message: `Native overview setup: ${error.message}` });
+      overviewSetupError = error.message;
+    }
+  }
+  overviewDisplay?.update(latestState);
 }
 
 async function bridgeRequest(path, method = "GET") {
@@ -320,6 +316,7 @@ async function bridgeRequest(path, method = "GET") {
 }
 
 async function openTaskSlot(slot) {
+  if (!latestState?.connected) throw new Error("Codex Bridge is offline");
   const task = latestState?.slots?.[slot];
   if (!task?.threadKey) throw new Error(`Codex task slot ${slot + 1} is empty`);
   await bridgeRequest(`/thread/${encodeURIComponent(task.threadKey)}/click?slot=${slot}`, "POST");
@@ -330,11 +327,22 @@ async function pollBridge() {
   pollInFlight = true;
   try {
     latestState = await bridgeRequest("/state");
+    await syncConversationLabels(latestState);
   } catch (error) {
     latestState = { connected: false, error: error.message, slots: [] };
   } finally {
-    pollInFlight = false;
     renderAll();
+    try {
+      await syncOverview();
+      overviewRuntimeError = null;
+    } catch (error) {
+      if (overviewRuntimeError !== error.message) send({ cmd: "logMessage", uuid: PLUGIN_UUID,
+        level: "error", message: `Native overview refresh: ${error.message}` });
+      overviewRuntimeError = error.message;
+    } finally {
+      // An optional panel must never stall the thirteen conversation keys.
+      pollInFlight = false;
+    }
   }
 }
 
@@ -412,6 +420,7 @@ function handleMessage(raw) {
     instance.active = Boolean(message.active);
     if (instance.active) {
       instance.lastDisplay = null;
+      instance.pendingDisplay = null;
       renderInstance(instance);
     }
     ack(message);
@@ -426,6 +435,9 @@ function handleMessage(raw) {
     ack(message);
     if (message.payload?.type === "bridgeSetup") {
       void handleBridgeSetupMessage(message);
+    }
+    if (message.payload?.type === "conversationLabel") {
+      void handleConversationLabelMessage(message);
     }
     return;
   }
@@ -451,6 +463,11 @@ function connect() {
   socket = new WebSocket(HOST_URL);
   socket.on("open", () => {
     send({ code: 0, cmd: "connected", uuid: PLUGIN_UUID });
+    overviewDisplay?.invalidate();
+    for (const instance of instances.values()) {
+      instance.lastDisplay = null;
+      instance.pendingDisplay = null;
+    }
     clearInterval(pollTimer);
     pollTimer = setInterval(() => void pollBridge(), 500);
     pollTimer.unref();
@@ -471,6 +488,7 @@ for (const signal of ["SIGINT", "SIGTERM"]) {
   process.on(signal, () => {
     clearTimeout(reconnectTimer);
     clearInterval(pollTimer);
+    overviewDisplay?.dispose();
     socket?.close();
     process.exit(0);
   });

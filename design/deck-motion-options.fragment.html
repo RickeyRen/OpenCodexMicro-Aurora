@@ -1,0 +1,148 @@
+<div id="codex-deck-motion-options">
+  <div class="viz-carousel viz-dotted-background" aria-label="Deck Dock 动效方案" data-previous-label="上一款" data-next-label="下一款">
+    <section data-variant="极光丝带" aria-label="极光丝带方案">
+      <div class="deck-study" data-design="aurora"></div>
+      <div class="deck-choice-slot"><button type="button" class="btn btn-primary" data-choose="aurora">选择极光丝带</button></div>
+    </section>
+    <section data-variant="等离子潮汐" aria-label="等离子潮汐方案" hidden>
+      <div class="deck-study" data-design="plasma"></div>
+      <div class="deck-choice-slot"><button type="button" class="btn btn-primary" data-choose="plasma">选择等离子潮汐</button></div>
+    </section>
+    <section data-variant="折射晶面" aria-label="折射晶面方案" hidden>
+      <div class="deck-study" data-design="prism"></div>
+      <div class="deck-choice-slot"><button type="button" class="btn btn-primary" data-choose="prism">选择折射晶面</button></div>
+    </section>
+    <section data-variant="光轨扫描" aria-label="光轨扫描方案" hidden>
+      <div class="deck-study" data-design="circuit"></div>
+      <div class="deck-choice-slot"><button type="button" class="btn btn-primary" data-choose="circuit">选择光轨扫描</button></div>
+    </section>
+  </div>
+  <span class="sr-only" data-choice-status aria-live="polite"></span>
+  <style>
+    #codex-deck-motion-options .deck-study { min-height:440px; padding:24px 12px 12px; box-sizing:border-box; }
+    #codex-deck-motion-options .deck-choice-slot { display:flex; justify-content:center; align-items:center; min-height:44px; }
+    #codex-deck-motion-options .deck-samples { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:14px; max-width:580px; margin:0 auto 26px; }
+    #codex-deck-motion-options .deck-key { position:relative; aspect-ratio:1; overflow:hidden; border-radius:13%; background:#060b12; color:#fff; container-type:inline-size; box-shadow:0 5px 15px #0003; }
+    #codex-deck-motion-options .deck-background { position:absolute; inset:0; }
+    #codex-deck-motion-options .deck-background svg { display:block; width:100%; height:100%; }
+    #codex-deck-motion-options .deck-identifier { position:absolute; top:6%; left:10%; color:#cfd7e2; font:600 max(11px,12cqw)/1 'PingFang SC',system-ui,sans-serif; }
+    #codex-deck-motion-options .deck-label { position:absolute; inset:25% 6% 8%; display:flex; flex-direction:column; justify-content:center; align-items:center; font:600 25cqw/1.14 'PingFang SC',system-ui,sans-serif; letter-spacing:-.035em; }
+    #codex-deck-motion-options .deck-state-label { margin-top:8px; text-align:center; }
+    #codex-deck-motion-options .deck-overview-caption { text-align:center; margin-bottom:10px; }
+    #codex-deck-motion-options .deck-overview { width:min(100%,460px); aspect-ratio:460/200; margin:0 auto; overflow:hidden; border-radius:15px; background:#070b10; box-shadow:0 5px 18px #0002; }
+    #codex-deck-motion-options .deck-overview svg { display:block; width:100%; height:100%; }
+    @media (max-width:520px) {
+      #codex-deck-motion-options .deck-study { min-height:510px; padding:18px 8px 12px; }
+      #codex-deck-motion-options .deck-samples { grid-template-columns:repeat(3,minmax(0,1fr)); max-width:340px; gap:12px; margin-bottom:22px; }
+    }
+  </style>
+  <script>
+    /*__DECK_DESIGN_RUNTIME__*/
+  </script>
+  <script>
+    (() => {
+      const root = document.getElementById('codex-deck-motion-options');
+      const settings = { playing:!matchMedia('(prefers-reduced-motion: reduce)').matches, speed:1 };
+      const samples = [
+        {status:'working',label:'运行',title:['界面','设计'],number:'01'},
+        {status:'attention',label:'等待处理',title:['部署','确认'],number:'02'},
+        {status:'complete',label:'完成未读',title:['文案','整理'],number:'03'},
+        {status:'error',label:'异常',title:['接口','排查'],number:'04'},
+        {status:'idle',label:'空闲',title:['代码','修复'],number:'05'}
+      ];
+      const state = window.openai?.widgetState || {};
+      const restore = (saved) => {
+        const ui = saved?.privateContent || {};
+        if (typeof ui.playing === 'boolean') settings.playing = ui.playing;
+        if (Number.isFinite(ui.speed)) settings.speed = Math.max(.5,Math.min(1.5,ui.speed));
+      };
+      restore(state);
+      window.addEventListener('openai:set_globals',event => restore(event.detail?.globals?.widgetState));
+      const targets = [];
+      // Native frames are separate images. Inline comparisons need unique SVG
+      // definition IDs so another key cannot supply the wrong state's gradient.
+      const backgroundSvg = (variant,status,phase) => {
+        const prefix=`deck-${variant}-${status}-`;
+        return DeckDesigns.designVariantSvg(variant,status,phase)
+          .replace(/\bid="([^"]+)"/g,(_match,id)=>`id="${prefix}${id}"`)
+          .replace(/url\(#([^)]+)\)/g,(_match,id)=>`url(#${prefix}${id})`)
+          .replace(/\bhref="#([^"]+)"/g,(_match,id)=>`href="#${prefix}${id}"`);
+      };
+      for (const study of root.querySelectorAll('.deck-study')) {
+        const variant = DeckDesigns.DESIGN_VARIANTS.find(item => item.id === study.dataset.design);
+        const grid = document.createElement('div');
+        grid.className = 'deck-samples';
+        grid.setAttribute('aria-label',`${variant.labelZh}，五种状态`);
+        for (const sample of samples) {
+          const item = document.createElement('div');
+          const key = document.createElement('div');
+          key.className = 'deck-key';
+          key.setAttribute('role','img');
+          key.setAttribute('aria-label',`${sample.title.join('')}，${sample.label}`);
+          const background = document.createElement('div');
+          background.className = 'deck-background';
+          background.setAttribute('aria-hidden','true');
+          background.innerHTML = backgroundSvg(variant.id,sample.status,0);
+          const identifier = document.createElement('span');
+          identifier.className = 'deck-identifier';
+          identifier.textContent = sample.number;
+          const label = document.createElement('span');
+          label.className = 'deck-label';
+          sample.title.forEach(line => { const span=document.createElement('span'); span.textContent=line; label.append(span); });
+          key.append(background,identifier,label);
+          const status = document.createElement('div');
+          status.className = 'deck-state-label';
+          status.textContent = sample.label;
+          item.append(key,status);
+          grid.append(item);
+          targets.push({background,status:sample.status,variant:variant.id,section:study.parentElement});
+        }
+        const caption = document.createElement('div');
+        caption.className = 'deck-overview-caption';
+        caption.textContent = '额度快照 · 长条概念';
+        const overview = document.createElement('div');
+        overview.className = 'deck-overview';
+        overview.setAttribute('role','img');
+        overview.setAttribute('aria-label','读取快照：本周剩余额度、重置倒计时及屏上会话状态数量');
+        overview.innerHTML = DeckDesigns.renderOverviewSvg(DeckDesigns.PREVIEW_SNAPSHOT,{now:DeckDesigns.PREVIEW_NOW,language:'zh_CN'});
+        study.append(grid,caption,overview);
+      }
+      let lastFrame=-1;
+      let animationTime=0;
+      let previousTime=performance.now();
+      function animate(time) {
+        const elapsed=Math.min(100,time-previousTime);
+        previousTime=time;
+        if(settings.playing) animationTime+=elapsed*settings.speed;
+        const frame=Math.floor(animationTime/80)%24;
+        if(frame!==lastFrame) {
+          for(const item of targets) {
+            if(item.section.hidden || !['working','attention','error'].includes(item.status)) continue;
+            item.background.innerHTML=backgroundSvg(item.variant,item.status,frame);
+          }
+          lastFrame=frame;
+        }
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+      if(globalThis.Tweak) {
+        const tweak=new Tweak({container:root,onChange:()=>{ lastFrame=-1; }});
+        tweak.addToggle(settings,'playing',{label:'播放动效'});
+        tweak.addSlider(settings,'speed',{label:'动效速度',min:.5,max:1.5,step:.1});
+      }
+      root.querySelectorAll('[data-choose]').forEach(button => {
+        button.addEventListener('click',async () => {
+          const variant=DeckDesigns.DESIGN_VARIANTS.find(item=>item.id===button.dataset.choose);
+          const modelContent={selectedStyle:variant.id,selectedStyleName:variant.labelZh};
+          if(window.openai?.setWidgetState) await window.openai.setWidgetState({modelContent,privateContent:{playing:settings.playing,speed:settings.speed}}).catch(()=>{});
+          root.querySelector('[data-choice-status]').textContent=`已选择${variant.labelZh}`;
+          if(window.openai?.sendFollowUpMessage) {
+            await window.openai.sendFollowUpMessage({prompt:`采用${variant.labelZh}小格设计，并部署到设备上的13个会话按键，保留现有真实对话标题、固定编号和状态配色。`,title:`采用${variant.labelZh}`});
+          } else {
+            button.textContent=`已选择${variant.labelZh}`;
+          }
+        });
+      });
+    })();
+  </script>
+</div>

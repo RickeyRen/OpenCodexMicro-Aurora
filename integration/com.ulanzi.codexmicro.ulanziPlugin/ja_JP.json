@@ -1,22 +1,96 @@
 {
-  "Name": "Codex Micro",
-  "Overview": "Ulanzi Studio の Ulanzi D200 Series から Codex Desktop のタスクと操作を制御します。",
-  "Description": "Ulanzi Studio を通じて、Ulanzi D200 Series を Codex Desktop 専用のコントロールサーフェスにします。\n\n機能\n- 最近の 5 件の Codex タスクをリアルタイム状態付きで表示し、選択したタスクを正確に開きます。\n- Fast、Usage、Pin、New、Fork、Steer、Mic、Submit を操作できます。\n- Latest Task & Scroll Encoder で task1 を開き、Codex を上下にスクロールできます。\n- 各 Action の設定ページから Codex Bridge のインストール、修復、起動、確認ができます。\n- Codex Bridge.app とループバック限定エンドポイントを使用して通信をローカルに保ちます。\n\nインストール環境\n- macOS 13 以降\n- Codex Desktop\n- Ulanzi Studio 3.0.1 以降\n- Ulanzi Studio に接続された Ulanzi D200 Series\n- リポジトリから手動設定する場合のみ Node.js 20 以降\n\nLLM / AGENT インストール\nAgent に次のように入力します：\nUlanzi Studio プラグインをインストールしてください：https://github.com/UlanziTechnology/OpenCodexMicro#1-llm--agent-installation\n\n手動インストール\n1. https://github.com/UlanziTechnology/OpenCodexMicro をクローンしてリポジトリを開きます。\n2. Ulanzi Studio を終了します。\n3. 実行：npm install\n4. 実行：npm run install:plugin\n5. 実行：npm run setup\n6. Ulanzi Studio を再度開き、Codex Desktop を終了して ~/Applications/Codex Bridge.app を起動します。\n7. Ulanzi Studio で Codex Micro actions をキーに追加します。\n8. 任意の Action を選択し、Codex Bridge 設定ページでインストール、サービス、CDP の状態を確認します。\n\n重要事項\nCodex Micro を使用する際は、必ず ~/Applications/Codex Bridge.app から Codex を起動してください。Codex Desktop を直接開かないでください。\n起動コマンド： open ~/Applications/Codex\\ Bridge.app",
+  "Name": "Codex Micro · Aurora",
+  "Overview": "Ulanzi D200H で 13 件の Codex 会話を極光シルクのアニメーションで表示し、横長パネルに残り利用枠と AI の状態を表示します。",
+  "Description": "OpenCodexMicro · Aurora は Ulanzi D200H を Codex Desktop 専用コントローラーに変え、Aurora Silk の動きと読みやすい概要を表示します。\n\n機能\n- Aurora Silk のアニメーションは、実行中、待機中、完了未読、エラー、アイドルを共通の状態色で表示します。\n- 実際の会話タイトル、固定番号、この Mac のみに保存する任意の別名を表示します。\n- 13 個の会話キーをすべて維持しながら、ネイティブの横長パネルに残り利用枠、リセットまでの時間、実行／待機／エラー数を任意で表示できます。この互換機能は Studio 3.4.4 で検証済みで、未検証のバージョンでは停止します。\n- 13 件の Codex 会話をリアルタイム状態付きで表示し、選択したタスクを正確に開きます。\n- Fast、Usage、Pin、New、Fork、Steer、Mic、Submit を操作できます。\n- Latest Task & Scroll Encoder で task1 を開き、Codex を上下にスクロールできます。\n- 各 Action の設定ページから Codex Bridge のインストール、修復、起動、確認ができます。\n- Codex Bridge.app とループバック限定エンドポイントを使用して通信をローカルに保ちます。\n\nインストール環境\n- macOS 13 以降。Apple Silicon で検証済み\n- Codex Desktop\n- Ulanzi Studio 3.4.4（互換性を検証済み）\n- Ulanzi Studio に接続された Ulanzi D200H\n- リポジトリから手動設定する場合のみ Node.js 20 以降\n\nLLM / AGENT インストール\nAgent に次のように入力します：\nUlanzi Studio プラグインをインストールしてください：https://github.com/RickeyRen/OpenCodexMicro-Aurora#1-llm--agent-installation\n\n手動インストール\n1. https://github.com/RickeyRen/OpenCodexMicro-Aurora をクローンしてリポジトリを開きます。\n2. Ulanzi Studio を終了します。\n3. 実行：npm install\n4. 実行：npm run install:plugin\n5. 実行：npm run setup\n6. Ulanzi Studio を再度開き、Codex Desktop を終了して ~/Applications/Codex Bridge.app を起動します。\n7. Ulanzi Studio で Codex Micro actions をキーに追加します。\n8. 任意の Action を選択し、Codex Bridge 設定ページでインストール、サービス、CDP の状態を確認します。\n9. 任意の横長パネル：Studio で画像を設定せず「Pure background」を選び、npm run setup:overview -- --enable を実行します。ページの選択方法と互換性の制限はガイドを参照してください。\n\n重要事項\nCodex Micro を使用する際は、必ず ~/Applications/Codex Bridge.app から Codex を起動してください。Codex Desktop を直接開かないでください。\n起動コマンド： open ~/Applications/Codex\\ Bridge.app",
   "Actions": [
-    { "Name": "Codex タスク 1", "Tooltip": "最近の Codex タスクスロット 1 を開き、リアルタイム状態を表示します。" },
-    { "Name": "Codex タスク 2", "Tooltip": "最近の Codex タスクスロット 2 を開き、リアルタイム状態を表示します。" },
-    { "Name": "Codex タスク 3", "Tooltip": "最近の Codex タスクスロット 3 を開き、リアルタイム状態を表示します。" },
-    { "Name": "Codex タスク 4", "Tooltip": "最近の Codex タスクスロット 4 を開き、リアルタイム状態を表示します。" },
-    { "Name": "Codex タスク 5", "Tooltip": "最近の Codex タスクスロット 5 を開き、リアルタイム状態を表示します。" },
-    { "Name": "Codex 高速モード", "Tooltip": "アクティブな Codex タスクの高速モードを切り替えます。" },
-    { "Name": "Codex 使用量", "Tooltip": "Codex の残り使用量を表示し、押すと Codex にフォーカスします。" },
-    { "Name": "Codex タスクをピン留め", "Tooltip": "アクティブな Codex タスクをピン留めまたは解除します。" },
-    { "Name": "新しい Codex タスク", "Tooltip": "新しい Codex タスクを作成します。" },
-    { "Name": "最新タスクとスクロール", "Tooltip": "押すと最新の Codex タスクを開きます。左回転で上、右回転で下にスクロールします。" },
-    { "Name": "Codex タスクをフォーク", "Tooltip": "アクティブな Codex タスクを新しいタスクとしてフォークします。" },
-    { "Name": "Codex を誘導", "Tooltip": "現在の入力欄のテキストを実行中タスクへの誘導入力として送信します。" },
-    { "Name": "Codex マイク", "Tooltip": "Codex のマイク操作を切り替えます。" },
-    { "Name": "Codex に送信", "Tooltip": "現在の Codex 入力欄のテキストを送信またはキューに追加します。" }
+    {
+      "Name": "Codex タスク 1",
+      "Tooltip": "最近の Codex タスクスロット 1 を開き、リアルタイム状態を表示します。"
+    },
+    {
+      "Name": "Codex タスク 2",
+      "Tooltip": "最近の Codex タスクスロット 2 を開き、リアルタイム状態を表示します。"
+    },
+    {
+      "Name": "Codex タスク 3",
+      "Tooltip": "最近の Codex タスクスロット 3 を開き、リアルタイム状態を表示します。"
+    },
+    {
+      "Name": "Codex タスク 4",
+      "Tooltip": "最近の Codex タスクスロット 4 を開き、リアルタイム状態を表示します。"
+    },
+    {
+      "Name": "Codex タスク 5",
+      "Tooltip": "最近の Codex タスクスロット 5 を開き、リアルタイム状態を表示します。"
+    },
+    {
+      "Name": "Codex 高速モード",
+      "Tooltip": "アクティブな Codex タスクの高速モードを切り替えます。"
+    },
+    {
+      "Name": "Codex 使用量",
+      "Tooltip": "Codex の残り使用量を表示し、押すと Codex にフォーカスします。"
+    },
+    {
+      "Name": "Codex タスクをピン留め",
+      "Tooltip": "アクティブな Codex タスクをピン留めまたは解除します。"
+    },
+    {
+      "Name": "新しい Codex タスク",
+      "Tooltip": "新しい Codex タスクを作成します。"
+    },
+    {
+      "Name": "最新タスクとスクロール",
+      "Tooltip": "押すと最新の Codex タスクを開きます。左回転で上、右回転で下にスクロールします。"
+    },
+    {
+      "Name": "Codex タスクをフォーク",
+      "Tooltip": "アクティブな Codex タスクを新しいタスクとしてフォークします。"
+    },
+    {
+      "Name": "Codex を誘導",
+      "Tooltip": "現在の入力欄のテキストを実行中タスクへの誘導入力として送信します。"
+    },
+    {
+      "Name": "Codex マイク",
+      "Tooltip": "Codex のマイク操作を切り替えます。"
+    },
+    {
+      "Name": "Codex に送信",
+      "Tooltip": "現在の Codex 入力欄のテキストを送信またはキューに追加します。"
+    },
+    {
+      "Name": "Codex タスク 6",
+      "Tooltip": "最近の Codex タスクスロット 6 を開き、リアルタイム状態を表示します。"
+    },
+    {
+      "Name": "Codex タスク 7",
+      "Tooltip": "最近の Codex タスクスロット 7 を開き、リアルタイム状態を表示します。"
+    },
+    {
+      "Name": "Codex タスク 8",
+      "Tooltip": "最近の Codex タスクスロット 8 を開き、リアルタイム状態を表示します。"
+    },
+    {
+      "Name": "Codex タスク 9",
+      "Tooltip": "最近の Codex タスクスロット 9 を開き、リアルタイム状態を表示します。"
+    },
+    {
+      "Name": "Codex タスク 10",
+      "Tooltip": "最近の Codex タスクスロット 10 を開き、リアルタイム状態を表示します。"
+    },
+    {
+      "Name": "Codex タスク 11",
+      "Tooltip": "最近の Codex タスクスロット 11 を開き、リアルタイム状態を表示します。"
+    },
+    {
+      "Name": "Codex タスク 12",
+      "Tooltip": "最近の Codex タスクスロット 12 を開き、リアルタイム状態を表示します。"
+    },
+    {
+      "Name": "Codex タスク 13",
+      "Tooltip": "最近の Codex タスクスロット 13 を開き、リアルタイム状態を表示します。"
+    }
   ],
   "Localization": {
     "BridgeSetup": "Codex Bridge 設定",
@@ -31,8 +105,8 @@
     "UninstallBridgeDone": "Codex Bridge をアンインストールしました。Ulanzi プラグインと Codex Desktop は保持されます。",
     "UninstallBridgeConfirm": "Codex Bridge とバックグラウンドサービスをアンインストールしますか？Ulanzi プラグインと Codex Desktop は削除されません。",
     "BridgeAppInfoTitle": "Codex Bridge.app とは？",
-    "BridgeAppDescription": "Codex Bridge.app はローカルランチャーです。Codex が実行中の場合は正常終了を要求し、ループバック専用の CDP 起動引数で公式 Codex Desktop 実行ファイルを起動します。",
-    "BridgeAppSafety": "このランチャーは Codex Desktop、アカウント、プロジェクト、ユーザーファイルを変更せず、CDP をこの Mac の外部に公開しません。その他の権限昇格や破壊的操作も行いません。別の Bridge サービスがローカル状態と Action 通信を処理します。",
+    "BridgeAppDescription": "Codex Bridge.app はローカルランチャーです。Codex が実行中の場合、別のインスタンスの起動を拒否します。作業を保存して Codex を手動で終了してから Codex Bridge.app を起動してください。ループバック専用の CDP 引数で公式 Codex Desktop 実行ファイルを起動します。",
+    "BridgeAppSafety": "ランチャーはディスク上の Codex Desktop アプリバンドルのファイルを変更せず、CDP をこの Mac のループバックインターフェースに限定します。Bridge は CDP を使用して Codex の Micro の実行時状態を読み取り、操作し、制御アクションを転送します。",
     "BackgroundActivityTitle": "バックグラウンド動作と Node.js",
     "LaunchAgentDescription": "LaunchAgent はログイン時にローカル Codex Bridge サービスを起動し、終了した場合は再起動します。サービスはループバックアドレスでこの Mac 内だけを待ち受けます。",
     "NodeSelectionStrategy": "インストール / 修復では、ログイン環境、PATH、Homebrew、一般的なパスから Node.js 20 以降を優先し、見つからない場合のみ Ulanzi Studio 内蔵 Node を使用します。",

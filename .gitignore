@@ -2,8 +2,27 @@ node_modules/
 dist/
 .DS_Store
 *.log
-CHANGELOG.md
+.env
+.env.*
+!.env.example
+.private/
+*.keychain-db
+*.p12
+*.pfx
+*.pem
+*.sqlite*
+*.db
+*.ulanziProfile/
+conversation-labels.json
+deck-overview.json
+release/
+.release-staging*/
+DerivedData/
+*.xcresult/
 
 # Ship the prebuilt Ulanzi Studio plugin; installation only copies this output.
 !integration/com.ulanzi.codexmicro.ulanziPlugin/dist/
 !integration/com.ulanzi.codexmicro.ulanziPlugin/dist/**
+
+# Runtime-generated glyph composites are local, bounded caches.
+.key-cache/

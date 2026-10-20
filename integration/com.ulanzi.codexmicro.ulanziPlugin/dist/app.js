@@ -24,9 +24,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// ../../node_modules/ws/lib/constants.js
+// node_modules/ws/lib/constants.js
 var require_constants = __commonJS({
-  "../../node_modules/ws/lib/constants.js"(exports2, module2) {
+  "node_modules/ws/lib/constants.js"(exports2, module2) {
     "use strict";
     var BINARY_TYPES = ["nodebuffer", "arraybuffer", "fragments"];
     var hasBlob = typeof Blob !== "undefined";
@@ -47,9 +47,9 @@ var require_constants = __commonJS({
   }
 });
 
-// ../../node_modules/ws/lib/buffer-util.js
+// node_modules/ws/lib/buffer-util.js
 var require_buffer_util = __commonJS({
-  "../../node_modules/ws/lib/buffer-util.js"(exports2, module2) {
+  "node_modules/ws/lib/buffer-util.js"(exports2, module2) {
     "use strict";
     var { EMPTY_BUFFER } = require_constants();
     var FastBuffer = Buffer[Symbol.species];
@@ -122,9 +122,9 @@ var require_buffer_util = __commonJS({
   }
 });
 
-// ../../node_modules/ws/lib/limiter.js
+// node_modules/ws/lib/limiter.js
 var require_limiter = __commonJS({
-  "../../node_modules/ws/lib/limiter.js"(exports2, module2) {
+  "node_modules/ws/lib/limiter.js"(exports2, module2) {
     "use strict";
     var kDone = Symbol("kDone");
     var kRun = Symbol("kRun");
@@ -172,9 +172,9 @@ var require_limiter = __commonJS({
   }
 });
 
-// ../../node_modules/ws/lib/permessage-deflate.js
+// node_modules/ws/lib/permessage-deflate.js
 var require_permessage_deflate = __commonJS({
-  "../../node_modules/ws/lib/permessage-deflate.js"(exports2, module2) {
+  "node_modules/ws/lib/permessage-deflate.js"(exports2, module2) {
     "use strict";
     var zlib = require("zlib");
     var bufferUtil = require_buffer_util();
@@ -555,9 +555,9 @@ var require_permessage_deflate = __commonJS({
   }
 });
 
-// ../../node_modules/ws/lib/validation.js
+// node_modules/ws/lib/validation.js
 var require_validation = __commonJS({
-  "../../node_modules/ws/lib/validation.js"(exports2, module2) {
+  "node_modules/ws/lib/validation.js"(exports2, module2) {
     "use strict";
     var { isUtf8 } = require("buffer");
     var { hasBlob } = require_constants();
@@ -756,9 +756,9 @@ var require_validation = __commonJS({
   }
 });
 
-// ../../node_modules/ws/lib/receiver.js
+// node_modules/ws/lib/receiver.js
 var require_receiver = __commonJS({
-  "../../node_modules/ws/lib/receiver.js"(exports2, module2) {
+  "node_modules/ws/lib/receiver.js"(exports2, module2) {
     "use strict";
     var { Writable } = require("stream");
     var PerMessageDeflate2 = require_permessage_deflate();
@@ -860,34 +860,34 @@ var require_receiver = __commonJS({
        * @return {Buffer} The consumed bytes
        * @private
        */
-      consume(n) {
-        this._bufferedBytes -= n;
-        if (n === this._buffers[0].length) return this._buffers.shift();
-        if (n < this._buffers[0].length) {
+      consume(n2) {
+        this._bufferedBytes -= n2;
+        if (n2 === this._buffers[0].length) return this._buffers.shift();
+        if (n2 < this._buffers[0].length) {
           const buf = this._buffers[0];
           this._buffers[0] = new FastBuffer(
             buf.buffer,
-            buf.byteOffset + n,
-            buf.length - n
+            buf.byteOffset + n2,
+            buf.length - n2
           );
-          return new FastBuffer(buf.buffer, buf.byteOffset, n);
+          return new FastBuffer(buf.buffer, buf.byteOffset, n2);
         }
-        const dst = Buffer.allocUnsafe(n);
+        const dst = Buffer.allocUnsafe(n2);
         do {
           const buf = this._buffers[0];
-          const offset = dst.length - n;
-          if (n >= buf.length) {
+          const offset = dst.length - n2;
+          if (n2 >= buf.length) {
             dst.set(this._buffers.shift(), offset);
           } else {
-            dst.set(new Uint8Array(buf.buffer, buf.byteOffset, n), offset);
+            dst.set(new Uint8Array(buf.buffer, buf.byteOffset, n2), offset);
             this._buffers[0] = new FastBuffer(
               buf.buffer,
-              buf.byteOffset + n,
-              buf.length - n
+              buf.byteOffset + n2,
+              buf.length - n2
             );
           }
-          n -= buf.length;
-        } while (n > 0);
+          n2 -= buf.length;
+        } while (n2 > 0);
         return dst;
       }
       /**
@@ -1379,9 +1379,9 @@ var require_receiver = __commonJS({
   }
 });
 
-// ../../node_modules/ws/lib/sender.js
+// node_modules/ws/lib/sender.js
 var require_sender = __commonJS({
-  "../../node_modules/ws/lib/sender.js"(exports2, module2) {
+  "node_modules/ws/lib/sender.js"(exports2, module2) {
     "use strict";
     var { Duplex } = require("stream");
     var { randomFillSync } = require("crypto");
@@ -1872,9 +1872,9 @@ var require_sender = __commonJS({
   }
 });
 
-// ../../node_modules/ws/lib/event-target.js
+// node_modules/ws/lib/event-target.js
 var require_event_target = __commonJS({
-  "../../node_modules/ws/lib/event-target.js"(exports2, module2) {
+  "node_modules/ws/lib/event-target.js"(exports2, module2) {
     "use strict";
     var { kForOnEventAttribute, kListener } = require_constants();
     var kCode = Symbol("kCode");
@@ -2101,9 +2101,9 @@ var require_event_target = __commonJS({
   }
 });
 
-// ../../node_modules/ws/lib/extension.js
+// node_modules/ws/lib/extension.js
 var require_extension = __commonJS({
-  "../../node_modules/ws/lib/extension.js"(exports2, module2) {
+  "node_modules/ws/lib/extension.js"(exports2, module2) {
     "use strict";
     var { tokenChars } = require_validation();
     function push(dest, name, elem) {
@@ -2254,16 +2254,16 @@ var require_extension = __commonJS({
   }
 });
 
-// ../../node_modules/ws/lib/websocket.js
+// node_modules/ws/lib/websocket.js
 var require_websocket = __commonJS({
-  "../../node_modules/ws/lib/websocket.js"(exports2, module2) {
+  "node_modules/ws/lib/websocket.js"(exports2, module2) {
     "use strict";
     var EventEmitter = require("events");
     var https = require("https");
     var http = require("http");
     var net = require("net");
     var tls = require("tls");
-    var { randomBytes, createHash } = require("crypto");
+    var { randomBytes: randomBytes2, createHash: createHash2 } = require("crypto");
     var { Duplex, Readable } = require("stream");
     var { URL } = require("url");
     var PerMessageDeflate2 = require_permessage_deflate();
@@ -2801,7 +2801,7 @@ var require_websocket = __commonJS({
         }
       }
       const defaultPort = isSecure ? 443 : 80;
-      const key = randomBytes(16).toString("base64");
+      const key = randomBytes2(16).toString("base64");
       const request = isSecure ? https.request : http.request;
       const protocolSet = /* @__PURE__ */ new Set();
       let perMessageDeflate;
@@ -2931,7 +2931,7 @@ var require_websocket = __commonJS({
           abortHandshake(websocket, socket2, "Invalid Upgrade header");
           return;
         }
-        const digest = createHash("sha1").update(key + GUID).digest("base64");
+        const digest = createHash2("sha1").update(key + GUID).digest("base64");
         if (res.headers["sec-websocket-accept"] !== digest) {
           abortHandshake(websocket, socket2, "Invalid Sec-WebSocket-Accept header");
           return;
@@ -3150,9 +3150,9 @@ var require_websocket = __commonJS({
   }
 });
 
-// ../../node_modules/ws/lib/stream.js
+// node_modules/ws/lib/stream.js
 var require_stream = __commonJS({
-  "../../node_modules/ws/lib/stream.js"(exports2, module2) {
+  "node_modules/ws/lib/stream.js"(exports2, module2) {
     "use strict";
     var WebSocket2 = require_websocket();
     var { Duplex } = require("stream");
@@ -3212,7 +3212,7 @@ var require_stream = __commonJS({
       };
       duplex._final = function(callback) {
         if (ws.readyState === ws.CONNECTING) {
-          ws.once("open", function open() {
+          ws.once("open", function open4() {
             duplex._final(callback);
           });
           return;
@@ -3233,7 +3233,7 @@ var require_stream = __commonJS({
       };
       duplex._write = function(chunk, encoding, callback) {
         if (ws.readyState === ws.CONNECTING) {
-          ws.once("open", function open() {
+          ws.once("open", function open4() {
             duplex._write(chunk, encoding, callback);
           });
           return;
@@ -3248,9 +3248,9 @@ var require_stream = __commonJS({
   }
 });
 
-// ../../node_modules/ws/lib/subprotocol.js
+// node_modules/ws/lib/subprotocol.js
 var require_subprotocol = __commonJS({
-  "../../node_modules/ws/lib/subprotocol.js"(exports2, module2) {
+  "node_modules/ws/lib/subprotocol.js"(exports2, module2) {
     "use strict";
     var { tokenChars } = require_validation();
     function parse(header) {
@@ -3293,14 +3293,14 @@ var require_subprotocol = __commonJS({
   }
 });
 
-// ../../node_modules/ws/lib/websocket-server.js
+// node_modules/ws/lib/websocket-server.js
 var require_websocket_server = __commonJS({
-  "../../node_modules/ws/lib/websocket-server.js"(exports2, module2) {
+  "node_modules/ws/lib/websocket-server.js"(exports2, module2) {
     "use strict";
     var EventEmitter = require("events");
     var http = require("http");
     var { Duplex } = require("stream");
-    var { createHash } = require("crypto");
+    var { createHash: createHash2 } = require("crypto");
     var extension2 = require_extension();
     var PerMessageDeflate2 = require_permessage_deflate();
     var subprotocol2 = require_subprotocol();
@@ -3607,7 +3607,7 @@ var require_websocket_server = __commonJS({
           );
         }
         if (this._state > RUNNING) return abortHandshake(socket2, 503);
-        const digest = createHash("sha1").update(key + GUID).digest("base64");
+        const digest = createHash2("sha1").update(key + GUID).digest("base64");
         const headers = [
           "HTTP/1.1 101 Switching Protocols",
           "Upgrade: websocket",
@@ -3694,7 +3694,7 @@ var require_websocket_server = __commonJS({
   }
 });
 
-// ../../node_modules/ws/wrapper.mjs
+// node_modules/ws/wrapper.mjs
 var import_stream = __toESM(require_stream(), 1);
 var import_extension = __toESM(require_extension(), 1);
 var import_permessage_deflate = __toESM(require_permessage_deflate(), 1);
@@ -3706,8 +3706,8 @@ var import_websocket_server = __toESM(require_websocket_server(), 1);
 var wrapper_default = import_websocket.default;
 
 // plugin/app.js
-var import_node_fs2 = require("node:fs");
-var import_node_path2 = require("node:path");
+var import_node_fs3 = require("node:fs");
+var import_node_path5 = require("node:path");
 
 // plugin/bridge-installer.js
 var import_node_fs = require("node:fs");
@@ -3716,21 +3716,126 @@ var import_node_child_process = require("node:child_process");
 var import_node_util = require("node:util");
 var import_node_os = require("node:os");
 var import_node_path = require("node:path");
+
+// plugin/bridge-launcher.js
+var codexBinary = "/Applications/ChatGPT.app/Contents/MacOS/ChatGPT";
+var shellQuote = (value) => `'${String(value).replaceAll("'", "'\\''")}'`;
+var codexProcessPattern = `^${codexBinary.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}([[:space:]]|$)`;
+var bridgeLauncher = `#!/bin/zsh
+set -u
+unsetopt BG_NICE
+
+codex_binary=${shellQuote(codexBinary)}
+codex_process_pattern=${shellQuote(codexProcessPattern)}
+bridge_log="$HOME/Library/Logs/OpenCodexMicro-codex-bridge.log"
+
+if [[ ! -x "$codex_binary" ]]; then
+  /usr/bin/osascript -e 'display alert "Codex Bridge" message "Codex was not found at /Applications/ChatGPT.app.\\n\u672A\u627E\u5230 /Applications/ChatGPT.app\u3002" as critical'
+  exit 1
+fi
+
+# macOS pgrep otherwise excludes ancestors, including Codex when the wrapper
+# is invoked from a terminal or automation hosted by that same application.
+/usr/bin/pgrep -a -f "$codex_process_pattern" >/dev/null 2>&1
+codex_process_status=$?
+if [[ "$codex_process_status" -eq 0 ]]; then
+  /usr/bin/osascript -e 'display alert "Codex Bridge" message "Codex is already running. No action was taken. If Bridge is connected, keep using it. Otherwise finish active tasks, quit Codex yourself, then open Codex Bridge again.\\nCodex \u5DF2\u5728\u8FD0\u884C\uFF0C\u542F\u52A8\u5668\u672A\u8FDB\u884C\u4EFB\u4F55\u64CD\u4F5C\u3002\u5982\u679C Bridge \u5DF2\u8FDE\u63A5\uFF0C\u53EF\u7EE7\u7EED\u4F7F\u7528\uFF1B\u5426\u5219\u8BF7\u5B8C\u6210\u4EFB\u52A1\u540E\u624B\u52A8\u9000\u51FA Codex\uFF0C\u518D\u6253\u5F00 Codex Bridge\u3002"'
+  exit 1
+fi
+if [[ "$codex_process_status" -ne 1 ]]; then
+  /usr/bin/osascript -e 'display alert "Codex Bridge" message "The running Codex state could not be verified. No application was started or stopped.\\n\u65E0\u6CD5\u786E\u8BA4 Codex \u8FD0\u884C\u72B6\u6001\uFF0C\u672A\u542F\u52A8\u6216\u505C\u6B62\u4EFB\u4F55\u5E94\u7528\u3002" as critical'
+  exit 1
+fi
+
+/usr/bin/nohup "$codex_binary" \\
+  --remote-debugging-address=127.0.0.1 \\
+  --remote-debugging-port=9222 \\
+  --remote-allow-origins=http://127.0.0.1:9222 \\
+  >>"$bridge_log" 2>&1 &
+
+# A bounded readiness check only: failure never retries the application launch.
+for attempt in {1..300}; do
+  if /usr/bin/curl --noproxy '*' --silent --fail --max-time 0.2 \\
+    http://127.0.0.1:9222/json/version >/dev/null 2>&1; then
+    exit 0
+  fi
+  if ! /usr/bin/pgrep -a -f "$codex_process_pattern" >/dev/null 2>&1; then
+    break
+  fi
+  /bin/sleep 0.1
+done
+
+/usr/bin/osascript -e 'display alert "Codex Bridge" message "Codex was launched once, but its Bridge endpoint is unavailable. No restart was attempted. Finish active tasks and quit Codex yourself before trying again.\\nCodex \u5DF2\u542F\u52A8\u4E00\u6B21\uFF0C\u4F46 Bridge \u8FDE\u63A5\u4E0D\u53EF\u7528\uFF0C\u672A\u5C1D\u8BD5\u91CD\u542F\u3002\u91CD\u8BD5\u524D\u8BF7\u5B8C\u6210\u4EFB\u52A1\u5E76\u624B\u52A8\u9000\u51FA Codex\u3002" as critical'
+exit 1
+`;
+
+// plugin/bridge-installer.js
 var execFileAsync = (0, import_node_util.promisify)(import_node_child_process.execFile);
 function xml(value) {
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&apos;");
 }
-async function exists(path, mode = import_node_fs.constants.F_OK) {
+var DEFAULT_USAGE_REFRESH_SECONDS = "30";
+var USAGE_REFRESH_VARIABLE = "CODEX_KEYBOARD_USAGE_REFRESH_SECONDS";
+async function bridgeAgentEnvironment({
+  agentPath,
+  environment = process.env,
+  execute = execFileAsync
+}) {
+  let previous = {};
+  let handle;
   try {
-    await (0, import_promises.access)(path, mode);
+    handle = await (0, import_promises.open)(agentPath, import_node_fs.constants.O_RDONLY | import_node_fs.constants.O_NOFOLLOW | import_node_fs.constants.O_NONBLOCK);
+    const info = await handle.stat();
+    if (!info.isFile() || info.size <= 0 || info.size > 256 * 1024) {
+      throw new Error("Existing Bridge LaunchAgent must be a regular plist of at most 256 KiB.");
+    }
+  } catch (error) {
+    if (error.code !== "ENOENT") throw new Error("Existing Bridge LaunchAgent cannot be safely read; installation was not changed.");
+  } finally {
+    await handle?.close();
+  }
+  if (handle) {
+    try {
+      const { stdout = "" } = await execute("/usr/bin/plutil", [
+        "-convert",
+        "json",
+        "-o",
+        "-",
+        agentPath
+      ], { timeout: 1200, maxBuffer: 256 * 1024 });
+      const plist = JSON.parse(stdout);
+      if (!plist || typeof plist !== "object" || Array.isArray(plist)) throw new Error();
+      previous = plist.EnvironmentVariables ?? {};
+    } catch {
+      throw new Error("Existing Bridge LaunchAgent is invalid; installation was not changed.");
+    }
+  }
+  if (!previous || typeof previous !== "object" || Array.isArray(previous) || Object.entries(previous).some(([key, value]) => !key || typeof value !== "string" || /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(key + value))) {
+    throw new Error("Existing Bridge LaunchAgent environment is invalid; installation was not changed.");
+  }
+  const override = environment[USAGE_REFRESH_VARIABLE];
+  const seconds = override === void 0 ? previous[USAGE_REFRESH_VARIABLE] ?? DEFAULT_USAGE_REFRESH_SECONDS : override;
+  if (typeof seconds !== "string" || !seconds.trim() || !Number.isFinite(Number(seconds)) || Number(seconds) < 15) {
+    throw new Error("CODEX_KEYBOARD_USAGE_REFRESH_SECONDS must be a finite number of at least 15 seconds.");
+  }
+  return { ...previous, [USAGE_REFRESH_VARIABLE]: seconds };
+}
+function bridgeAgentEnvironmentXml(environment) {
+  return `<key>EnvironmentVariables</key><dict>
+${Object.entries(environment).sort(([left], [right]) => left.localeCompare(right)).map(([key, value]) => `    <key>${xml(key)}</key><string>${xml(value)}</string>`).join("\n")}
+  </dict>`;
+}
+async function exists(path2, mode = import_node_fs.constants.F_OK) {
+  try {
+    await (0, import_promises.access)(path2, mode);
     return true;
   } catch {
     return false;
   }
 }
-async function readJson(path) {
+async function readJson(path2) {
   try {
-    return JSON.parse(await (0, import_promises.readFile)(path, "utf8"));
+    return JSON.parse(await (0, import_promises.readFile)(path2, "utf8"));
   } catch {
     return null;
   }
@@ -3802,6 +3907,7 @@ function createBridgeInstaller({
   platform = process.platform,
   nodeExecutable = process.execPath,
   environmentPath = process.env.PATH || "",
+  environment = process.env,
   execute = execFileAsync
 }) {
   const appRoot = (0, import_node_path.join)(home, "Library", "Application Support", "OpenCodexMicro");
@@ -3833,7 +3939,7 @@ function createBridgeInstaller({
     }
   }
   async function status() {
-    const [appInstalled, runtimeInstalled, agentInstalled, metadata, probe] = await Promise.all([
+    const [appInstalled, runtimeInstalled, agentInstalled, metadata2, probe] = await Promise.all([
       exists(bridgeExecutable, import_node_fs.constants.X_OK),
       exists(bridgeRuntime),
       exists(bridgeAgent),
@@ -3846,13 +3952,13 @@ function createBridgeInstaller({
       installed,
       appInstalled,
       serviceInstalled: runtimeInstalled && agentInstalled,
-      installedVersion: metadata?.version || null,
+      installedVersion: metadata2?.version || null,
       bundledVersion: version,
-      needsUpdate: !installed || metadata?.version !== version,
+      needsUpdate: !installed || metadata2?.version !== version,
       appPath: bridgeApp,
-      nodeExecutable: metadata?.nodeExecutable || null,
-      nodeVersion: metadata?.nodeVersion || null,
-      nodeSource: metadata?.nodeSource || null,
+      nodeExecutable: metadata2?.nodeExecutable || null,
+      nodeVersion: metadata2?.nodeVersion || null,
+      nodeSource: metadata2?.nodeSource || null,
       ...probe
     };
   }
@@ -3894,6 +4000,7 @@ function createBridgeInstaller({
     if (!await exists(bundledRuntime) || !await exists(bundledIcon)) {
       throw new Error("The plugin does not contain the Codex Bridge installation resources.");
     }
+    const agentEnvironment = await bridgeAgentEnvironment({ agentPath: bridgeAgent, environment, execute });
     const nodeRuntime = await selectBridgeNodeRuntime({
       home,
       fallbackNodeExecutable: nodeExecutable,
@@ -3932,52 +4039,7 @@ function createBridgeInstaller({
 </dict></plist>
 `;
     await (0, import_promises.writeFile)((0, import_node_path.join)(bridgeContents, "Info.plist"), info);
-    const launcher = `#!/bin/zsh
-set -u
-unsetopt BG_NICE
-
-codex_binary="/Applications/ChatGPT.app/Contents/MacOS/ChatGPT"
-bridge_log="$HOME/Library/Logs/OpenCodexMicro-codex-bridge.log"
-
-if [[ ! -x "$codex_binary" ]]; then
-  /usr/bin/osascript -e 'display alert "Codex Bridge" message "Codex was not found at /Applications/ChatGPT.app." as critical'
-  exit 1
-fi
-
-if /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1; then
-  /usr/bin/osascript -e 'tell application id "com.openai.codex" to quit'
-  for attempt in {1..80}; do
-    /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1 || break
-    /bin/sleep 0.1
-  done
-fi
-
-if /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1; then
-  /usr/bin/osascript -e 'display alert "Codex Bridge" message "Codex did not quit, so bridge parameters could not be applied. Quit Codex and try again." as critical'
-  exit 1
-fi
-
-/usr/bin/nohup "$codex_binary" \\
-  --remote-debugging-address=127.0.0.1 \\
-  --remote-debugging-port=9222 \\
-  --remote-allow-origins=http://127.0.0.1:9222 \\
-  >>"$bridge_log" 2>&1 &
-
-for attempt in {1..300}; do
-  if /usr/bin/curl --noproxy '*' --silent --fail --max-time 0.2 \\
-    http://127.0.0.1:9222/json/version >/dev/null 2>&1; then
-    exit 0
-  fi
-  if ! /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1; then
-    break
-  fi
-  /bin/sleep 0.1
-done
-
-/usr/bin/osascript -e 'display alert "Codex Bridge" message "Codex started, but the bridge endpoint is unavailable. Quit Codex and launch Codex Bridge again." as critical'
-exit 1
-`;
-    await (0, import_promises.writeFile)(bridgeExecutable, launcher, { mode: 493 });
+    await (0, import_promises.writeFile)(bridgeExecutable, bridgeLauncher, { mode: 493 });
     await (0, import_promises.chmod)(bridgeExecutable, 493);
     await execute("/usr/bin/codesign", ["--force", "--deep", "--sign", "-", bridgeApp]);
     const plist = `<?xml version="1.0" encoding="UTF-8"?>
@@ -3988,6 +4050,7 @@ exit 1
     <string>${xml(nodeRuntime.executable)}</string>
     <string>${xml(bridgeRuntime)}</string>
   </array>
+  ${bridgeAgentEnvironmentXml(agentEnvironment)}
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
   <key>ProcessType</key><string>Background</string>
@@ -4035,22 +4098,1132 @@ exit 1
   return { status, install, launch, uninstall };
 }
 
+// plugin/key-title.js
+var segmenter = new Intl.Segmenter(void 0, { granularity: "grapheme" });
+function titleSource(value) {
+  return String(value ?? "").trim();
+}
+var UNTITLED_LABELS = Object.freeze({
+  en: "Untitled",
+  zh: "\u672A\u547D\u540D",
+  ja: "\u7121\u984C",
+  de: "Unbenannt",
+  ko: "\uC81C\uBAA9 \uC5C6\uC74C",
+  pt: "Sem t\xEDtulo",
+  es: "Sin t\xEDtulo"
+});
+function untitledTaskLabel(language2 = "en") {
+  const languageCode = String(language2 ?? "en").trim().toLowerCase().split(/[-_]/u)[0];
+  return UNTITLED_LABELS[languageCode] || UNTITLED_LABELS.en;
+}
+function widthOf(grapheme) {
+  return /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}\p{Extended_Pictographic}\p{Regional_Indicator}\uFF01-\uFF60]/u.test(grapheme) ? 2 : 0.75;
+}
+function fitAliasLine(value) {
+  const graphemes = [...segmenter.segment(value.trim())].map((item) => item.segment);
+  const line = [];
+  let used = 0;
+  let end = 0;
+  while (end < graphemes.length && used + widthOf(graphemes[end]) <= 6) {
+    used += widthOf(graphemes[end]);
+    line.push(graphemes[end++]);
+  }
+  if (end < graphemes.length) {
+    while (line.length && used + 0.75 > 6) used -= widthOf(line.pop());
+    line.push("\u2026");
+  }
+  return line.join("");
+}
+function formatTaskLabel(value, { preserveLines = false } = {}) {
+  if (preserveLines && String(value ?? "").includes("\n")) {
+    return String(value).split("\n").slice(0, 2).map(fitAliasLine).filter(Boolean).join("\n") || "?";
+  }
+  const text2 = titleSource(value).replace(/[\u0000-\u001f\u007f-\u009f]/gu, " ").replace(/\s+/gu, " ").trim();
+  const remaining2 = [...segmenter.segment(text2)].map((item) => item.segment);
+  if (!remaining2.length) return "?";
+  const lines = [];
+  while (remaining2.length && lines.length < 2) {
+    let end = 0;
+    let width = 0;
+    while (end < remaining2.length && width + widthOf(remaining2[end]) <= 6) {
+      width += widthOf(remaining2[end++]);
+    }
+    if (end < remaining2.length && lines.length === 0) {
+      const space = remaining2.slice(0, end + 1).lastIndexOf(" ");
+      if (space >= 2) end = space;
+      else if (!remaining2.includes(" ")) {
+        const totalWidth = remaining2.reduce((sum, part) => sum + widthOf(part), 0);
+        if (totalWidth <= 12) {
+          end = 0;
+          width = 0;
+          while (width < totalWidth / 2) width += widthOf(remaining2[end++]);
+        }
+      }
+    }
+    const line = remaining2.splice(0, end);
+    while (line.at(-1) === " ") line.pop();
+    while (remaining2[0] === " ") remaining2.shift();
+    if (lines.length === 1 && remaining2.length) {
+      const space = line.lastIndexOf(" ");
+      if (space >= 2) line.splice(space);
+      let used = line.reduce((sum, part) => sum + widthOf(part), 0);
+      while (line.length && used + 0.75 > 6) used -= widthOf(line.pop());
+      line.push("\u2026");
+    }
+    lines.push(line.join(""));
+  }
+  return lines.join("\n");
+}
+
+// plugin/conversation-labels.js
+var import_promises2 = require("node:fs/promises");
+var import_node_os2 = __toESM(require("node:os"), 1);
+var import_node_path2 = __toESM(require("node:path"), 1);
+var import_node_crypto = require("node:crypto");
+var MAX_ALIAS_GRAPHEMES = 16;
+var MAX_REGISTRY_BYTES = 2 * 1024 * 1024;
+var segmenter2 = new Intl.Segmenter(void 0, { granularity: "grapheme" });
+function invalid(message, code = "INVALID_CONVERSATION_LABEL") {
+  return Object.assign(new Error(message), { code });
+}
+function validThreadKey(value) {
+  if (typeof value !== "string" || !value.trim() || value.length > 512 || /[\p{Cc}\u2028\u2029]/u.test(value)) {
+    throw invalid("Invalid conversation identifier.");
+  }
+  return value;
+}
+function normalizeConversationAlias(value) {
+  if (typeof value !== "string") throw invalid("The short name must be text.");
+  const alias = value.replace(/\r\n?/g, "\n").trim();
+  if (/[\p{Cc}\u2028\u2029]/u.test(alias.replace(/\n/g, ""))) {
+    throw invalid("The short name cannot contain control characters.");
+  }
+  if (alias.split("\n").length > 2) throw invalid("Use at most two lines for the short name.");
+  if ([...segmenter2.segment(alias)].length > MAX_ALIAS_GRAPHEMES) {
+    throw invalid(`Use at most ${MAX_ALIAS_GRAPHEMES} characters for the short name.`);
+  }
+  return alias;
+}
+function metadata(entry) {
+  return { identifier: String(entry.number).padStart(2, "0"), alias: entry.alias };
+}
+function createConversationLabels({
+  filePath = import_node_path2.default.join(import_node_os2.default.homedir(), "Library/Application Support/OpenCodexMicro/conversation-labels.json"),
+  maxEntries = 4096
+} = {}) {
+  if (!Number.isSafeInteger(maxEntries) || maxEntries < 1 || maxEntries > 4096) {
+    throw invalid("Invalid conversation label capacity.");
+  }
+  const resolvedPath = import_node_path2.default.resolve(filePath);
+  let entries = /* @__PURE__ */ new Map();
+  let nextNumber = 1;
+  let loadPromise;
+  let queue = Promise.resolve();
+  async function load() {
+    if (!loadPromise) loadPromise = (async () => {
+      let source;
+      try {
+        if ((await (0, import_promises2.stat)(resolvedPath)).size > MAX_REGISTRY_BYTES) throw invalid("Conversation label file is too large.", "INVALID_LABEL_REGISTRY");
+        source = await (0, import_promises2.readFile)(resolvedPath, "utf8");
+      } catch (error) {
+        if (error.code === "ENOENT") return;
+        throw error;
+      }
+      let data;
+      try {
+        data = JSON.parse(source);
+      } catch {
+        throw invalid("Conversation label file is invalid.", "INVALID_LABEL_REGISTRY");
+      }
+      if (data?.version !== 1 || !Array.isArray(data.entries) || data.entries.length > maxEntries || !Number.isSafeInteger(data.nextNumber) || data.nextNumber < 1 || data.nextNumber > maxEntries + 1) {
+        throw invalid("Conversation label file has an unsupported format.", "INVALID_LABEL_REGISTRY");
+      }
+      const loaded = /* @__PURE__ */ new Map();
+      const numbers = /* @__PURE__ */ new Set();
+      for (const entry of data.entries) {
+        const key = validThreadKey(entry?.threadKey);
+        const alias = normalizeConversationAlias(entry.alias ?? "");
+        if (!Number.isSafeInteger(entry.number) || entry.number < 1 || entry.number >= data.nextNumber || loaded.has(key) || numbers.has(entry.number)) {
+          throw invalid("Conversation label file contains conflicting identifiers.", "INVALID_LABEL_REGISTRY");
+        }
+        loaded.set(key, { number: entry.number, alias });
+        numbers.add(entry.number);
+      }
+      entries = loaded;
+      nextNumber = data.nextNumber;
+    })();
+    return loadPromise;
+  }
+  async function persist(updated, next) {
+    const directory = import_node_path2.default.dirname(resolvedPath);
+    await (0, import_promises2.mkdir)(directory, { recursive: true, mode: 448 });
+    const directoryInfo = await (0, import_promises2.lstat)(directory);
+    if (!directoryInfo.isDirectory() || directoryInfo.isSymbolicLink()) throw invalid("Conversation labels need a local directory.");
+    await (0, import_promises2.chmod)(directory, 448);
+    const temporary = `${resolvedPath}.${process.pid}.${(0, import_node_crypto.randomBytes)(6).toString("hex")}.tmp`;
+    let handle;
+    try {
+      handle = await (0, import_promises2.open)(temporary, "wx", 384);
+      const source = JSON.stringify({ version: 1, nextNumber: next, entries: [...updated].map(([threadKey, entry]) => ({ threadKey, number: entry.number, ...entry.alias ? { alias: entry.alias } : {} })) }, null, 2);
+      if (Buffer.byteLength(source) > MAX_REGISTRY_BYTES) throw invalid("Conversation label file is too large.", "LABEL_CAPACITY_REACHED");
+      await handle.writeFile(`${source}
+`, "utf8");
+      await handle.sync();
+      await handle.close();
+      handle = void 0;
+      await (0, import_promises2.rename)(temporary, resolvedPath);
+    } finally {
+      await handle?.close();
+      await (0, import_promises2.unlink)(temporary).catch((error) => {
+        if (error.code !== "ENOENT") throw error;
+      });
+    }
+  }
+  function serialize(operation) {
+    const pending = queue.then(async () => {
+      await load();
+      return operation();
+    });
+    queue = pending.catch(() => {
+    });
+    return pending;
+  }
+  function addMissing(updated, keys) {
+    const missing = keys.filter((key) => !updated.has(key));
+    if (updated.size + missing.length > maxEntries || nextNumber + missing.length > Number.MAX_SAFE_INTEGER) {
+      throw invalid("Conversation label capacity was reached; existing identifiers were kept.", "LABEL_CAPACITY_REACHED");
+    }
+    let next = nextNumber;
+    for (const key of missing) updated.set(key, { number: next++, alias: "" });
+    return next;
+  }
+  return {
+    filePath: resolvedPath,
+    get(threadKey) {
+      const entry = entries.get(validThreadKey(threadKey));
+      return entry ? metadata(entry) : null;
+    },
+    async ensure(threadKeys) {
+      if (!Array.isArray(threadKeys)) throw invalid("Conversation identifiers must be an array.");
+      const keys = [...new Set(threadKeys.map(validThreadKey))];
+      return serialize(async () => {
+        const updated = new Map(entries);
+        const next = addMissing(updated, keys);
+        if (next !== nextNumber) {
+          await persist(updated, next);
+          entries = updated;
+          nextNumber = next;
+        }
+        return new Map(keys.map((key) => [key, metadata(entries.get(key))]));
+      });
+    },
+    async setAlias(threadKey, value) {
+      const key = validThreadKey(threadKey);
+      const alias = normalizeConversationAlias(value);
+      return serialize(async () => {
+        const updated = new Map(entries);
+        const next = addMissing(updated, [key]);
+        const previous = updated.get(key);
+        if (next !== nextNumber || previous.alias !== alias) {
+          updated.set(key, { ...previous, alias });
+          await persist(updated, next);
+          entries = updated;
+          nextNumber = next;
+        }
+        return metadata(entries.get(key));
+      });
+    }
+  };
+}
+
+// plugin/design-variants.js
+var DESIGN_VARIANTS = Object.freeze([
+  Object.freeze({
+    id: "aurora",
+    labelZh: "\u6781\u5149\u4E1D\u5E26",
+    labelEn: "Aurora Silk",
+    descriptionZh: "\u5BBD\u5E45\u5149\u7EF8\u6CBF\u8FB9\u7F18\u8212\u5C55\uFF0C\u660E\u6697\u6298\u9762\u7F13\u6162\u6D41\u52A8\uFF0C\u4E2D\u592E\u7559\u7ED9\u5BF9\u8BDD\u6807\u9898\u3002"
+  }),
+  Object.freeze({
+    id: "plasma",
+    labelZh: "\u7B49\u79BB\u5B50\u6F6E\u6C50",
+    labelEn: "Plasma Tide",
+    descriptionZh: "\u7EC6\u5BC6\u80FD\u91CF\u66F2\u7EBF\u4EA4\u7EC7\u6210\u6F6E\u6C50\uFF0C\u7535\u6D41\u6301\u7EED\u7A7F\u884C\uFF0C\u52A8\u611F\u66F4\u5F3A\u3002"
+  }),
+  Object.freeze({
+    id: "prism",
+    labelZh: "\u6298\u5C04\u6676\u9762",
+    labelEn: "Prism Glass",
+    descriptionZh: "\u6E05\u6670\u7684\u5207\u5272\u6676\u9762\u4E0E\u79FB\u52A8\u53CD\u5149\uFF0C\u50CF\u4E00\u5757\u6709\u6DF1\u5EA6\u7684\u5F69\u8272\u5149\u5B66\u73BB\u7483\u3002"
+  }),
+  Object.freeze({
+    id: "circuit",
+    labelZh: "\u5149\u8F68\u626B\u63CF",
+    labelEn: "Circuit Scan",
+    descriptionZh: "\u7B80\u6D01\u7684\u53D1\u5149\u8F68\u9053\u548C\u6D41\u52A8\u626B\u63CF\u5149\u70B9\uFF0C\u4F18\u5148\u4FDD\u8BC1\u6807\u9898\u6E05\u6670\u3002"
+  })
+]);
+var SIZE = 196;
+var FRAMES = 24;
+var TAU = Math.PI * 2;
+var ANIMATED = /* @__PURE__ */ new Set(["working", "attention", "error"]);
+var PALETTE = Object.freeze({
+  working: { deep: "#051D58", base: "#0754FF", bright: "#13E8FF", white: "#CEFCFF" },
+  attention: { deep: "#4B1804", base: "#FF7106", bright: "#FFD31D", white: "#FFF2B7" },
+  complete: { deep: "#053424", base: "#00BC74", bright: "#4DFFAD", white: "#C8FFE4" },
+  error: { deep: "#420D16", base: "#F42D49", bright: "#FF6D64", white: "#FFE1DB" },
+  idle: { deep: "#101B25", base: "#354A5B", bright: "#778C98", white: "#B8C9D0" },
+  unknown: { deep: "#14212B", base: "#4C6575", bright: "#A1B6BF", white: "#D5E2E6" },
+  offline: { deep: "#111B24", base: "#3A4E5D", bright: "#819AA8", white: "#B6CBD3" },
+  empty: { deep: "#0E1820", base: "#263B49", bright: "#536D7A", white: "#8DA4AE" }
+});
+function n(value) {
+  return Number(value.toFixed(2));
+}
+function frameAngle(status, phase) {
+  if (!ANIMATED.has(status)) return 0;
+  const value = Number(phase);
+  const frame = Number.isFinite(value) ? (Math.floor(value) % FRAMES + FRAMES) % FRAMES : 0;
+  return frame * TAU / FRAMES;
+}
+function motionStrength(status) {
+  return status === "working" ? 1 : status === "attention" ? 0.3 : status === "error" ? 0.16 : 0;
+}
+function brightness(status, angle) {
+  if (status === "attention") return 0.73 + 0.27 * (0.5 + 0.5 * Math.sin(angle));
+  if (status === "error") return 0.72 + 0.28 * (0.5 + 0.5 * Math.cos(angle));
+  return 1;
+}
+function sharedDefinitions(p) {
+  return `<radialGradient id="ambience" cx=".85" cy=".97" r="1"><stop stop-color="${p.base}" stop-opacity=".2"/><stop offset="1" stop-color="${p.deep}" stop-opacity="0"/></radialGradient>
+    <radialGradient id="title-shade" cx=".5" cy=".52" r=".61"><stop stop-color="#060B12" stop-opacity=".97"/><stop offset=".54" stop-color="#060B12" stop-opacity=".82"/><stop offset="1" stop-color="#060B12" stop-opacity="0"/></radialGradient>`;
+}
+function field() {
+  return '<rect width="196" height="196" fill="#060B12"/><rect width="196" height="196" fill="url(#ambience)"/>';
+}
+function aurora(p, angle, status) {
+  const strength = motionStrength(status);
+  const sway = 19 * Math.sin(angle) * strength;
+  const lift = 14 * Math.cos(angle) * strength;
+  const fold = 12 * Math.sin(angle + 0.8) * strength;
+  const ribbon = `M-28 ${n(125 + lift)} C${n(29 + sway)} ${n(206 + lift)} ${n(104 - fold)} ${n(67 - lift)} 224 109 L224 168 C${n(115 + sway)} ${n(115 + fold)} ${n(58 - sway)} 244 -28 172 Z`;
+  const top = `M100 -24 C${n(120 - sway)} ${n(27 + lift)} ${n(162 + sway)} ${n(69 - fold)} 221 73 L224 19 C165 22 ${n(142 + fold)} -2 139 -24 Z`;
+  return `<defs>${sharedDefinitions(p)}
+    <linearGradient id="silk" x1=".11" y1=".13" x2=".65" y2="1"><stop stop-color="${p.deep}"/><stop offset=".36" stop-color="${p.base}"/><stop offset=".62" stop-color="${p.bright}"/><stop offset=".73" stop-color="${p.white}"/><stop offset=".8" stop-color="${p.base}"/><stop offset="1" stop-color="${p.deep}"/></linearGradient>
+    <linearGradient id="silk-top" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${p.base}" stop-opacity=".1"/><stop offset=".64" stop-color="${p.bright}"/><stop offset=".78" stop-color="${p.white}" stop-opacity=".9"/><stop offset="1" stop-color="${p.base}"/></linearGradient>
+    <linearGradient id="silk-rim" x1="0" y1="1" x2="1" y2="0"><stop stop-color="${p.white}" stop-opacity="0"/><stop offset=".45" stop-color="${p.white}" stop-opacity=".9"/><stop offset="1" stop-color="${p.bright}" stop-opacity="0"/></linearGradient>
+  </defs>${field()}
+  <g opacity="${n(brightness(status, angle))}">
+    <path d="${ribbon}" fill="url(#silk)"/>
+    <path d="${top}" fill="url(#silk-top)"/>
+    <path d="M-28 ${n(125 + lift)} C${n(29 + sway)} ${n(206 + lift)} ${n(104 - fold)} ${n(67 - lift)} 224 109" fill="none" stroke="url(#silk-rim)" stroke-width="1.5"/>
+    <path d="M-12 ${n(153 + lift * 0.6)} C${n(49 + sway)} 203 ${n(130 - fold)} ${n(104 - lift * 0.3)} 217 136" fill="none" stroke="${p.deep}" stroke-opacity=".42" stroke-width="3"/>
+  </g><rect width="196" height="196" fill="url(#title-shade)" opacity=".4"/>`;
+}
+function plasma(p, angle, status) {
+  const strength = motionStrength(status);
+  const sway = 17 * Math.sin(angle) * strength;
+  const turn = 12 * Math.cos(angle) * strength;
+  const currents = [];
+  for (let line = 0; line < 11; line += 1) {
+    const u = line / 10;
+    const tilt = 10 * Math.sin(angle + line * 0.32) * strength;
+    const path2 = `M${n(-37 + line * 3.6)} ${n(31 + line * 9.6)} C${n(45 + sway + line * 1.9)} ${n(-46 + turn + line * 2.4)} ${n(79 + tilt)} ${n(216 - line * 2)} ${n(232 - line * 2.4)} ${n(161 - line * 7.2)}`;
+    currents.push(`<path d="${path2}" fill="none" stroke="url(#current)" stroke-width="${line % 4 === 0 ? 2.5 : 1.15}" opacity="${n(0.35 + 0.58 * Math.sin(u * Math.PI))}"/>`);
+  }
+  const returnCurrents = [];
+  for (let line = 0; line < 5; line += 1) {
+    returnCurrents.push(`<path d="M${n(149 + line * 12)} -18 C${n(238 - line * 7)} ${n(28 + turn)} ${n(102 + sway)} ${n(162 - line * 6)} ${n(45 - line * 14)} 218" fill="none" stroke="url(#return)" stroke-width="${line === 2 ? 2.3 : 1}" opacity="${n(0.3 + line % 3 * 0.16)}"/>`);
+  }
+  return `<defs>${sharedDefinitions(p)}
+    <linearGradient id="current" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${p.base}" stop-opacity="0"/><stop offset=".18" stop-color="${p.base}"/><stop offset=".42" stop-color="${p.bright}"/><stop offset=".56" stop-color="${p.white}"/><stop offset=".78" stop-color="${p.base}"/><stop offset="1" stop-color="${p.bright}" stop-opacity="0"/></linearGradient>
+    <linearGradient id="return" x1="1" y1="0" x2="0" y2="1"><stop stop-color="${p.bright}" stop-opacity="0"/><stop offset=".28" stop-color="${p.bright}"/><stop offset=".51" stop-color="${p.white}"/><stop offset=".84" stop-color="${p.base}"/><stop offset="1" stop-color="${p.base}" stop-opacity="0"/></linearGradient>
+    <radialGradient id="pool" cx=".14" cy=".24" r=".73"><stop stop-color="${p.base}" stop-opacity=".35"/><stop offset="1" stop-color="${p.base}" stop-opacity="0"/></radialGradient>
+  </defs>${field()}<rect width="196" height="196" fill="url(#pool)"/>
+  <g opacity="${n(brightness(status, angle))}">${currents.join("")}${returnCurrents.join("")}</g>
+  <rect width="196" height="196" fill="url(#title-shade)" opacity=".91"/>`;
+}
+function prism(p, angle, status) {
+  const strength = motionStrength(status);
+  const shineX = 0.18 + 0.26 * (1 + Math.cos(angle)) * strength;
+  const shineY = 0.12 + 0.23 * (1 + Math.sin(angle)) * strength;
+  const facetOpacity = 0.72 + 0.2 * Math.sin(angle + 0.3) * strength;
+  return `<defs>${sharedDefinitions(p)}
+    <linearGradient id="glass-top" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="${p.base}"/><stop offset=".48" stop-color="${p.bright}"/><stop offset=".64" stop-color="${p.white}"/><stop offset="1" stop-color="${p.deep}"/></linearGradient>
+    <linearGradient id="glass-side" x1="0" y1="1" x2="1" y2="0"><stop stop-color="${p.deep}"/><stop offset=".37" stop-color="${p.base}"/><stop offset=".73" stop-color="${p.bright}"/><stop offset="1" stop-color="${p.white}"/></linearGradient>
+    <linearGradient id="glass-bottom" x1="0" y1="0" x2="1" y2=".6"><stop stop-color="${p.deep}"/><stop offset=".42" stop-color="${p.bright}"/><stop offset=".56" stop-color="${p.white}"/><stop offset=".7" stop-color="${p.base}"/><stop offset="1" stop-color="${p.deep}"/></linearGradient>
+    <radialGradient id="glass-sheen" cx="${n(shineX)}" cy="${n(shineY)}" r=".66"><stop stop-color="${p.white}" stop-opacity=".74"/><stop offset=".34" stop-color="${p.bright}" stop-opacity=".14"/><stop offset="1" stop-color="${p.white}" stop-opacity="0"/></radialGradient>
+    <linearGradient id="glass-face" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${p.deep}"/><stop offset=".48" stop-color="#07121D"/><stop offset="1" stop-color="${p.deep}" stop-opacity=".45"/></linearGradient>
+  </defs>${field()}
+  <g opacity="${n(brightness(status, angle))}">
+    <path d="M-12 4 L148 -12 L193 28 L145 55 L33 42 Z" fill="url(#glass-top)" opacity="${n(facetOpacity)}"/>
+    <path d="M193 28 L213 78 L189 202 L157 157 L145 55 Z" fill="url(#glass-side)"/>
+    <path d="M-12 139 L31 155 L157 157 L189 202 L45 211 Z" fill="url(#glass-bottom)"/>
+    <path d="M-12 4 L33 42 L31 155 L-12 139 Z" fill="url(#glass-side)" opacity=".65"/>
+    <path d="M33 42 L145 55 L157 157 L31 155 Z" fill="url(#glass-face)"/>
+    <path d="M-12 4 L148 -12 L193 28 L213 78 L189 202 L45 211 L-12 139 Z" fill="url(#glass-sheen)"/>
+    <path d="M-12 4 L33 42 L145 55 L193 28 M145 55 L157 157 L189 202 M157 157 L31 155 L-12 139" fill="none" stroke="${p.white}" stroke-opacity=".38" stroke-width="1"/>
+    <path d="M35 44 L143 57 M159 158 L184 193" fill="none" stroke="${p.bright}" stroke-opacity=".8" stroke-width="1.7"/>
+  </g><rect width="196" height="196" fill="url(#title-shade)" opacity=".54"/>`;
+}
+var TRACK = "M32 15 H164 Q181 15 181 32 V164 Q181 181 164 181 H32 Q15 181 15 164 V32 Q15 15 32 15 Z";
+function circuit(p, angle, status) {
+  const strength = motionStrength(status);
+  const progress = status === "working" ? angle / TAU : 0.17 + 0.04 * Math.sin(angle) * strength;
+  const offset = n(-progress * 1e3);
+  const bars = Array.from({ length: 17 }, (_, index) => {
+    const wave = 0.5 + 0.5 * Math.cos(angle - index * 0.45);
+    const opacity = status === "working" ? 0.16 + 0.72 * wave : 0.25;
+    const height = status === "working" ? 3 + wave * 9 : 4;
+    return `<rect x="${38 + index * 7}" y="${n(166 - height)}" width="3" height="${n(height)}" rx="1.5" fill="${p.bright}" opacity="${n(opacity)}"/>`;
+  }).join("");
+  return `<defs>${sharedDefinitions(p)}
+    <linearGradient id="track" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${p.bright}" stop-opacity=".52"/><stop offset=".45" stop-color="${p.base}" stop-opacity=".15"/><stop offset="1" stop-color="${p.bright}" stop-opacity=".48"/></linearGradient>
+    <radialGradient id="scan-field" cx=".89" cy=".91" r=".73"><stop stop-color="${p.base}" stop-opacity=".18"/><stop offset="1" stop-color="${p.base}" stop-opacity="0"/></radialGradient>
+  </defs>${field()}<rect width="196" height="196" fill="url(#scan-field)"/>
+  <g opacity="${n(brightness(status, angle))}" fill="none" stroke-linecap="round">
+    <path d="${TRACK}" stroke="url(#track)" stroke-width="1"/>
+    <path d="${TRACK}" pathLength="1000" stroke="${p.base}" stroke-width="6" stroke-opacity=".24" stroke-dasharray="110 890" stroke-dashoffset="${offset}"/>
+    <path d="${TRACK}" pathLength="1000" stroke="${p.bright}" stroke-width="2.1" stroke-dasharray="88 912" stroke-dashoffset="${offset}"/>
+    <path d="${TRACK}" pathLength="1000" stroke="${p.white}" stroke-width="2.6" stroke-dasharray="3 997" stroke-dashoffset="${offset}"/>
+    <path d="M24 48 V33 Q24 24 33 24 H48 M148 172 H163 Q172 172 172 163 V148" stroke="${p.bright}" stroke-width="1" stroke-opacity=".55"/>
+  </g><g opacity="${n(brightness(status, angle))}">${bars}</g>`;
+}
+var RENDERERS = Object.freeze({ aurora, plasma, prism, circuit });
+function designVariantSvg(id, status, phase = 0) {
+  const state = Object.hasOwn(PALETTE, status) ? status : "unknown";
+  const renderer = Object.hasOwn(RENDERERS, id) ? RENDERERS[id] : aurora;
+  const art = renderer(PALETTE[state], frameAngle(state, phase), state);
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${SIZE}" height="${SIZE}" viewBox="0 0 ${SIZE} ${SIZE}">${art}</svg>`;
+}
+
+// plugin/premium-art.js
+var THEMES = Object.freeze(["solid", "orb", ...DESIGN_VARIANTS.map((variant) => variant.id)]);
+var SIZE2 = 196;
+var FRAMES2 = 24;
+var FONT = "'Source Han Sans SC','PingFang SC','Heiti SC','Noto Sans CJK SC',Arial,sans-serif";
+var ANIMATED2 = /* @__PURE__ */ new Set(["working", "attention", "error"]);
+var COLORS = Object.freeze({
+  working: { dark: "#06164F", base: "#0445FF", light: "#12EFFF", flat: "#1BDDFF" },
+  attention: { dark: "#580E00", base: "#FF5B00", light: "#FFE112", flat: "#FFBD0C" },
+  error: { dark: "#4F0B12", base: "#F72E35", light: "#FF7660", flat: "#FF5F57" },
+  complete: { dark: "#043725", base: "#00BA66", light: "#5AFF9D", flat: "#5AFF9D" },
+  idle: { dark: "#111923", base: "#36434F", light: "#85939B", flat: "#85939B" },
+  unknown: { dark: "#18232D", base: "#6D8190", light: "#BECFD6", flat: "#A2B0B9" },
+  offline: { dark: "#111A23", base: "#4B5C6B", light: "#8BA1AE", flat: "#798D9C" },
+  empty: { dark: "#0B121B", base: "#344959", light: "#647C86", flat: "#8F9EA8" }
+});
+function number(value) {
+  return Number(value.toFixed(2));
+}
+function xml2(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&apos;"
+  })[character]);
+}
+function phaseAngle(status, phase) {
+  if (!ANIMATED2.has(status)) return 0;
+  const value = Number(phase);
+  const frame = Number.isFinite(value) ? (Math.floor(value) % FRAMES2 + FRAMES2) % FRAMES2 : 0;
+  return frame * Math.PI * 2 / FRAMES2;
+}
+function glyph(value, theme, identifier = "") {
+  if (!value) return "";
+  const color = theme === "solid" ? "#071D2E" : "#FFFFFF";
+  const lines = String(value).split("\n").slice(0, 2);
+  const legacy = !identifier && [...new Intl.Segmenter(void 0, { granularity: "grapheme" }).segment(value)].length === 1;
+  const size = legacy ? 88 : 52;
+  const firstBaseline = lines.length === 2 ? 106 : 132;
+  const number3 = identifier ? `<text x="20" y="39" fill="${color}" opacity=".85" font-family="${FONT}" font-size="24" font-weight="600">${xml2(identifier)}</text>` : "";
+  return number3 + lines.map((line, index) => {
+    const width = [...line].reduce((sum, character) => sum + (/[^\x00-\x7f]/u.test(character) ? size : size * 0.6), 0);
+    const fit = width > 156 ? ' textLength="156" lengthAdjust="spacingAndGlyphs"' : "";
+    return `<text x="98" y="${legacy ? 128 : firstBaseline + index * 54}" fill="${color}" font-family="${FONT}" font-size="${size}" font-weight="600" text-anchor="middle"${fit}>${xml2(line)}</text>`;
+  }).join("");
+}
+function outline(phase, scale = 1) {
+  const points = [];
+  for (let step = 0; step < 120; step += 1) {
+    const angle = step * Math.PI * 2 / 120;
+    const radius = 77 * scale * (1 + 0.065 * Math.sin(angle * 3 + phase) + 0.052 * Math.cos(angle * 2 - phase) + 0.018 * Math.sin(angle * 5 + phase));
+    points.push(`${step ? "L" : "M"}${number(98 + radius * Math.cos(angle))} ${number(96 + radius * Math.sin(angle))}`);
+  }
+  return `${points.join(" ")} Z`;
+}
+function orb(palette, phase, status) {
+  const breathe = status === "attention" ? 1 + 0.035 * Math.sin(phase) : 1;
+  const shape = outline(phase, breathe);
+  const bend = number(22 * Math.sin(phase));
+  const lift = number(14 * Math.cos(phase));
+  const shimmer = status === "error" ? 0.6 + 0.4 * Math.cos(phase * 2) ** 2 : 1;
+  return `<defs>
+    <radialGradient id="surface" cx=".32" cy=".24" r=".88"><stop stop-color="${palette.light}"/><stop offset=".36" stop-color="${palette.base}"/><stop offset="1" stop-color="${palette.dark}"/></radialGradient>
+    <radialGradient id="fold"><stop stop-color="${palette.light}" stop-opacity=".96"/><stop offset=".48" stop-color="${palette.light}" stop-opacity=".66"/><stop offset="1" stop-color="${palette.light}" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gloss"><stop stop-color="#F4FFFF" stop-opacity=".76"/><stop offset="1" stop-color="#F4FFFF" stop-opacity="0"/></radialGradient>
+    <clipPath id="silhouette"><path d="${shape}"/></clipPath>
+  </defs>
+  <rect width="196" height="196" fill="#04070F"/>
+  <g><path d="${shape}" fill="url(#surface)"/>
+    <g clip-path="url(#silhouette)" opacity="${number(shimmer)}">
+      <ellipse cx="${number(108 + bend)}" cy="${number(117 + lift)}" rx="96" ry="36" fill="url(#fold)" transform="rotate(${number(-28 + bend * 0.45)} 98 98)"/>
+      <ellipse cx="${number(74 + bend * 0.4)}" cy="${number(57 + lift * 0.35)}" rx="30" ry="18" fill="url(#gloss)" transform="rotate(-26 74 57)"/>
+    </g>
+  </g>`;
+}
+function solid(palette, phase, status) {
+  const bend = number(24 * Math.sin(phase));
+  const lift = number(15 * Math.cos(phase));
+  const pulse = status === "error" ? 0.72 + 0.28 * Math.cos(phase * 2) ** 2 : 1;
+  return `<defs>
+    <linearGradient id="surface" x1="0" y1="0" x2=".28" y2="1"><stop stop-color="${palette.flat}"/><stop offset=".55" stop-color="${palette.flat}"/><stop offset="1" stop-color="${palette.base}" stop-opacity=".2"/></linearGradient>
+    <linearGradient id="refraction" x1="0" y1="0" x2=".4" y2="1"><stop stop-color="${palette.light}" stop-opacity="0"/><stop offset=".48" stop-color="${palette.light}" stop-opacity=".08"/><stop offset=".63" stop-color="#F4FFFF" stop-opacity=".22"/><stop offset="1" stop-color="#F4FFFF" stop-opacity="0"/></linearGradient>
+    <linearGradient id="depth" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${palette.base}" stop-opacity="0"/><stop offset="1" stop-color="${palette.base}" stop-opacity=".14"/></linearGradient>
+  </defs>
+  <rect width="196" height="196" fill="${palette.flat}"/>
+  <rect width="196" height="196" fill="url(#surface)" opacity="${number(pulse)}"/>
+  <path d="M-40 ${number(118 + lift)} C${number(37 + bend)} ${number(178 - lift)} ${number(93 - bend)} ${number(27 + lift)} 236 66 L236 143 C${number(104 + bend)} 90 68 219 -40 170Z" fill="url(#refraction)"/>
+  <path d="M-30 240 C12 ${number(118 - lift)} ${number(114 + bend)} ${number(158 + lift)} 224 72 L224 230Z" fill="url(#depth)"/>`;
+}
+function premiumTaskSvg(status, firstGlyph = "", phase = 0, theme = "solid", identifier = "") {
+  const state = Object.hasOwn(COLORS, status) ? status : "unknown";
+  const variant = THEMES.includes(theme) ? theme : "solid";
+  if (DESIGN_VARIANTS.some((design) => design.id === variant)) {
+    return designVariantSvg(variant, state, phase).replace("</svg>", `${glyph(firstGlyph, variant, identifier)}</svg>`);
+  }
+  const angle = phaseAngle(state, phase);
+  const art = variant === "orb" ? orb(COLORS[state], angle, state) : solid(COLORS[state], angle, state);
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${SIZE2}" height="${SIZE2}" viewBox="0 0 ${SIZE2} ${SIZE2}">${art}${glyph(firstGlyph, variant, identifier)}</svg>`;
+}
+
+// plugin/key-art.js
+var DEFAULT_KEY_THEME = "aurora";
+var FONT2 = "'Source Han Sans SC','PingFang SC','Noto Sans CJK SC',Arial,sans-serif";
+var PALETTE2 = Object.freeze({
+  working: { color: "#00E8FF", secondary: "#246BFF", tint: "#04203A" },
+  complete: { color: "#24FF91", secondary: "#00CB9D", tint: "#052A21" },
+  attention: { color: "#FFBE00", secondary: "#FF691F", tint: "#302007" },
+  error: { color: "#FF348B", secondary: "#FF364C", tint: "#310E26" },
+  idle: { color: "#B784FF", secondary: "#7646FF", tint: "#1D1535" },
+  offline: { color: "#718299", secondary: "#3D4D64", tint: "#141D2B" },
+  empty: { color: "#42546D", secondary: "#293B54", tint: "#0D1726" }
+});
+var STATUS_ALIASES = Object.freeze({
+  idle: ["idle"],
+  unknown: ["unknown"],
+  working: ["working", "thinking", "running", "in_progress", "in-progress"],
+  complete: ["unread", "complete", "completed", "done", "success"],
+  attention: ["attention", "notification", "input", "approval", "waiting_input", "needs_input", "awaiting-approval", "awaiting-response"],
+  error: ["error", "failed", "failure"],
+  offline: ["offline", "disconnected", "unavailable"],
+  empty: ["empty", "off", "unassigned"]
+});
+function normalizeStatus(status) {
+  const value = String(status ?? "").toLowerCase().trim();
+  for (const [normalized, aliases] of Object.entries(STATUS_ALIASES)) {
+    if (aliases.includes(value)) return normalized;
+  }
+  return "unknown";
+}
+function isAnimatedStatus(status) {
+  return ["working", "attention", "error"].includes(normalizeStatus(status));
+}
+function point(radius, angle) {
+  const radians = angle * Math.PI / 180;
+  return [98 + radius * Math.cos(radians), 98 + radius * Math.sin(radians)];
+}
+function number2(value) {
+  return Number(value.toFixed(2));
+}
+function arc(radius, start, length, color, width, opacity = 1) {
+  const a = point(radius, start);
+  const b = point(radius, start + length);
+  return `<path d="M${number2(a[0])} ${number2(a[1])} A${radius} ${radius} 0 ${length > 180 ? 1 : 0} 1 ${number2(b[0])} ${number2(b[1])}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" opacity="${number2(opacity)}"/>`;
+}
+function document(palette, artwork) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="196" height="196" viewBox="0 0 196 196"><defs><radialGradient id="ambient" cx=".5" cy=".42" r=".72"><stop offset="0" stop-color="${palette.tint}"/><stop offset="1" stop-color="#060A13"/></radialGradient><linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${palette.color}"/><stop offset="1" stop-color="${palette.secondary}"/></linearGradient></defs><rect width="196" height="196" fill="#060A13"/><rect width="196" height="196" fill="url(#ambient)"/>${artwork}</svg>`;
+}
+function ringTrack(palette) {
+  return `<circle cx="98" cy="98" r="83" fill="none" stroke="${palette.color}" stroke-width="2" opacity=".15"/><circle cx="98" cy="98" r="66" fill="${palette.color}" opacity=".045"/>`;
+}
+function taskVisualSvg(status, firstGlyph = "", phase = 0, theme = DEFAULT_KEY_THEME, identifier = "") {
+  return premiumTaskSvg(normalizeStatus(status), firstGlyph, phase, theme, identifier);
+}
+function dataURI(svg) {
+  return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
+}
+function taskVisual(status, firstGlyph = "", phase = 0, identifier = "") {
+  return dataURI(taskVisualSvg(status, firstGlyph, phase, DEFAULT_KEY_THEME, identifier));
+}
+var ACTIONS = Object.freeze({
+  fast: { color: "#FFCF00", secondary: "#FF801A", tint: "#2E2107", path: '<path d="m108 47-45 59h31l-6 43 45-62h-31z" fill="currentColor" stroke="none"/>' },
+  new: { color: "#00E8FF", secondary: "#246BFF", tint: "#07243A", path: '<path d="M98 61v74M61 98h74"/>' },
+  pin: { color: "#BB7AFF", secondary: "#8144FF", tint: "#201332", path: '<path d="m82 54 43 16-11 14-3 26 9 10-54-20 13-3 13-22zM90 111l-13 33"/>' },
+  navigate: { color: "#65A0FF", secondary: "#486BFF", tint: "#0E1E36", path: '<path d="m66 98 31-31M66 98l31 31M69 98h46c16 0 24-11 24-27"/>' },
+  fork: { color: "#00F3C1", secondary: "#00A4C7", tint: "#052A2B", path: '<path d="M75 132V66M77 109c31 0 47-16 47-43"/><circle cx="75" cy="60" r="10" fill="#071A22"/><circle cx="124" cy="60" r="10" fill="#071A22"/><circle cx="75" cy="138" r="10" fill="#071A22"/>' },
+  steer: { color: "#FF9A26", secondary: "#FF582B", tint: "#2A1A0F", path: '<path d="M72 143V92c0-18 15-30 36-30h22m-18-18 18 18-18 18M101 143v-24c0-17 9-28 29-28"/>' },
+  mic: { color: "#FF55CE", secondary: "#B942FF", tint: "#2E1230", path: '<rect x="82" y="48" width="32" height="66" rx="16"/><path d="M66 96v4a32 32 0 0 0 64 0v-4M98 132v17M81 149h34"/>' },
+  submit: { color: "#A98AFF", secondary: "#566FFF", tint: "#191D3A", path: '<path d="M98 143V56m-30 30 30-30 30 30"/>' },
+  usage: { color: "#24FF91", secondary: "#00CB9D", tint: "#052A21", path: '<path d="M98 54v44h44M81 57a44 44 0 1 0 58 58"/>' }
+});
+function actionVisual(action, phase = 0) {
+  void phase;
+  const palette = ACTIONS[String(action ?? "").toLowerCase()] ?? ACTIONS.new;
+  return dataURI(document(palette, `${ringTrack(palette)}${arc(83, -70, 142, palette.color, 5, 0.8)}${arc(83, 112, 142, palette.secondary, 5, 0.65)}<g fill="none" color="${palette.color}" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">${palette.path}</g>`));
+}
+function usageVisual(remainingPercent, phase = 0) {
+  void phase;
+  const value = remainingPercent === null || remainingPercent === void 0 || remainingPercent === "" ? NaN : Number(remainingPercent);
+  const remaining2 = Number.isFinite(value) ? Math.max(0, Math.min(100, Math.round(value))) : null;
+  const palette = remaining2 === null ? PALETTE2.offline : remaining2 >= 50 ? PALETTE2.complete : remaining2 >= 20 ? PALETTE2.attention : PALETTE2.error;
+  const text2 = remaining2 === null ? "\u2014" : String(remaining2);
+  let artwork = `<circle cx="98" cy="98" r="80" fill="none" stroke="${palette.color}" stroke-width="10" opacity=".14"/>`;
+  if (remaining2 > 0) artwork += arc(80, -90, Math.min(359.9, remaining2 * 3.6), palette.color, 10);
+  artwork += `<text x="98" y="115" fill="#F5FCFF" font-family="${FONT2}" font-size="${text2.length > 2 ? 65 : 76}" font-weight="700" text-anchor="middle">${text2}</text>`;
+  if (remaining2 !== null) artwork += `<text x="98" y="145" fill="${palette.color}" font-family="${FONT2}" font-size="24" font-weight="700" text-anchor="middle">%</text>`;
+  return dataURI(document(palette, artwork));
+}
+
+// plugin/task-artwork.js
+var import_node_child_process2 = require("node:child_process");
+var import_node_crypto2 = require("node:crypto");
+var import_promises3 = require("node:fs/promises");
+var import_node_path3 = require("node:path");
+var import_node_util2 = require("node:util");
+var runFile = (0, import_node_util2.promisify)(import_node_child_process2.execFile);
+var ARTWORK_VERSION = "state-coretext-v3-short-label";
+var FILE_PREFIX = "task-v2-";
+var OWN_ARTIFACT = /^task-v[12]-[a-f0-9]{64}\.(gif|png)$/;
+var MAX_MEMORY_ENTRIES = 64;
+var MAX_DISK_ARTIFACTS = 96;
+var MAX_ARTIFACT_BYTES = 512 * 1024;
+function shortLabel(value) {
+  const text2 = String(value ?? "").slice(0, 512).replace(/\r\n?/g, "\n").replace(/[\u0000-\u0009\u000b-\u001f\u007f-\u009f]/g, "").normalize("NFC");
+  const lines = text2.split("\n").map((line) => line.trim()).filter(Boolean).slice(0, 2);
+  const label = lines.join("\n");
+  return Buffer.byteLength(label, "utf8") <= 256 ? label : "";
+}
+function conversationIdentifier(value) {
+  const identifier = String(value ?? "").trim();
+  return /^\d{1,4}$/.test(identifier) && Number(identifier) <= 4096 ? identifier : "";
+}
+function createTaskArtwork({ pluginRoot, theme = DEFAULT_KEY_THEME } = {}) {
+  if (!pluginRoot) throw new TypeError("Task artwork requires a plugin root");
+  if (theme !== DEFAULT_KEY_THEME) throw new TypeError(`Only the installed ${DEFAULT_KEY_THEME} artwork theme is available`);
+  const root = (0, import_node_path3.resolve)(pluginRoot);
+  const cacheRoot = (0, import_node_path3.resolve)(root, ".key-cache");
+  const helper = (0, import_node_path3.resolve)(root, "runtime", "key-glyph-renderer");
+  const memory = /* @__PURE__ */ new Map();
+  const pending = /* @__PURE__ */ new Map();
+  const sourceFingerprints = /* @__PURE__ */ new Map();
+  let queue = Promise.resolve();
+  let initialized;
+  let temporarySequence = 0;
+  async function initialize() {
+    await (0, import_promises3.mkdir)(cacheRoot, { recursive: true, mode: 448 });
+    const info = await (0, import_promises3.lstat)(cacheRoot);
+    if (!info.isDirectory() || info.isSymbolicLink()) throw new Error("Task artwork cache must be a directory");
+    await (0, import_promises3.chmod)(cacheRoot, 448);
+  }
+  function remember(key, artwork) {
+    memory.delete(key);
+    memory.set(key, artwork);
+    while (memory.size > MAX_MEMORY_ENTRIES) memory.delete(memory.keys().next().value);
+    return artwork;
+  }
+  async function cachedFileExists(file) {
+    try {
+      const info = await (0, import_promises3.lstat)(file);
+      return info.isFile() && info.size > 0 && info.size <= MAX_ARTIFACT_BYTES;
+    } catch (error) {
+      if (error.code === "ENOENT") return false;
+      throw error;
+    }
+  }
+  async function prune() {
+    const entries = (await (0, import_promises3.readdir)(cacheRoot, { withFileTypes: true })).filter((entry) => entry.isFile() && OWN_ARTIFACT.test(entry.name));
+    if (entries.length <= MAX_DISK_ARTIFACTS) return;
+    const protectedFiles = new Set([...memory.values()].map((value) => (0, import_node_path3.basename)(value.gifpath ?? value.path)));
+    const artifacts = [];
+    for (const entry of entries) {
+      if (protectedFiles.has(entry.name)) continue;
+      try {
+        const info = await (0, import_promises3.stat)((0, import_node_path3.resolve)(cacheRoot, entry.name));
+        artifacts.push({ name: entry.name, modified: info.mtimeMs });
+      } catch (error) {
+        if (error.code !== "ENOENT") throw error;
+      }
+    }
+    artifacts.sort((left, right) => left.modified - right.modified || left.name.localeCompare(right.name));
+    for (const artifact of artifacts.slice(0, entries.length - MAX_DISK_ARTIFACTS)) {
+      await (0, import_promises3.rm)((0, import_node_path3.resolve)(cacheRoot, artifact.name), { force: true });
+    }
+  }
+  async function renderOne(key, status, label, identifier) {
+    initialized ??= initialize().catch((error) => {
+      initialized = void 0;
+      throw error;
+    });
+    await initialized;
+    const animated = isAnimatedStatus(status);
+    const extension2 = animated ? "gif" : "png";
+    const background = (0, import_node_path3.resolve)(root, "assets", "neon", `task-${status}.${extension2}`);
+    if (!sourceFingerprints.has(background)) {
+      const fingerprint = (0, import_promises3.readFile)(background).then((bytes) => (0, import_node_crypto2.createHash)("sha256").update(bytes).digest("hex"));
+      sourceFingerprints.set(background, fingerprint);
+      fingerprint.catch(() => sourceFingerprints.delete(background));
+    }
+    const fileKey = (0, import_node_crypto2.createHash)("sha256").update(key).update(await sourceFingerprints.get(background)).digest("hex");
+    const filename = `${FILE_PREFIX}${fileKey}.${extension2}`;
+    const relative2 = `.key-cache/${filename}`;
+    const artwork = Object.freeze(animated ? { type: 4, gifpath: relative2 } : { type: 2, path: relative2 });
+    const destination = (0, import_node_path3.resolve)(cacheRoot, filename);
+    if (!await cachedFileExists(destination)) {
+      const temporary = (0, import_node_path3.resolve)(cacheRoot, `${filename}.${process.pid}.${temporarySequence++}.tmp`);
+      try {
+        await runFile(helper, [background, temporary, label, identifier], {
+          timeout: 5e3,
+          maxBuffer: 4096,
+          windowsHide: true
+        });
+        if (!await cachedFileExists(temporary)) throw new Error("Task artwork renderer produced an invalid image");
+        await (0, import_promises3.chmod)(temporary, 384);
+        await (0, import_promises3.rename)(temporary, destination);
+      } finally {
+        await (0, import_promises3.rm)(temporary, { force: true });
+      }
+    }
+    remember(key, artwork);
+    await prune();
+    return artwork;
+  }
+  function render(statusValue, labelValue = "", identifierValue = "") {
+    const status = normalizeStatus(statusValue);
+    const label = shortLabel(labelValue);
+    const identifier = conversationIdentifier(identifierValue);
+    const key = (0, import_node_crypto2.createHash)("sha256").update(JSON.stringify([ARTWORK_VERSION, theme, status, label, identifier])).digest("hex");
+    if (memory.has(key)) return Promise.resolve(remember(key, memory.get(key)));
+    if (pending.has(key)) return pending.get(key);
+    const operation = queue.then(() => renderOne(key, status, label, identifier));
+    queue = operation.catch(() => {
+    });
+    pending.set(key, operation);
+    operation.then(() => pending.delete(key), () => pending.delete(key));
+    return operation;
+  }
+  return Object.freeze({ render });
+}
+
+// plugin/task-display.js
+function createTaskDisplay({ theme, artwork, send: send2, isCurrent }) {
+  return function setTaskDisplay2(instance, status, text2, identifier = "") {
+    const normalized = normalizeStatus(status);
+    const digest = `task:${theme}:${normalized}:${identifier}:${text2}`;
+    instance.desiredDisplay = digest;
+    if (!instance.active || instance.lastDisplay === digest || instance.pendingDisplay === digest) return;
+    instance.pendingDisplay = digest;
+    return artwork.render(normalized, text2, identifier).catch((error) => {
+      send2({
+        cmd: "logMessage",
+        uuid: instance.uuid,
+        actionid: instance.actionid,
+        key: instance.key,
+        level: "error",
+        message: `Task artwork: ${error.message}`
+      });
+      return { type: 1, data: taskVisual(normalized, text2, 0, identifier) };
+    }).then((image) => {
+      if (!instance.active || instance.desiredDisplay !== digest || instance.lastDisplay === digest || !isCurrent(instance)) return;
+      instance.lastDisplay = digest;
+      send2({
+        cmd: "state",
+        param: {
+          statelist: [{
+            uuid: instance.uuid,
+            actionid: instance.actionid,
+            key: instance.key,
+            ...image,
+            showtext: false,
+            textdata: text2
+          }]
+        }
+      });
+    }).finally(() => {
+      if (instance.pendingDisplay === digest) instance.pendingDisplay = null;
+    });
+  };
+}
+
+// plugin/overview-art.js
+var OVERVIEW_SIZE = Object.freeze({ width: 460, height: 200 });
+var OVERVIEW_MAX_USAGE_AGE_MS = 15 * 60 * 1e3;
+var OVERVIEW_WINDOW_PAGE_MS = 6e3;
+var FONT3 = "'PingFang SC','Source Han Sans SC','Noto Sans CJK SC',Arial,sans-serif";
+var INK = "#F7FBFF";
+var MUTED = "#A7B5C6";
+var COLORS2 = Object.freeze({
+  good: "#50FFA5",
+  medium: "#FFBB32",
+  low: "#FF4A64",
+  unknown: MUTED,
+  working: "#20DEFF",
+  attention: "#FFBB32",
+  error: "#FF4A64"
+});
+var WORDS = Object.freeze({
+  en: { allowance: "ALLOWANCE", weekly: "WEEK LEFT", fiveHour: "5H LEFT", scope: "ON SCREEN", reset: "RESET", run: "RUN", wait: "WAIT", error: "ERR", live: "LIVE", offline: "OFFLINE", stale: "UPDATE NEEDED", unavailable: "UNAVAILABLE", now: "DUE" },
+  zh: { allowance: "\u5269\u4F59\u989D\u5EA6", weekly: "\u672C\u5468\u5269\u4F59", fiveHour: "5\u5C0F\u65F6\u5269\u4F59", scope: "\u5C4F\u4E0A\u4F1A\u8BDD", reset: "\u91CD\u7F6E", run: "\u8FD0\u884C", wait: "\u7B49\u5F85", error: "\u5F02\u5E38", live: "\u5DF2\u8FDE\u63A5", offline: "\u672A\u8FDE\u63A5", stale: "\u7B49\u5F85\u66F4\u65B0", unavailable: "\u6682\u65E0\u6570\u636E", now: "\u5F85\u5237\u65B0" },
+  zh_HK: { allowance: "\u5269\u9918\u984D\u5EA6", weekly: "\u672C\u9031\u5269\u9918", fiveHour: "5\u5C0F\u6642\u5269\u9918", scope: "\u87A2\u5E55\u5C0D\u8A71", reset: "\u91CD\u8A2D", run: "\u904B\u884C", wait: "\u7B49\u5F85", error: "\u7570\u5E38", live: "\u5DF2\u9023\u63A5", offline: "\u672A\u9023\u63A5", stale: "\u7B49\u5F85\u66F4\u65B0", unavailable: "\u66AB\u7121\u8CC7\u6599", now: "\u5F85\u66F4\u65B0" },
+  ja: { allowance: "\u4F7F\u7528\u53EF\u80FD\u91CF", weekly: "\u9031\u9593\u6B8B\u91CF", fiveHour: "5\u6642\u9593\u6B8B\u91CF", scope: "\u753B\u9762\u306E\u4F1A\u8A71", reset: "\u30EA\u30BB\u30C3\u30C8", run: "\u5B9F\u884C", wait: "\u5F85\u6A5F", error: "\u7570\u5E38", live: "\u63A5\u7D9A\u4E2D", offline: "\u672A\u63A5\u7D9A", stale: "\u8981\u66F4\u65B0", unavailable: "\u30C7\u30FC\u30BF\u306A\u3057", now: "\u8981\u66F4\u65B0" },
+  de: { allowance: "KONTINGENT", weekly: "WOCHE \xDCBRIG", fiveHour: "5H \xDCBRIG", scope: "AM BILDSCHIRM", reset: "RESET", run: "AKT", wait: "WART", error: "FEHL", live: "LIVE", offline: "OFFLINE", stale: "UPDATE N\xD6TIG", unavailable: "KEINE DATEN", now: "F\xC4LLIG" },
+  es: { allowance: "DISPONIBLE", weekly: "SEM. LIBRE", fiveHour: "5H LIBRES", scope: "EN PANTALLA", reset: "REIN.", run: "ACT", wait: "ESP", error: "ERR", live: "EN L\xCDNEA", offline: "SIN RED", stale: "ACTUALIZAR", unavailable: "SIN DATOS", now: "PEND" },
+  ko: { allowance: "\uC794\uC5EC \uD55C\uB3C4", weekly: "\uC8FC\uAC04 \uC794\uC5EC", fiveHour: "5\uC2DC\uAC04 \uC794\uC5EC", scope: "\uD654\uBA74 \uB300\uD654", reset: "\uCD08\uAE30\uD654", run: "\uC2E4\uD589", wait: "\uB300\uAE30", error: "\uC624\uB958", live: "\uC5F0\uACB0\uB428", offline: "\uC5F0\uACB0 \uC548 \uB428", stale: "\uC5C5\uB370\uC774\uD2B8 \uD544\uC694", unavailable: "\uB370\uC774\uD130 \uC5C6\uC74C", now: "\uAC31\uC2E0 \uD544\uC694" },
+  pt: { allowance: "DISPON\xCDVEL", weekly: "SEM. LIVRE", fiveHour: "5H LIVRES", scope: "NA TELA", reset: "RENOVA", run: "ATIV", wait: "ESP", error: "ERR", live: "ONLINE", offline: "OFFLINE", stale: "ATUALIZAR", unavailable: "SEM DADOS", now: "AGORA" }
+});
+function escape(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" })[character]);
+}
+function numeric(value) {
+  return value !== null && value !== void 0 && value !== "" && typeof value !== "boolean" && Number.isFinite(Number(value)) ? Number(value) : null;
+}
+function observedMillis(value) {
+  const result = numeric(value);
+  if (result === null || result <= 0) return null;
+  return result < 1e11 ? result * 1e3 : result;
+}
+function remaining(window, usage, connected, now) {
+  const value = numeric(window?.remainingPercent);
+  const observed = observedMillis(window?.observedAt ?? usage?.observedAt);
+  const stale = observed === null || now - observed > OVERVIEW_MAX_USAGE_AGE_MS || observed > now + 6e4;
+  return { value: connected && !stale && value !== null ? Math.round(Math.max(0, Math.min(100, value))) : null, stale };
+}
+function resetDuration(window, now, words) {
+  const resetsAt = numeric(window?.resetsAt);
+  if (resetsAt === null || resetsAt <= 0) return "\u2014";
+  const minutes = Math.ceil((resetsAt * 1e3 - now) / 6e4);
+  if (minutes <= 0) return words.now;
+  const days = Math.floor(minutes / 1440);
+  const hours = Math.floor(minutes % 1440 / 60);
+  const remainingMinutes = minutes % 60;
+  return days ? `${days}d${hours}h` : hours ? `${hours}h${remainingMinutes}m` : `${remainingMinutes}m`;
+}
+function resetText(window, now, words) {
+  return `${words.reset} ${resetDuration(window, now, words)}`;
+}
+function text(x, y, value, size, color = INK, weight = 600, anchor = "start") {
+  return `<text x="${x}" y="${y}" fill="${color}" font-size="${size}" font-weight="${weight}" text-anchor="${anchor}">${escape(value)}</text>`;
+}
+function allowanceColor(value) {
+  return value === null ? COLORS2.unknown : value < 20 ? COLORS2.low : value < 50 ? COLORS2.medium : COLORS2.good;
+}
+function renderOverviewSvg(state = {}, { now = Date.now(), language: language2 = "en" } = {}) {
+  const nowMs = Number.isFinite(Number(now)) ? Number(now) : Date.now();
+  const languageTag = String(language2).toLowerCase().replaceAll("_", "-");
+  const languageKey = ["zh-hk", "zh-tw", "zh-hant"].some((tag) => languageTag.startsWith(tag)) ? "zh_HK" : languageTag.split("-")[0];
+  const words = WORDS[languageKey] ?? WORDS.en;
+  const connected = state?.connected === true;
+  const usage = state?.usage;
+  const windows = Array.isArray(usage?.windows) ? usage.windows : [];
+  const weekly = windows.find((window) => window?.kind === "weekly");
+  const fiveHour = windows.find((window) => ["five_hour", "five-hour", "fiveHour", "5h"].includes(window?.kind));
+  const shown = [{ window: fiveHour, label: words.fiveHour }, { window: weekly, label: words.weekly }].filter((item2) => item2.window);
+  if (shown.length === 0) shown.push({ window: null, label: words.allowance });
+  const counts = { working: 0, attention: 0, error: 0 };
+  const seen = /* @__PURE__ */ new Set();
+  for (const slot of Array.isArray(state?.slots) ? state.slots : []) {
+    if (!slot?.threadKey || seen.has(slot.threadKey)) continue;
+    seen.add(slot.threadKey);
+    const status = normalizeStatus(slot.status);
+    if (Object.hasOwn(counts, status)) counts[status] += 1;
+  }
+  const page = Math.floor(Math.max(0, nowMs) / OVERVIEW_WINDOW_PAGE_MS) % shown.length;
+  const item = shown[page];
+  const { value, stale } = remaining(item.window, usage, connected, nowMs);
+  const color = allowanceColor(value);
+  const detail = !connected ? words.offline : !item.window ? words.unavailable : stale ? words.stale : resetText(item.window, nowMs, words);
+  let art = `<title>${escape(words.scope)}</title><rect width="460" height="200" fill="#070B10"/>`;
+  art += text(20, 39, item.label, 28, INK, 600);
+  const digits = value === null ? "\u2014" : String(value);
+  art += `<text x="18" y="143" fill="${color}" font-family="Arial,sans-serif" font-size="${digits.length > 2 ? 98 : 128}" font-weight="700" font-variant-numeric="tabular-nums">${digits}${value === null ? "" : '<tspan dx="5" font-size="42" font-weight="600">%</tspan>'}</text>`;
+  art += text(20, 184, detail, 28, MUTED, 500);
+  art += '<rect x="20" y="193" width="206" height="5" rx="2.5" fill="#24303D"/>';
+  if (value !== null && value > 0) art += `<rect x="20" y="193" width="${(206 * value / 100).toFixed(2)}" height="5" rx="2.5" fill="${color}"/>`;
+  if (shown.length > 1) {
+    for (let index = 0; index < shown.length; index++) {
+      art += `<rect x="${181 + index * 24}" y="12" width="17" height="4" rx="2" fill="${index === page ? INK : "#364454"}"/>`;
+    }
+  }
+  for (const [index, [key, label]] of [["working", words.run], ["attention", words.wait], ["error", words.error]].entries()) {
+    const x = 240 + index * 72;
+    const center = x + 34;
+    const count = connected ? String(counts[key]) : "\u2014";
+    const active = connected && counts[key] > 0;
+    const accent = connected ? COLORS2[key] : MUTED;
+    art += `<rect x="${x}" y="16" width="68" height="172" rx="13" fill="${accent}" fill-opacity="${active ? ".13" : ".055"}"/>`;
+    art += text(center, 56, label, 26, INK, 600, "middle");
+    art += `<text x="${center}" y="143" fill="${active || !connected ? accent : MUTED}" font-family="Arial,sans-serif" font-size="${count === "\u2014" ? 54 : count.length > 1 ? 58 : 76}" font-weight="700" font-variant-numeric="tabular-nums" text-anchor="middle">${count}</text>`;
+    art += `<rect x="${center - 18}" y="164" width="36" height="4" rx="2" fill="${accent}" opacity="${active ? ".9" : ".3"}"/>`;
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="460" height="200" viewBox="0 0 460 200"><g font-family="${FONT3}">${art}</g></svg>`;
+}
+
+// plugin/overview-display.js
+function svgImage(svg) {
+  return { type: 1, data: `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}` };
+}
+function imagePayload(image) {
+  const field2 = { 1: "data", 2: "path", 4: "gifpath" }[image?.type];
+  if (!field2 || typeof image[field2] !== "string" || !image[field2]) {
+    throw new TypeError("Overview renderer must return an SVG, PNG or GIF state image");
+  }
+  return { type: image.type, [field2]: image[field2] };
+}
+function createOverviewDisplay({
+  send: send2,
+  target,
+  renderImage = svgImage,
+  language: language2 = "en",
+  now = Date.now,
+  minUpdateMs = 1e3,
+  isCurrent = () => true,
+  onError = () => {
+  },
+  setTimer = setTimeout,
+  clearTimer = clearTimeout
+} = {}) {
+  if (typeof send2 !== "function" || typeof renderImage !== "function") {
+    throw new TypeError("Overview display requires send and renderImage functions");
+  }
+  if (!["uuid", "actionid", "key"].every((field2) => typeof target?.[field2] === "string" && target[field2])) {
+    throw new TypeError("Overview display requires a verified native window target");
+  }
+  const destination = Object.freeze({ uuid: target.uuid, actionid: target.actionid, key: target.key });
+  const displayLanguage = typeof language2 === "string" ? language2.slice(0, 64) : "en";
+  const interval = Math.max(1e3, Number.isFinite(Number(minUpdateMs)) ? Number(minUpdateMs) : 1e3);
+  let latestState2;
+  let desiredSvg;
+  let displayedSvg;
+  let lastActivityAt = -Infinity;
+  let generation = 0;
+  let timer = null;
+  let inFlight = false;
+  let disposed = false;
+  let reportedError = null;
+  let invalidStateReported = false;
+  function clock() {
+    try {
+      const value = Number(now());
+      if (Number.isFinite(value)) return value;
+    } catch {
+    }
+    return Date.now();
+  }
+  function cancelTimer() {
+    if (timer !== null) clearTimer(timer);
+    timer = null;
+  }
+  function pump() {
+    if (disposed || !isCurrent() || inFlight || desiredSvg === void 0 || desiredSvg === displayedSvg) return;
+    const instant = clock();
+    if (instant < lastActivityAt) lastActivityAt = instant - interval;
+    const delay = Math.max(0, lastActivityAt + interval - instant);
+    if (delay > 0) {
+      if (timer === null) {
+        timer = setTimer(() => {
+          timer = null;
+          pump();
+        }, delay);
+        timer?.unref?.();
+      }
+      return;
+    }
+    cancelTimer();
+    const svg = desiredSvg;
+    const ticket = generation;
+    inFlight = true;
+    lastActivityAt = instant;
+    Promise.resolve().then(() => renderImage(svg)).then(imagePayload).then(async (image) => {
+      if (disposed || !isCurrent() || ticket !== generation || desiredSvg !== svg || displayedSvg === svg) return;
+      await send2({ cmd: "state", param: { statelist: [{ ...image, ...destination, showtext: false, textdata: "" }] } });
+      displayedSvg = svg;
+      lastActivityAt = clock();
+      reportedError = null;
+    }).catch((error) => {
+      const message = String(error?.message ?? error);
+      if (!disposed && ticket === generation && message !== reportedError) {
+        reportedError = message;
+        try {
+          onError(error);
+        } catch {
+        }
+      }
+    }).finally(() => {
+      inFlight = false;
+      if (!disposed && (desiredSvg !== svg || ticket !== generation)) pump();
+    });
+  }
+  function refresh() {
+    if (disposed || latestState2 === void 0) return;
+    try {
+      desiredSvg = renderOverviewSvg(latestState2, { now: clock(), language: displayLanguage });
+      invalidStateReported = false;
+    } catch {
+      desiredSvg = renderOverviewSvg({ connected: false }, { now: clock(), language: displayLanguage });
+      if (!invalidStateReported) {
+        invalidStateReported = true;
+        const error = Object.assign(new Error("Overview display: Bridge state could not be rendered"), {
+          code: "OVERVIEW_INVALID_STATE"
+        });
+        try {
+          onError(error);
+        } catch {
+        }
+      }
+    }
+    if (desiredSvg === displayedSvg) cancelTimer();
+    pump();
+  }
+  return Object.freeze({
+    update(state) {
+      if (disposed) return;
+      latestState2 = state ?? {};
+      refresh();
+    },
+    refresh,
+    invalidate() {
+      if (disposed) return;
+      generation += 1;
+      displayedSvg = void 0;
+      cancelTimer();
+      refresh();
+    },
+    dispose() {
+      disposed = true;
+      generation += 1;
+      latestState2 = void 0;
+      desiredSvg = void 0;
+      cancelTimer();
+    }
+  });
+}
+
+// plugin/native-overview-target.js
+var import_node_fs2 = require("node:fs");
+var import_promises4 = require("node:fs/promises");
+var import_node_os3 = require("node:os");
+var import_node_path4 = require("node:path");
+var DEFAULT_OVERVIEW_CONFIG_PATH = (0, import_node_path4.resolve)((0, import_node_os3.homedir)(), "Library/Application Support/OpenCodexMicro/deck-overview.json");
+var DEFAULT_STUDIO_PROFILES_ROOT = (0, import_node_path4.resolve)((0, import_node_os3.homedir)(), "Library/Application Support/Ulanzi/UlanziDeck/ProfilesV2");
+var SUPPORTED_OVERVIEW_STUDIO_VERSION = "3.4.4";
+var OVERVIEW_PLUGIN_UUID = "com.ulanzi.ulanzistudio.codexmicro";
+var NATIVE_WINDOW_ACTION = "com.ulanzi.ulanzideck.smallwindow.window";
+var MAX_JSON_BYTES = 1024 * 1024;
+var UUID = /^[a-f\d]{8}(?:-[a-f\d]{4}){3}-[a-f\d]{12}$/i;
+function invalid2(message, code = "NATIVE_OVERVIEW_CONFIG") {
+  return Object.assign(new Error(`Native overview: ${message}`), { code });
+}
+async function readBoundedJson(path2, kind, { optional = false } = {}) {
+  let file;
+  try {
+    file = await (0, import_promises4.open)(path2, import_node_fs2.constants.O_RDONLY | import_node_fs2.constants.O_NOFOLLOW | import_node_fs2.constants.O_NONBLOCK);
+  } catch (error) {
+    if (optional && error.code === "ENOENT") return null;
+    throw invalid2(`${kind} cannot be opened`, `NATIVE_OVERVIEW_${kind.toUpperCase()}`);
+  }
+  try {
+    const info = await file.stat();
+    if (!info.isFile() || info.size <= 0 || info.size > MAX_JSON_BYTES) {
+      throw invalid2(`${kind} must be a nonempty JSON file of at most 1 MiB`, `NATIVE_OVERVIEW_${kind.toUpperCase()}`);
+    }
+    const bytes = Buffer.alloc(info.size + 1);
+    let count = 0;
+    while (count < bytes.length) {
+      const { bytesRead } = await file.read(bytes, count, bytes.length - count, null);
+      if (bytesRead === 0) break;
+      count += bytesRead;
+    }
+    if (count !== info.size) throw invalid2(`${kind} changed while being read`, `NATIVE_OVERVIEW_${kind.toUpperCase()}`);
+    let value;
+    try {
+      value = JSON.parse(bytes.subarray(0, count).toString("utf8"));
+    } catch {
+      throw invalid2(`${kind} is not valid JSON`, `NATIVE_OVERVIEW_${kind.toUpperCase()}`);
+    }
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      throw invalid2(`${kind} must contain a JSON object`, `NATIVE_OVERVIEW_${kind.toUpperCase()}`);
+    }
+    return value;
+  } finally {
+    await file.close();
+  }
+}
+async function resolveNativeOverviewTarget({
+  configPath = process.env.CODEX_MICRO_OVERVIEW_FILE || DEFAULT_OVERVIEW_CONFIG_PATH,
+  profilesRoot = DEFAULT_STUDIO_PROFILES_ROOT,
+  studioVersion: studioVersion2
+} = {}) {
+  const config = await readBoundedJson(configPath, "config", { optional: true });
+  if (config === null || config.enabled === false) return null;
+  if (config.enabled !== true) throw invalid2("enabled must be a boolean");
+  if (config.studioVersion !== SUPPORTED_OVERVIEW_STUDIO_VERSION || studioVersion2 !== config.studioVersion) {
+    throw invalid2("Studio version is not the explicitly supported version", "NATIVE_OVERVIEW_VERSION");
+  }
+  if (typeof config.actionid !== "string" || !UUID.test(config.actionid)) throw invalid2("actionid must be a UUID");
+  if (typeof config.profilePath !== "string" || !(0, import_node_path4.isAbsolute)(config.profilePath) || (0, import_node_path4.extname)(config.profilePath).toLowerCase() !== ".json") {
+    throw invalid2("profilePath must be an absolute JSON path");
+  }
+  let root;
+  let profilePath;
+  try {
+    [root, profilePath] = await Promise.all([(0, import_promises4.realpath)(profilesRoot), (0, import_promises4.realpath)(config.profilePath)]);
+  } catch {
+    throw invalid2("profile or ProfilesV2 directory is unavailable", "NATIVE_OVERVIEW_PROFILE");
+  }
+  const location = (0, import_node_path4.relative)(root, profilePath);
+  if (!location || location === ".." || location.startsWith(`..${import_node_path4.sep}`) || (0, import_node_path4.isAbsolute)(location) || (0, import_node_path4.extname)(profilePath).toLowerCase() !== ".json") {
+    throw invalid2("profile must remain inside Studio ProfilesV2", "NATIVE_OVERVIEW_PROFILE");
+  }
+  const profile = await readBoundedJson(profilePath, "profile");
+  const controllers = Array.isArray(profile.Controllers) ? profile.Controllers.filter((controller) => controller?.Type === "Keypad") : [];
+  if (controllers.length !== 1) throw invalid2("profile must have one Keypad controller", "NATIVE_OVERVIEW_PROFILE");
+  const window = controllers[0].Actions?.["3_2"];
+  if (window?.Action !== NATIVE_WINDOW_ACTION || window.ActionID !== config.actionid) {
+    throw invalid2("native window assignment no longer matches", "NATIVE_OVERVIEW_PROFILE");
+  }
+  if (window.ActionParam?.SmallViewMode !== 2) {
+    throw invalid2("native window is not in background-only mode", "NATIVE_OVERVIEW_PROFILE");
+  }
+  if (!Array.isArray(window.ViewParam) || window.ViewParam.length !== 1 || window.ViewParam[0]?.Icon !== "" || window.ViewParam[0]?.IconRel !== "") {
+    throw invalid2("native window has a user-selected background", "NATIVE_OVERVIEW_PROFILE");
+  }
+  return Object.freeze({ uuid: OVERVIEW_PLUGIN_UUID, actionid: window.ActionID, key: "3_2" });
+}
+
 // plugin/app.js
 var PLUGIN_UUID = "com.ulanzi.ulanzistudio.codexmicro";
 var BRIDGE_URL = process.env.CODEX_BRIDGE_URL || "http://127.0.0.1:17373";
-var [address = "127.0.0.1", port = "3906"] = process.argv.slice(2);
+var [address = "127.0.0.1", port = "3906", language = "en-US", studioVersion = ""] = process.argv.slice(2);
+var UNTITLED = untitledTaskLabel(language);
 var HOST_URL = `ws://${address}:${port}`;
 var instances = /* @__PURE__ */ new Map();
-var PLUGIN_ROOT = (0, import_node_path2.resolve)((0, import_node_path2.dirname)((0, import_node_path2.resolve)(process.argv[1])), "..");
-var MANIFEST = JSON.parse((0, import_node_fs2.readFileSync)((0, import_node_path2.resolve)(PLUGIN_ROOT, "manifest.json"), "utf8"));
+var PLUGIN_ROOT = (0, import_node_path5.resolve)((0, import_node_path5.dirname)((0, import_node_path5.resolve)(process.argv[1])), "..");
+var MANIFEST = JSON.parse((0, import_node_fs3.readFileSync)((0, import_node_path5.resolve)(PLUGIN_ROOT, "manifest.json"), "utf8"));
+var taskArtwork = createTaskArtwork({ pluginRoot: PLUGIN_ROOT, theme: DEFAULT_KEY_THEME });
+var conversationLabels = createConversationLabels({ filePath: process.env.CODEX_MICRO_LABELS_FILE });
+var setTaskDisplay = createTaskDisplay({
+  theme: DEFAULT_KEY_THEME,
+  artwork: taskArtwork,
+  send,
+  isCurrent: (instance) => instances.get(contextOf(instance)) === instance
+});
 var bridgeSetup = createBridgeInstaller({
   pluginRoot: PLUGIN_ROOT,
   bridgeUrl: BRIDGE_URL,
   version: MANIFEST.Version
 });
-var USAGE_BASE64 = (0, import_node_fs2.readFileSync)(
-  (0, import_node_path2.resolve)(PLUGIN_ROOT, "assets/icons/usage-base.png")
-).toString("base64");
 var ACTION_LABELS = Object.freeze({
   fast: "FAST",
   usage: "USAGE",
@@ -4062,24 +5235,23 @@ var ACTION_LABELS = Object.freeze({
   mic: "MIC",
   submit: "SUBMIT"
 });
-var TASK_ICON_PATHS = Object.freeze({
-  idle: "assets/icons/task-idle.png",
-  working: "assets/icons/task-working.png",
-  complete: "assets/icons/task-complete.png",
-  attention: "assets/icons/task-attention.png",
-  error: "assets/icons/task-error.png"
-});
 var socket;
 var reconnectTimer;
 var pollTimer;
 var pollInFlight = false;
 var latestState = null;
 var setupOperation = null;
+var labelStorageError = null;
+var overviewDisplay = null;
+var overviewTargetKey = null;
+var overviewCheckedAt = -Infinity;
+var overviewSetupError = null;
+var overviewRuntimeError = null;
 function contextOf(message) {
   return String(message.actionid || `${message.uuid}___${message.key}`);
 }
 function taskSlot(uuid) {
-  const match = String(uuid || "").match(/\.task([1-5])$/);
+  const match = String(uuid || "").match(/\.task([1-9]|1[0-3])$/);
   return match ? Number(match[1]) - 1 : null;
 }
 function actionName(uuid) {
@@ -4089,34 +5261,8 @@ function actionName(uuid) {
 function usageRemaining(usage) {
   const windows = Array.isArray(usage?.windows) ? usage.windows : [];
   const window = windows.find((item) => item?.kind === "weekly") ?? windows[0];
-  const remaining = Number(window?.remainingPercent);
-  return Number.isFinite(remaining) ? Math.max(0, Math.min(100, Math.round(remaining))) : null;
-}
-function usageIconData(usage) {
-  const remaining = usageRemaining(usage);
-  const progress = remaining === null ? "#858c8f" : remaining >= 50 ? "#2fbd7f" : remaining >= 20 ? "#e89b2d" : "#e45861";
-  const circumference = 2 * Math.PI * 57;
-  const filled = circumference * (remaining ?? 0) / 100;
-  const value = remaining === null ? "\u2014" : String(remaining);
-  const percent = remaining === null ? "" : "%";
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="196" height="196" viewBox="0 0 196 196">
-    <defs>
-      <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="4.5" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-    <image width="196" height="196" href="data:image/png;base64,${USAGE_BASE64}" xlink:href="data:image/png;base64,${USAGE_BASE64}"/>
-    <g fill="none" transform="rotate(-90 98 94)">
-      <circle cx="98" cy="94" r="58.5" stroke="#ffffff" stroke-opacity=".57" stroke-width="2.4"/>
-      <circle cx="98" cy="94" r="57" stroke="#5e6c68" stroke-opacity=".57" stroke-width="16"/>
-      <circle cx="98" cy="94" r="57" stroke="#a0aca9" stroke-width="12"/>
-      <circle cx="98" cy="94" r="57" stroke="#cdd6d3" stroke-width="6"/>
-      ${remaining === null ? "" : `<circle cx="98" cy="94" r="57" stroke="${progress}" stroke-opacity=".5" stroke-width="18" stroke-linecap="butt" stroke-dasharray="${filled} ${circumference - filled}" filter="url(#glow)"/><circle cx="98" cy="94" r="57" stroke="${progress}" stroke-width="10" stroke-linecap="butt" stroke-dasharray="${filled} ${circumference - filled}"/>`}
-    </g>
-    <text x="98" y="105" fill="#303638" font-family="-apple-system,BlinkMacSystemFont,Arial,sans-serif" font-size="36" font-weight="700" text-anchor="middle">${value}${percent ? `<tspan dx="2" dy="-2" font-size="18">${percent}</tspan>` : ""}</text>
-  </svg>`;
-  return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
+  const remaining2 = Number(window?.remainingPercent);
+  return Number.isFinite(remaining2) ? Math.max(0, Math.min(100, Math.round(remaining2))) : null;
 }
 function send(message) {
   if (socket?.readyState === wrapper_default.OPEN) {
@@ -4143,6 +5289,54 @@ function sendToInspector(message, payload) {
     payload
   });
 }
+function inspectorTask(message) {
+  const slot = taskSlot(message.uuid) ?? (actionName(message.uuid) === "navigate" ? 0 : null);
+  return slot === null ? null : latestState?.slots?.[slot];
+}
+async function syncConversationLabels(state) {
+  try {
+    await conversationLabels.ensure((state?.slots || []).map((task) => task?.threadKey).filter(Boolean));
+    labelStorageError = null;
+  } catch (error) {
+    if (labelStorageError !== error.message) send({
+      cmd: "logMessage",
+      uuid: PLUGIN_UUID,
+      level: "error",
+      message: `Conversation labels: ${error.message}`
+    });
+    labelStorageError = error.message;
+  }
+}
+async function handleConversationLabelMessage(message) {
+  let error = null;
+  let errorCode = null;
+  try {
+    const action = message.payload?.action || "status";
+    if (!["status", "save", "reset"].includes(action)) throw new Error("Unknown label action");
+    if (action !== "status") {
+      const task2 = inspectorTask(message);
+      if (!task2?.threadKey || message.payload?.threadKey !== task2.threadKey) {
+        throw Object.assign(new Error("The conversation on this key changed. Check its name and try again."), { code: "STALE_CONVERSATION" });
+      }
+      await conversationLabels.setAlias(task2.threadKey, action === "reset" ? "" : message.payload.alias);
+      renderAll();
+    }
+  } catch (failure) {
+    error = failure.message;
+    errorCode = ["STALE_CONVERSATION", "INVALID_CONVERSATION_LABEL", "LABEL_CAPACITY_REACHED"].includes(failure.code) ? failure.code : "LABEL_STORAGE_ERROR";
+  }
+  const task = inspectorTask(message);
+  const label = task?.threadKey ? conversationLabels.get(task.threadKey) : null;
+  sendToInspector(message, {
+    type: "conversationLabelStatus",
+    threadKey: task?.threadKey || null,
+    title: task?.threadKey ? task.title || UNTITLED : "",
+    identifier: label?.identifier || "",
+    alias: label?.alias || "",
+    error: error || labelStorageError,
+    errorCode: errorCode || (labelStorageError ? "LABEL_STORAGE_ERROR" : null)
+  });
+}
 async function sendBridgeSetupStatus(message, extra = {}) {
   const status = await bridgeSetup.status();
   sendToInspector(message, {
@@ -4158,7 +5352,7 @@ async function handleBridgeSetupMessage(message) {
   if (action === "openGuide") {
     send({
       cmd: "openurl",
-      url: "https://github.com/UlanziTechnology/OpenCodexMicro#1-llm--agent-installation",
+      url: "https://github.com/RickeyRen/OpenCodexMicro-Aurora#1-llm--agent-installation",
       local: false
     });
     await sendBridgeSetupStatus(message);
@@ -4200,59 +5394,7 @@ async function handleBridgeSetupMessage(message) {
   }
   await sendBridgeSetupStatus(message, { result, error: failure });
 }
-function taskIconPath(status) {
-  const value = String(status || "").toLowerCase();
-  if (["working", "thinking", "running", "in_progress"].includes(value)) return TASK_ICON_PATHS.working;
-  if (["unread", "complete", "completed", "done", "success"].includes(value)) return TASK_ICON_PATHS.complete;
-  if (["attention", "notification", "input", "approval", "waiting_input", "needs_input"].includes(value)) return TASK_ICON_PATHS.attention;
-  if (["error", "failed", "failure"].includes(value)) return TASK_ICON_PATHS.error;
-  return TASK_ICON_PATHS.idle;
-}
-function shortTitle(value) {
-  const title = String(value || "Untitled").replace(/\s+/g, " ").trim();
-  return title.length > 18 ? `${title.slice(0, 17)}\u2026` : title;
-}
-function setDisplay(instance, state, text) {
-  const digest = `${state}:${text}`;
-  if (!instance.active || instance.lastDisplay === digest) return;
-  instance.lastDisplay = digest;
-  send({
-    cmd: "state",
-    param: {
-      statelist: [{
-        uuid: instance.uuid,
-        actionid: instance.actionid,
-        key: instance.key,
-        type: 0,
-        state,
-        showtext: true,
-        textdata: text
-      }]
-    }
-  });
-}
-function setTaskDisplay(instance, path, text) {
-  const digest = `path:${path}:${text}`;
-  if (!instance.active || instance.lastDisplay === digest) return;
-  instance.lastDisplay = digest;
-  send({
-    cmd: "state",
-    param: {
-      statelist: [{
-        uuid: instance.uuid,
-        actionid: instance.actionid,
-        key: instance.key,
-        type: 2,
-        path,
-        showtext: true,
-        textdata: text
-      }]
-    }
-  });
-}
-function setUsageDisplay(instance, usage) {
-  const remaining = usageRemaining(usage);
-  const digest = `usage:${remaining ?? "unknown"}`;
+function setArtworkDisplay(instance, data, digest) {
   if (!instance.active || instance.lastDisplay === digest) return;
   instance.lastDisplay = digest;
   send({
@@ -4263,57 +5405,104 @@ function setUsageDisplay(instance, usage) {
         actionid: instance.actionid,
         key: instance.key,
         type: 1,
-        data: usageIconData(usage),
-        showtext: true,
-        textdata: ACTION_LABELS.usage
+        data,
+        showtext: false,
+        textdata: ""
       }]
     }
   });
+}
+function shortTaskLabel(task, label) {
+  if (label?.alias) return formatTaskLabel(label.alias, { preserveLines: true });
+  return formatTaskLabel(task.title || UNTITLED);
 }
 function renderInstance(instance) {
   const slot = taskSlot(instance.uuid);
   if (slot === null) {
     const action = actionName(instance.uuid);
     if (!latestState?.connected) {
-      if (action === "navigate") {
-        setTaskDisplay(instance, TASK_ICON_PATHS.idle, "Bridge Offline");
-      } else {
-        setDisplay(instance, 0, "Bridge Offline");
-      }
+      setArtworkDisplay(instance, taskVisual("offline", "\xD7"), "offline");
       return;
     }
     if (action === "usage") {
-      setUsageDisplay(instance, latestState.usage);
+      const remaining2 = usageRemaining(latestState.usage);
+      setArtworkDisplay(instance, usageVisual(remaining2), `usage:${remaining2 ?? "unknown"}`);
       return;
     }
     if (action === "navigate") {
       const task2 = latestState.slots?.[0];
-      if (!task2?.threadKey) {
-        setTaskDisplay(instance, TASK_ICON_PATHS.idle, "Latest Task");
-        return;
-      }
-      setTaskDisplay(instance, taskIconPath(task2.status), shortTitle(task2.title));
+      const label2 = task2?.threadKey ? conversationLabels.get(task2.threadKey) : null;
+      setTaskDisplay(
+        instance,
+        task2?.threadKey ? task2.status : "empty",
+        task2?.threadKey ? shortTaskLabel(task2, label2) : "\xB7",
+        label2?.identifier || ""
+      );
       return;
     }
-    setDisplay(instance, 0, ACTION_LABELS[action] || "CODEX");
+    setArtworkDisplay(instance, actionVisual(action), `action:${action}`);
     return;
   }
   if (!latestState?.connected) {
-    setTaskDisplay(instance, TASK_ICON_PATHS.idle, "Bridge Offline");
+    setTaskDisplay(instance, "offline", "\xD7");
     return;
   }
   const task = latestState.slots?.[slot];
   if (!task?.threadKey) {
-    setTaskDisplay(instance, TASK_ICON_PATHS.idle, `Task ${slot + 1}`);
+    setTaskDisplay(instance, "empty", "\xB7");
     return;
   }
-  setTaskDisplay(instance, taskIconPath(task.status), shortTitle(task.title));
+  const label = conversationLabels.get(task.threadKey);
+  setTaskDisplay(instance, task.status, shortTaskLabel(task, label), label?.identifier || "");
 }
 function renderAll() {
   for (const instance of instances.values()) renderInstance(instance);
 }
-async function bridgeRequest(path, method = "GET") {
-  const response = await fetch(`${BRIDGE_URL}${path}`, {
+async function syncOverview() {
+  const now = Date.now();
+  if (now < overviewCheckedAt || now - overviewCheckedAt >= 5e3) {
+    overviewCheckedAt = now;
+    try {
+      const target = await resolveNativeOverviewTarget({ studioVersion });
+      const targetKey = target ? JSON.stringify(target) : null;
+      if (targetKey !== overviewTargetKey) {
+        overviewDisplay?.dispose();
+        overviewDisplay = null;
+        overviewTargetKey = targetKey;
+        if (target) {
+          const display = createOverviewDisplay({
+            send,
+            target,
+            language,
+            isCurrent: () => overviewDisplay === display && socket?.readyState === wrapper_default.OPEN,
+            onError: (error) => send({
+              cmd: "logMessage",
+              uuid: PLUGIN_UUID,
+              level: "error",
+              message: `Native overview: ${error.message}`
+            })
+          });
+          overviewDisplay = display;
+        }
+      }
+      overviewSetupError = null;
+    } catch (error) {
+      overviewDisplay?.dispose();
+      overviewDisplay = null;
+      overviewTargetKey = null;
+      if (overviewSetupError !== error.message) send({
+        cmd: "logMessage",
+        uuid: PLUGIN_UUID,
+        level: "error",
+        message: `Native overview setup: ${error.message}`
+      });
+      overviewSetupError = error.message;
+    }
+  }
+  overviewDisplay?.update(latestState);
+}
+async function bridgeRequest(path2, method = "GET") {
+  const response = await fetch(`${BRIDGE_URL}${path2}`, {
     method,
     signal: AbortSignal.timeout(1200)
   });
@@ -4324,6 +5513,7 @@ async function bridgeRequest(path, method = "GET") {
   return payload;
 }
 async function openTaskSlot(slot) {
+  if (!latestState?.connected) throw new Error("Codex Bridge is offline");
   const task = latestState?.slots?.[slot];
   if (!task?.threadKey) throw new Error(`Codex task slot ${slot + 1} is empty`);
   await bridgeRequest(`/thread/${encodeURIComponent(task.threadKey)}/click?slot=${slot}`, "POST");
@@ -4333,11 +5523,25 @@ async function pollBridge() {
   pollInFlight = true;
   try {
     latestState = await bridgeRequest("/state");
+    await syncConversationLabels(latestState);
   } catch (error) {
     latestState = { connected: false, error: error.message, slots: [] };
   } finally {
-    pollInFlight = false;
     renderAll();
+    try {
+      await syncOverview();
+      overviewRuntimeError = null;
+    } catch (error) {
+      if (overviewRuntimeError !== error.message) send({
+        cmd: "logMessage",
+        uuid: PLUGIN_UUID,
+        level: "error",
+        message: `Native overview refresh: ${error.message}`
+      });
+      overviewRuntimeError = error.message;
+    } finally {
+      pollInFlight = false;
+    }
   }
 }
 async function invoke(instance, pressed) {
@@ -4411,6 +5615,7 @@ function handleMessage(raw) {
     instance.active = Boolean(message.active);
     if (instance.active) {
       instance.lastDisplay = null;
+      instance.pendingDisplay = null;
       renderInstance(instance);
     }
     ack(message);
@@ -4425,6 +5630,9 @@ function handleMessage(raw) {
     ack(message);
     if (message.payload?.type === "bridgeSetup") {
       void handleBridgeSetupMessage(message);
+    }
+    if (message.payload?.type === "conversationLabel") {
+      void handleConversationLabelMessage(message);
     }
     return;
   }
@@ -4449,6 +5657,11 @@ function connect() {
   socket = new wrapper_default(HOST_URL);
   socket.on("open", () => {
     send({ code: 0, cmd: "connected", uuid: PLUGIN_UUID });
+    overviewDisplay?.invalidate();
+    for (const instance of instances.values()) {
+      instance.lastDisplay = null;
+      instance.pendingDisplay = null;
+    }
     clearInterval(pollTimer);
     pollTimer = setInterval(() => void pollBridge(), 500);
     pollTimer.unref();
@@ -4467,6 +5680,7 @@ for (const signal of ["SIGINT", "SIGTERM"]) {
   process.on(signal, () => {
     clearTimeout(reconnectTimer);
     clearInterval(pollTimer);
+    overviewDisplay?.dispose();
     socket?.close();
     process.exit(0);
   });

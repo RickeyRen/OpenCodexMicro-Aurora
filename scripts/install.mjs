@@ -9,6 +9,8 @@ import {
 import { execFileSync } from "node:child_process";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
+import { bridgeLauncher } from "../integration/com.ulanzi.codexmicro.ulanziPlugin/plugin/bridge-launcher.js";
+import { bridgeAgentEnvironment, bridgeAgentEnvironmentXml } from "../integration/com.ulanzi.codexmicro.ulanziPlugin/plugin/bridge-installer.js";
 
 const home = homedir();
 const uid = process.getuid();
@@ -29,6 +31,8 @@ const xml = (value) => String(value)
   .replaceAll(">", "&gt;")
   .replaceAll('"', "&quot;")
   .replaceAll("'", "&apos;");
+
+const agentEnvironment = await bridgeAgentEnvironment({ agentPath: bridgeAgent });
 
 await mkdir(appRoot, { recursive: true, mode: 0o700 });
 await chmod(appRoot, 0o700);
@@ -106,51 +110,6 @@ const bridgeInfo = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 await writeFile(join(bridgeContents, "Info.plist"), bridgeInfo);
 
-const bridgeLauncher = `#!/bin/zsh
-set -u
-unsetopt BG_NICE
-
-codex_binary="/Applications/ChatGPT.app/Contents/MacOS/ChatGPT"
-bridge_log="$HOME/Library/Logs/OpenCodexMicro-codex-bridge.log"
-
-if [[ ! -x "$codex_binary" ]]; then
-  /usr/bin/osascript -e 'display alert "Codex Bridge" message "Codex was not found at /Applications/ChatGPT.app." as critical'
-  exit 1
-fi
-
-if /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1; then
-  /usr/bin/osascript -e 'tell application id "com.openai.codex" to quit'
-  for attempt in {1..80}; do
-    /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1 || break
-    /bin/sleep 0.1
-  done
-fi
-
-if /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1; then
-  /usr/bin/osascript -e 'display alert "Codex Bridge" message "Codex did not quit, so bridge parameters could not be applied. Quit Codex and try again." as critical'
-  exit 1
-fi
-
-/usr/bin/nohup "$codex_binary" \\
-  --remote-debugging-address=127.0.0.1 \\
-  --remote-debugging-port=9222 \\
-  --remote-allow-origins=http://127.0.0.1:9222 \\
-  >>"$bridge_log" 2>&1 &
-
-for attempt in {1..300}; do
-  if /usr/bin/curl --noproxy '*' --silent --fail --max-time 0.2 \\
-    http://127.0.0.1:9222/json/version >/dev/null 2>&1; then
-    exit 0
-  fi
-  if ! /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1; then
-    break
-  fi
-  /bin/sleep 0.1
-done
-
-/usr/bin/osascript -e 'display alert "Codex Bridge" message "Codex started, but the bridge endpoint is unavailable. Task keys will use the slower native fallback. Quit Codex and launch Codex Bridge again." as critical'
-exit 1
-`;
 await writeFile(bridgeExecutable, bridgeLauncher, { mode: 0o755 });
 await chmod(bridgeExecutable, 0o755);
 execFileSync("/usr/bin/codesign", [
@@ -170,6 +129,7 @@ const bridgePlist = `<?xml version="1.0" encoding="UTF-8"?>
     <string>${xml(process.execPath)}</string>
     <string>${xml(join(appRoot, "bridge.mjs"))}</string>
   </array>
+  ${bridgeAgentEnvironmentXml(agentEnvironment)}
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
   <key>ProcessType</key><string>Background</string>

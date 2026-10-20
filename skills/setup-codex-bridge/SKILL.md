@@ -29,15 +29,19 @@ OpenCodexMicro checkout.
    ```bash
    test -x "$HOME/Applications/Codex Bridge.app/Contents/MacOS/Codex Bridge"
    launchctl print "gui/$(id -u)/io.opencodexmicro.bridge"
-   curl --fail http://127.0.0.1:17373/health
+   npm run doctor -- --lang en
    ```
 
-5. Do not launch `Codex Bridge.app` merely to verify installation. Launching it
-   quits any running Codex instance; do so only when the user asks and has had
-   a chance to save current work.
-6. When launched, verify `/state` and report whether `connected` is true. If it
+5. Do not launch `Codex Bridge.app` merely to verify installation. The local
+   launcher refuses to interrupt a running ChatGPT instance. Ask the user to
+   save current work and explicitly authorize quitting and restarting Codex
+   before changing its launch mode; do not bypass the launcher's guard.
+6. When launched with authorization, verify cached `/state` and report whether `connected` is true. If it
    is false, inspect `bridge-error.log` and confirm Codex was opened through the
    wrapper app.
+
+   Do not use `/health` for read-only verification: it forces a refresh and may
+   establish CDP and execute the Micro runtime integration.
 
 ## Boundaries
 

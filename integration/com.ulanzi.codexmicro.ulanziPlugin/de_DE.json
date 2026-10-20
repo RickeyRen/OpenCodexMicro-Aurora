@@ -1,22 +1,96 @@
 {
-  "Name": "Codex Micro",
-  "Overview": "Codex-Desktop-Aufgaben und -Aktionen mit der Ulanzi D200 Series in Ulanzi Studio steuern.",
-  "Description": "Verwandeln Sie die Ulanzi D200 Series über Ulanzi Studio in eine dedizierte Steueroberfläche für Codex Desktop.\n\nFUNKTIONEN\n- Zeigt fünf aktuelle Codex-Aufgaben mit Live-Status und öffnet exakt die ausgewählte Aufgabe.\n- Bietet Fast, Usage, Pin, New, Fork, Steer, Mic und Submit.\n- Mit Latest Task & Scroll öffnen Sie task1 und scrollen Codex über den Encoder.\n- Codex Bridge über die Einstellungsseite jeder Action installieren, reparieren, starten und prüfen.\n- Hält die Kommunikation über Codex Bridge.app und ausschließlich lokale Loopback-Endpunkte auf dem Mac.\n\nINSTALLATIONSUMGEBUNG\n- macOS 13 oder neuer\n- Codex Desktop\n- Ulanzi Studio 3.0.1 oder neuer\n- In Ulanzi Studio verbundene Ulanzi D200 Series\n- Node.js 20 oder neuer nur für die manuelle Einrichtung aus dem Repository\n\nLLM-/AGENT-INSTALLATION\nGeben Sie in Ihrem Agent ein:\nInstalliere bitte das Ulanzi-Studio-Plugin für mich: https://github.com/UlanziTechnology/OpenCodexMicro#1-llm--agent-installation\n\nMANUELLE INSTALLATION\n1. https://github.com/UlanziTechnology/OpenCodexMicro klonen und das Repository öffnen.\n2. Ulanzi Studio beenden.\n3. Ausführen: npm install\n4. Ausführen: npm run install:plugin\n5. Ausführen: npm run setup\n6. Ulanzi Studio erneut öffnen, Codex Desktop beenden und ~/Applications/Codex Bridge.app starten.\n7. Die Codex-Micro-Aktionen in Ulanzi Studio den gewünschten Tasten hinzufügen.\n8. Eine Action auswählen und Installation, Dienst sowie CDP auf der Codex-Bridge-Seite prüfen.\n\nWICHTIG\nStarten Sie Codex bei Verwendung von Codex Micro immer über ~/Applications/Codex Bridge.app. Öffnen Sie Codex Desktop nicht direkt.\nStartbefehl: open ~/Applications/Codex\\ Bridge.app",
+  "Name": "Codex Micro · Aurora",
+  "Overview": "Aurora-Silk-Animationen für 13 Codex-Chats sowie verbleibende Nutzung und KI-Status auf dem breiten Display der Ulanzi D200H.",
+  "Description": "OpenCodexMicro · Aurora macht die Ulanzi D200H zur Codex-Desktop-Steuerung mit Aurora-Silk-Animationen und einer gut lesbaren Live-Übersicht.\n\nFUNKTIONEN\n- Aurora Silk zeigt laufende, wartende, ungelesen abgeschlossene, fehlerhafte und inaktive Chats mit einheitlichen Statusfarben.\n- Zeigt echte Chat-Titel, feste Kennnummern und optionale Aliase, die nur auf diesem Mac gespeichert werden.\n- Die optionale native Display-Übersicht zeigt verbleibende Nutzung, Zeit bis zum Zurücksetzen und Anzahlen laufender, wartender oder fehlerhafter Chats; alle dreizehn Chat-Tasten bleiben erhalten. Dieser Kompatibilitätsweg wurde mit Studio 3.4.4 geprüft und wird bei ungeprüften Versionen deaktiviert.\n- Zeigt dreizehn Codex-Chats mit Live-Status und öffnet exakt die ausgewählte Aufgabe.\n- Bietet Fast, Usage, Pin, New, Fork, Steer, Mic und Submit.\n- Mit Latest Task & Scroll öffnen Sie task1 und scrollen Codex über den Encoder.\n- Codex Bridge über die Einstellungsseite jeder Action installieren, reparieren, starten und prüfen.\n- Hält die Kommunikation über Codex Bridge.app und ausschließlich lokale Loopback-Endpunkte auf dem Mac.\n\nINSTALLATIONSUMGEBUNG\n- macOS 13 oder neuer; auf Apple Silicon getestet\n- Codex Desktop\n- Ulanzi Studio 3.4.4 (geprüfte Kompatibilitätsversion)\n- In Ulanzi Studio verbundene Ulanzi D200H\n- Node.js 20 oder neuer nur für die manuelle Einrichtung aus dem Repository\n\nLLM-/AGENT-INSTALLATION\nGeben Sie in Ihrem Agent ein:\nInstalliere bitte das Ulanzi-Studio-Plugin für mich: https://github.com/RickeyRen/OpenCodexMicro-Aurora#1-llm--agent-installation\n\nMANUELLE INSTALLATION\n1. https://github.com/RickeyRen/OpenCodexMicro-Aurora klonen und das Repository öffnen.\n2. Ulanzi Studio beenden.\n3. Ausführen: npm install\n4. Ausführen: npm run install:plugin\n5. Ausführen: npm run setup\n6. Ulanzi Studio erneut öffnen, Codex Desktop beenden und ~/Applications/Codex Bridge.app starten.\n7. Die Codex-Micro-Aktionen in Ulanzi Studio den gewünschten Tasten hinzufügen.\n8. Eine Action auswählen und Installation, Dienst sowie CDP auf der Codex-Bridge-Seite prüfen.\n9. Optionales breites Display: In Studio Pure background ohne Bild auswählen und npm run setup:overview -- --enable ausführen. Profilauswahl und Kompatibilitätsgrenzen stehen in der Anleitung.\n\nWICHTIG\nStarten Sie Codex bei Verwendung von Codex Micro immer über ~/Applications/Codex Bridge.app. Öffnen Sie Codex Desktop nicht direkt.\nStartbefehl: open ~/Applications/Codex\\ Bridge.app",
   "Actions": [
-    { "Name": "Codex-Aufgabe 1", "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 1 und zeigt seinen Live-Status." },
-    { "Name": "Codex-Aufgabe 2", "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 2 und zeigt seinen Live-Status." },
-    { "Name": "Codex-Aufgabe 3", "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 3 und zeigt seinen Live-Status." },
-    { "Name": "Codex-Aufgabe 4", "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 4 und zeigt seinen Live-Status." },
-    { "Name": "Codex-Aufgabe 5", "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 5 und zeigt seinen Live-Status." },
-    { "Name": "Codex-Schnellmodus", "Tooltip": "Schaltet den Schnellmodus für die aktive Codex-Aufgabe um." },
-    { "Name": "Codex-Nutzung", "Tooltip": "Zeigt das verbleibende Codex-Nutzungskontingent und fokussiert Codex beim Drücken." },
-    { "Name": "Codex-Aufgabe anheften", "Tooltip": "Heftet die aktive Codex-Aufgabe an oder löst sie." },
-    { "Name": "Neue Codex-Aufgabe", "Tooltip": "Erstellt eine neue Codex-Aufgabe." },
-    { "Name": "Letzte Aufgabe & Scrollen", "Tooltip": "Drücken öffnet die letzte Codex-Aufgabe. Links drehen scrollt nach oben, rechts drehen nach unten." },
-    { "Name": "Codex-Aufgabe abzweigen", "Tooltip": "Zweigt die aktive Codex-Aufgabe in eine neue Aufgabe ab." },
-    { "Name": "Codex steuern", "Tooltip": "Sendet den aktuellen Eingabetext als Steueranweisung an die laufende Aufgabe." },
-    { "Name": "Codex-Mikrofon", "Tooltip": "Schaltet die Codex-Mikrofonaktion um." },
-    { "Name": "An Codex senden", "Tooltip": "Sendet den aktuellen Codex-Eingabetext oder stellt ihn in die Warteschlange." }
+    {
+      "Name": "Codex-Aufgabe 1",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 1 und zeigt seinen Live-Status."
+    },
+    {
+      "Name": "Codex-Aufgabe 2",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 2 und zeigt seinen Live-Status."
+    },
+    {
+      "Name": "Codex-Aufgabe 3",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 3 und zeigt seinen Live-Status."
+    },
+    {
+      "Name": "Codex-Aufgabe 4",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 4 und zeigt seinen Live-Status."
+    },
+    {
+      "Name": "Codex-Aufgabe 5",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 5 und zeigt seinen Live-Status."
+    },
+    {
+      "Name": "Codex-Schnellmodus",
+      "Tooltip": "Schaltet den Schnellmodus für die aktive Codex-Aufgabe um."
+    },
+    {
+      "Name": "Codex-Nutzung",
+      "Tooltip": "Zeigt das verbleibende Codex-Nutzungskontingent und fokussiert Codex beim Drücken."
+    },
+    {
+      "Name": "Codex-Aufgabe anheften",
+      "Tooltip": "Heftet die aktive Codex-Aufgabe an oder löst sie."
+    },
+    {
+      "Name": "Neue Codex-Aufgabe",
+      "Tooltip": "Erstellt eine neue Codex-Aufgabe."
+    },
+    {
+      "Name": "Letzte Aufgabe & Scrollen",
+      "Tooltip": "Drücken öffnet die letzte Codex-Aufgabe. Links drehen scrollt nach oben, rechts drehen nach unten."
+    },
+    {
+      "Name": "Codex-Aufgabe abzweigen",
+      "Tooltip": "Zweigt die aktive Codex-Aufgabe in eine neue Aufgabe ab."
+    },
+    {
+      "Name": "Codex steuern",
+      "Tooltip": "Sendet den aktuellen Eingabetext als Steueranweisung an die laufende Aufgabe."
+    },
+    {
+      "Name": "Codex-Mikrofon",
+      "Tooltip": "Schaltet die Codex-Mikrofonaktion um."
+    },
+    {
+      "Name": "An Codex senden",
+      "Tooltip": "Sendet den aktuellen Codex-Eingabetext oder stellt ihn in die Warteschlange."
+    },
+    {
+      "Name": "Codex-Aufgabe 6",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 6 und zeigt seinen Live-Status."
+    },
+    {
+      "Name": "Codex-Aufgabe 7",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 7 und zeigt seinen Live-Status."
+    },
+    {
+      "Name": "Codex-Aufgabe 8",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 8 und zeigt seinen Live-Status."
+    },
+    {
+      "Name": "Codex-Aufgabe 9",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 9 und zeigt seinen Live-Status."
+    },
+    {
+      "Name": "Codex-Aufgabe 10",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 10 und zeigt seinen Live-Status."
+    },
+    {
+      "Name": "Codex-Aufgabe 11",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 11 und zeigt seinen Live-Status."
+    },
+    {
+      "Name": "Codex-Aufgabe 12",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 12 und zeigt seinen Live-Status."
+    },
+    {
+      "Name": "Codex-Aufgabe 13",
+      "Tooltip": "Öffnet den letzten Codex-Aufgabenplatz 13 und zeigt seinen Live-Status."
+    }
   ],
   "Localization": {
     "BridgeSetup": "Codex Bridge einrichten",
@@ -31,8 +105,8 @@
     "UninstallBridgeDone": "Codex Bridge wurde deinstalliert. Das Ulanzi-Plugin und Codex Desktop bleiben erhalten.",
     "UninstallBridgeConfirm": "Codex Bridge und den Hintergrunddienst deinstallieren? Das Ulanzi-Plugin und Codex Desktop werden nicht entfernt.",
     "BridgeAppInfoTitle": "Was ist Codex Bridge.app?",
-    "BridgeAppDescription": "Codex Bridge.app ist ein lokaler Starter. Falls Codex bereits läuft, wird es regulär beendet und anschließend die offizielle Codex-Desktop-Datei mit ausschließlich lokalen CDP-Startparametern gestartet.",
-    "BridgeAppSafety": "Der Starter verändert weder Codex Desktop noch Konten, Projekte oder Benutzerdateien und gibt CDP nicht außerhalb dieses Macs frei. Er führt keine weiteren privilegierten oder destruktiven Aktionen aus. Der separate Bridge-Dienst übernimmt lokalen Status und Action-Kommunikation.",
+    "BridgeAppDescription": "Codex Bridge.app ist ein lokaler Starter. Solange Codex läuft, verweigert er den Start einer weiteren Instanz. Speichern Sie Ihre Arbeit und beenden Sie Codex manuell. Starten Sie danach Codex Bridge.app, um die offizielle ausführbare Codex-Desktop-Datei mit auf Loopback beschränkten CDP-Parametern zu öffnen.",
+    "BridgeAppSafety": "Der Starter lässt die Dateien des Codex-Desktop-App-Bundles auf der Festplatte unverändert und beschränkt CDP auf die Loopback-Schnittstelle dieses Macs. Die Bridge verwendet CDP, um den Micro-Laufzeitstatus von Codex zu lesen und zu verändern sowie Steuerungsaktionen weiterzuleiten.",
     "BackgroundActivityTitle": "Hintergrundaktivität und Node.js",
     "LaunchAgentDescription": "Der LaunchAgent startet den lokalen Codex-Bridge-Dienst bei der Anmeldung und startet ihn nach einem Beenden neu. Der Dienst lauscht nur über eine Loopback-Adresse auf diesem Mac.",
     "NodeSelectionStrategy": "Installieren / Reparieren bevorzugt Node.js 20 oder neuer aus Anmeldeumgebung, PATH, Homebrew oder üblichen Installationspfaden. Nur ersatzweise wird das in Ulanzi Studio enthaltene Node verwendet.",

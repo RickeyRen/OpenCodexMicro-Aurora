@@ -5,7 +5,7 @@ OpenCodexMicro uses Ulanzi Studio as the only device owner.
 ```text
 Codex renderer Micro store
   ├─ local and SSH tasks
-  ├─ Most Recent order, status, and selection
+  ├─ six native Micro slots plus bounded sidebar conversation metadata
   └─ thread -> project and host assignment
                     |
              loopback CDP snapshot
@@ -28,7 +28,9 @@ The initial discovery locates Codex's Micro store, event bus, resolver,
 context map, and usage query clients. Those references are cached for the
 renderer lifecycle and rediscovered only when they become invalid.
 
-Task activation and Fast, Fork, Submit, and Mic use Codex Micro events. Pin,
+The six native task slots and Fast, Fork, Submit, and Mic use Codex Micro events.
+The other seven dashboard slots read the same upstream sidebar metadata signals;
+a local mounted sidebar row is required for their direct activation. Pin,
 New, and Steer invoke the matching semantic renderer controls. An uncertain
 HTTP failure is never replayed through another mechanism because the first
 request may already have executed.
@@ -37,7 +39,11 @@ request may already have executed.
 
 The plugin is a Node.js JavaScript plugin using protocol V3.0.0. It polls the
 Bridge state, keeps each Ulanzi action instance keyed by its context, updates
-task icons and titles, and forwards keydown/keyup events to the Bridge.
+task icons and short labels, and forwards keydown/keyup events to the Bridge.
+Animated statuses use the native `state` type 4 `gifpath` protocol. An unchanged
+status, label, and stable conversation number send no additional image update, so Bridge polling
+does not restart GIF playback. Static task states use type 2 PNGs; controls and
+Usage use type 1 SVG data. All drawing assets stay local.
 
 The distributed entry point is the committed CommonJS file `dist/app.js`.
 Build and smoke checks happen during development; `scripts/install-plugin.mjs`

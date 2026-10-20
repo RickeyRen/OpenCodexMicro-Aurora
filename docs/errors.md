@@ -21,6 +21,10 @@
 ## Security and lifecycle
 
 - CDP and the Bridge API must bind only to loopback addresses.
+- Debugger discovery must match the exact ChatGPT app binary, not another app
+  or browser that happens to have a loopback debugger.
+- Launchers must refuse to interrupt an existing ChatGPT process; process
+  inspection failure must stop startup. Never install a ChatGPT restart loop.
 - The Bridge launcher must allow slow Codex cold starts and fail early only if
   the Codex process exits.
 - Long-lived Bridge and plugin dispatch loops must isolate individual request

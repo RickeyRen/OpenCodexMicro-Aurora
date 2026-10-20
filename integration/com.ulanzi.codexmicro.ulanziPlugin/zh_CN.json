@@ -1,22 +1,96 @@
 {
-  "Name": "Codex Micro",
-  "Overview": "通过 Ulanzi Studio，在 Ulanzi D200 Series 上查看并控制 Codex Desktop。",
-  "Description": "通过 Ulanzi Studio，将 Ulanzi D200 Series 变成 Codex Desktop 专用控制台。\n\n功能\n- 实时显示最近五个 Codex 任务的状态，并精确打开所选任务。\n- 提供 Fast、Usage、Pin、New、Fork、Steer、Mic 和 Submit 操作。\n- 使用 Latest Task & Scroll 旋钮打开 task1，并上下滚动 Codex。\n- 通过每个 Action 的配置页安装、修复、启动并检测 Codex Bridge。\n- 通过 Codex Bridge.app 和仅限回环地址的接口保持本机通信。\n\n安装环境\n- macOS 13 或更高版本\n- Codex Desktop\n- Ulanzi Studio 3.0.1 或更高版本\n- 已在 Ulanzi Studio 中连接 Ulanzi D200 Series\n- 仅使用仓库手动设置 Bridge 时需要 Node.js 20 或更高版本\n\nLLM / AGENT 安装\n在 Agent 中输入：\n替我安装一下UlanziStudio插件：https://github.com/UlanziTechnology/OpenCodexMicro#1-llm--agent-installation\n\n手动安装\n1. 克隆 https://github.com/UlanziTechnology/OpenCodexMicro 并进入仓库目录。\n2. 退出 Ulanzi Studio。\n3. 运行：npm install\n4. 运行：npm run install:plugin\n5. 运行：npm run setup\n6. 重新打开 Ulanzi Studio，退出 Codex Desktop，再启动 ~/Applications/Codex Bridge.app。\n7. 在 Ulanzi Studio 中把 Codex Micro actions 添加到按键。\n8. 选中任意 Action，在 Codex Bridge 设置页检查安装、服务和 CDP 状态。\n\n注意事项\n使用 Codex Micro 时，必须通过 ~/Applications/Codex Bridge.app 启动 Codex，请勿直接打开 Codex Desktop。\n启动命令： open ~/Applications/Codex\\ Bridge.app",
+  "Name": "Codex Micro · Aurora",
+  "Overview": "为 Ulanzi D200H 带来 13 个 Codex 对话的极光丝带动画，在原生长条显示实时剩余额度与 AI 状态。",
+  "Description": "OpenCodexMicro · Aurora 将 Ulanzi D200H 变成 Codex Desktop 专用控制台，以极光丝带动效和清晰长条概览呈现工作状态。\n\n功能\n- Aurora Silk 极光丝带动画以统一颜色表示运行、等待、完成未读、异常和空闲。\n- 显示真实对话标题、固定编号，并支持仅保存在本机的自定义别名。\n- 可选择在原生长条显示剩余额度、重置倒计时及运行／等待／异常数量，保留全部 13 个对话格。此兼容通道已在 Studio 3.4.4 验证，遇到未验证版本时停止更新。\n- 实时显示十三个 Codex 对话的状态，并精确打开所选任务。\n- 提供 Fast、Usage、Pin、New、Fork、Steer、Mic 和 Submit 操作。\n- 使用 Latest Task & Scroll 旋钮打开 task1，并上下滚动 Codex。\n- 通过每个 Action 的配置页安装、修复、启动并检测 Codex Bridge。\n- 通过 Codex Bridge.app 和仅限回环地址的接口保持本机通信。\n\n安装环境\n- macOS 13 或更高版本；已在 Apple Silicon 验证\n- Codex Desktop\n- Ulanzi Studio 3.4.4（已验证的兼容版本）\n- 已在 Ulanzi Studio 中连接 Ulanzi D200H\n- 仅使用仓库手动设置 Bridge 时需要 Node.js 20 或更高版本\n\nLLM / AGENT 安装\n在 Agent 中输入：\n替我安装一下UlanziStudio插件：https://github.com/RickeyRen/OpenCodexMicro-Aurora#1-llm--agent-installation\n\n手动安装\n1. 克隆 https://github.com/RickeyRen/OpenCodexMicro-Aurora 并进入仓库目录。\n2. 退出 Ulanzi Studio。\n3. 运行：npm install\n4. 运行：npm run install:plugin\n5. 运行：npm run setup\n6. 重新打开 Ulanzi Studio，退出 Codex Desktop，再启动 ~/Applications/Codex Bridge.app。\n7. 在 Ulanzi Studio 中把 Codex Micro actions 添加到按键。\n8. 选中任意 Action，在 Codex Bridge 设置页检查安装、服务和 CDP 状态。\n9. 可选长条概览：在 Studio 选择“纯背景”并清空图片，再运行 npm run setup:overview -- --enable。页面选择及兼容限制详见说明。\n\n注意事项\n使用 Codex Micro 时，必须通过 ~/Applications/Codex Bridge.app 启动 Codex，请勿直接打开 Codex Desktop。\n启动命令： open ~/Applications/Codex\\ Bridge.app",
   "Actions": [
-    { "Name": "Codex 任务 1", "Tooltip": "打开最近的 Codex 任务槽位 1，并显示其实时状态。" },
-    { "Name": "Codex 任务 2", "Tooltip": "打开最近的 Codex 任务槽位 2，并显示其实时状态。" },
-    { "Name": "Codex 任务 3", "Tooltip": "打开最近的 Codex 任务槽位 3，并显示其实时状态。" },
-    { "Name": "Codex 任务 4", "Tooltip": "打开最近的 Codex 任务槽位 4，并显示其实时状态。" },
-    { "Name": "Codex 任务 5", "Tooltip": "打开最近的 Codex 任务槽位 5，并显示其实时状态。" },
-    { "Name": "Codex 快速模式", "Tooltip": "切换当前 Codex 任务的快速模式。" },
-    { "Name": "Codex 用量", "Tooltip": "显示 Codex 剩余用量，按下时聚焦 Codex。" },
-    { "Name": "固定 Codex 任务", "Tooltip": "固定或取消固定当前 Codex 任务。" },
-    { "Name": "新建 Codex 任务", "Tooltip": "创建新的 Codex 任务。" },
-    { "Name": "最新任务与滚动", "Tooltip": "按下打开最新的 Codex 任务；左转向上滚动，右转向下滚动。" },
-    { "Name": "分支 Codex 任务", "Tooltip": "将当前 Codex 任务创建为新的分支任务。" },
-    { "Name": "引导 Codex", "Tooltip": "将当前编辑器文本作为引导输入发送给正在运行的任务。" },
-    { "Name": "Codex 麦克风", "Tooltip": "切换 Codex 麦克风操作。" },
-    { "Name": "提交到 Codex", "Tooltip": "提交或排队发送当前 Codex 编辑器文本。" }
+    {
+      "Name": "Codex 任务 1",
+      "Tooltip": "打开最近的 Codex 任务槽位 1，并显示其实时状态。"
+    },
+    {
+      "Name": "Codex 任务 2",
+      "Tooltip": "打开最近的 Codex 任务槽位 2，并显示其实时状态。"
+    },
+    {
+      "Name": "Codex 任务 3",
+      "Tooltip": "打开最近的 Codex 任务槽位 3，并显示其实时状态。"
+    },
+    {
+      "Name": "Codex 任务 4",
+      "Tooltip": "打开最近的 Codex 任务槽位 4，并显示其实时状态。"
+    },
+    {
+      "Name": "Codex 任务 5",
+      "Tooltip": "打开最近的 Codex 任务槽位 5，并显示其实时状态。"
+    },
+    {
+      "Name": "Codex 快速模式",
+      "Tooltip": "切换当前 Codex 任务的快速模式。"
+    },
+    {
+      "Name": "Codex 用量",
+      "Tooltip": "显示 Codex 剩余用量，按下时聚焦 Codex。"
+    },
+    {
+      "Name": "固定 Codex 任务",
+      "Tooltip": "固定或取消固定当前 Codex 任务。"
+    },
+    {
+      "Name": "新建 Codex 任务",
+      "Tooltip": "创建新的 Codex 任务。"
+    },
+    {
+      "Name": "最新任务与滚动",
+      "Tooltip": "按下打开最新的 Codex 任务；左转向上滚动，右转向下滚动。"
+    },
+    {
+      "Name": "分支 Codex 任务",
+      "Tooltip": "将当前 Codex 任务创建为新的分支任务。"
+    },
+    {
+      "Name": "引导 Codex",
+      "Tooltip": "将当前编辑器文本作为引导输入发送给正在运行的任务。"
+    },
+    {
+      "Name": "Codex 麦克风",
+      "Tooltip": "切换 Codex 麦克风操作。"
+    },
+    {
+      "Name": "提交到 Codex",
+      "Tooltip": "提交或排队发送当前 Codex 编辑器文本。"
+    },
+    {
+      "Name": "Codex 任务 6",
+      "Tooltip": "打开最近的 Codex 任务槽位 6，并显示其实时状态。"
+    },
+    {
+      "Name": "Codex 任务 7",
+      "Tooltip": "打开最近的 Codex 任务槽位 7，并显示其实时状态。"
+    },
+    {
+      "Name": "Codex 任务 8",
+      "Tooltip": "打开最近的 Codex 任务槽位 8，并显示其实时状态。"
+    },
+    {
+      "Name": "Codex 任务 9",
+      "Tooltip": "打开最近的 Codex 任务槽位 9，并显示其实时状态。"
+    },
+    {
+      "Name": "Codex 任务 10",
+      "Tooltip": "打开最近的 Codex 任务槽位 10，并显示其实时状态。"
+    },
+    {
+      "Name": "Codex 任务 11",
+      "Tooltip": "打开最近的 Codex 任务槽位 11，并显示其实时状态。"
+    },
+    {
+      "Name": "Codex 任务 12",
+      "Tooltip": "打开最近的 Codex 任务槽位 12，并显示其实时状态。"
+    },
+    {
+      "Name": "Codex 任务 13",
+      "Tooltip": "打开最近的 Codex 任务槽位 13，并显示其实时状态。"
+    }
   ],
   "Localization": {
     "BridgeSetup": "Codex Bridge 设置",
@@ -31,8 +105,8 @@
     "UninstallBridgeDone": "Codex Bridge 已卸载，Ulanzi 插件和 Codex Desktop 保留不变。",
     "UninstallBridgeConfirm": "是否卸载 Codex Bridge 及其后台服务？不会删除 Ulanzi 插件和 Codex Desktop。",
     "BridgeAppInfoTitle": "什么是 Codex Bridge.app？",
-    "BridgeAppDescription": "Codex Bridge.app 是一个本地启动器。如果 Codex 已在运行，它会先请求 Codex 正常退出，再使用仅限本机回环地址的 CDP 启动参数打开官方 Codex Desktop 可执行文件。",
-    "BridgeAppSafety": "该启动器不会修改 Codex Desktop、账户、项目或用户文件，也不会把 CDP 开放到本机之外；它不执行其他提权或破坏性操作。独立的 Bridge 服务负责本地状态和 Action 通信。",
+    "BridgeAppDescription": "Codex Bridge.app 是一个本地启动器。Codex 正在运行时，它会拒绝再次启动。请先保存工作并手动退出 Codex，再启动 Codex Bridge.app；它会使用仅限本机回环地址的 CDP 参数打开官方 Codex Desktop 可执行文件。",
+    "BridgeAppSafety": "启动器保留磁盘上的 Codex Desktop 应用包文件不变，并将 CDP 限定在本机回环接口。Bridge 通过 CDP 读取并操作 Codex 的 Micro 运行时状态，并转发控制操作。",
     "BackgroundActivityTitle": "后台活动与 Node.js",
     "LaunchAgentDescription": "LaunchAgent 会在用户登录时启动本机 Codex Bridge 服务，并在服务退出后自动重启。该服务只通过回环地址在本机监听，不向外部网络开放。",
     "NodeSelectionStrategy": "“安装 / 修复”会优先从登录环境、PATH、Homebrew 和常见安装路径选择系统 Node.js 20 或更高版本，仅在找不到合适版本时使用 Ulanzi Studio 内置 Node。",

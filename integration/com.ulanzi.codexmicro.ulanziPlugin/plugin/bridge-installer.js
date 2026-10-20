@@ -4,6 +4,7 @@ import {
   chmod,
   copyFile,
   mkdir,
+  open,
   readFile,
   realpath,
   rm,
@@ -13,6 +14,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { homedir } from "node:os";
 import { delimiter, join, resolve } from "node:path";
+import { bridgeLauncher } from "./bridge-launcher.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -23,6 +25,60 @@ function xml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&apos;");
+}
+
+export const DEFAULT_USAGE_REFRESH_SECONDS = "30";
+const USAGE_REFRESH_VARIABLE = "CODEX_KEYBOARD_USAGE_REFRESH_SECONDS";
+
+/** Preserve user launchd overrides across either installation path. Never copy
+ * the installer's complete environment (which may contain unrelated secrets). */
+export async function bridgeAgentEnvironment({
+  agentPath,
+  environment = process.env,
+  execute = execFileAsync
+}) {
+  let previous = {};
+  let handle;
+  try {
+    handle = await open(agentPath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW | fsConstants.O_NONBLOCK);
+    const info = await handle.stat();
+    if (!info.isFile() || info.size <= 0 || info.size > 256 * 1024) {
+      throw new Error("Existing Bridge LaunchAgent must be a regular plist of at most 256 KiB.");
+    }
+  } catch (error) {
+    if (error.code !== "ENOENT") throw new Error("Existing Bridge LaunchAgent cannot be safely read; installation was not changed.");
+  } finally {
+    await handle?.close();
+  }
+  if (handle) {
+    try {
+      const { stdout = "" } = await execute("/usr/bin/plutil", [
+        "-convert", "json", "-o", "-", agentPath
+      ], { timeout: 1200, maxBuffer: 256 * 1024 });
+      const plist = JSON.parse(stdout);
+      if (!plist || typeof plist !== "object" || Array.isArray(plist)) throw new Error();
+      previous = plist.EnvironmentVariables ?? {};
+    } catch {
+      throw new Error("Existing Bridge LaunchAgent is invalid; installation was not changed.");
+    }
+  }
+  if (!previous || typeof previous !== "object" || Array.isArray(previous)
+    || Object.entries(previous).some(([key, value]) => !key || typeof value !== "string"
+      || /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(key + value))) {
+    throw new Error("Existing Bridge LaunchAgent environment is invalid; installation was not changed.");
+  }
+  const override = environment[USAGE_REFRESH_VARIABLE];
+  const seconds = override === undefined ? previous[USAGE_REFRESH_VARIABLE] ?? DEFAULT_USAGE_REFRESH_SECONDS : override;
+  if (typeof seconds !== "string" || !seconds.trim() || !Number.isFinite(Number(seconds)) || Number(seconds) < 15) {
+    throw new Error("CODEX_KEYBOARD_USAGE_REFRESH_SECONDS must be a finite number of at least 15 seconds.");
+  }
+  return { ...previous, [USAGE_REFRESH_VARIABLE]: seconds };
+}
+
+export function bridgeAgentEnvironmentXml(environment) {
+  return `<key>EnvironmentVariables</key><dict>\n${Object.entries(environment)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([key, value]) => `    <key>${xml(key)}</key><string>${xml(value)}</string>`).join("\n")}\n  </dict>`;
 }
 
 async function exists(path, mode = fsConstants.F_OK) {
@@ -118,6 +174,7 @@ export function createBridgeInstaller({
   platform = process.platform,
   nodeExecutable = process.execPath,
   environmentPath = process.env.PATH || "",
+  environment = process.env,
   execute = execFileAsync
 }) {
   const appRoot = join(home, "Library", "Application Support", "OpenCodexMicro");
@@ -209,6 +266,7 @@ export function createBridgeInstaller({
     if (!await exists(bundledRuntime) || !await exists(bundledIcon)) {
       throw new Error("The plugin does not contain the Codex Bridge installation resources.");
     }
+    const agentEnvironment = await bridgeAgentEnvironment({ agentPath: bridgeAgent, environment, execute });
     const nodeRuntime = await selectBridgeNodeRuntime({
       home,
       fallbackNodeExecutable: nodeExecutable,
@@ -251,52 +309,7 @@ export function createBridgeInstaller({
 `;
     await writeFile(join(bridgeContents, "Info.plist"), info);
 
-    const launcher = `#!/bin/zsh
-set -u
-unsetopt BG_NICE
-
-codex_binary="/Applications/ChatGPT.app/Contents/MacOS/ChatGPT"
-bridge_log="$HOME/Library/Logs/OpenCodexMicro-codex-bridge.log"
-
-if [[ ! -x "$codex_binary" ]]; then
-  /usr/bin/osascript -e 'display alert "Codex Bridge" message "Codex was not found at /Applications/ChatGPT.app." as critical'
-  exit 1
-fi
-
-if /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1; then
-  /usr/bin/osascript -e 'tell application id "com.openai.codex" to quit'
-  for attempt in {1..80}; do
-    /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1 || break
-    /bin/sleep 0.1
-  done
-fi
-
-if /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1; then
-  /usr/bin/osascript -e 'display alert "Codex Bridge" message "Codex did not quit, so bridge parameters could not be applied. Quit Codex and try again." as critical'
-  exit 1
-fi
-
-/usr/bin/nohup "$codex_binary" \\
-  --remote-debugging-address=127.0.0.1 \\
-  --remote-debugging-port=9222 \\
-  --remote-allow-origins=http://127.0.0.1:9222 \\
-  >>"$bridge_log" 2>&1 &
-
-for attempt in {1..300}; do
-  if /usr/bin/curl --noproxy '*' --silent --fail --max-time 0.2 \\
-    http://127.0.0.1:9222/json/version >/dev/null 2>&1; then
-    exit 0
-  fi
-  if ! /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1; then
-    break
-  fi
-  /bin/sleep 0.1
-done
-
-/usr/bin/osascript -e 'display alert "Codex Bridge" message "Codex started, but the bridge endpoint is unavailable. Quit Codex and launch Codex Bridge again." as critical'
-exit 1
-`;
-    await writeFile(bridgeExecutable, launcher, { mode: 0o755 });
+    await writeFile(bridgeExecutable, bridgeLauncher, { mode: 0o755 });
     await chmod(bridgeExecutable, 0o755);
     await execute("/usr/bin/codesign", ["--force", "--deep", "--sign", "-", bridgeApp]);
 
@@ -308,6 +321,7 @@ exit 1
     <string>${xml(nodeRuntime.executable)}</string>
     <string>${xml(bridgeRuntime)}</string>
   </array>
+  ${bridgeAgentEnvironmentXml(agentEnvironment)}
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
   <key>ProcessType</key><string>Background</string>

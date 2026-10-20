@@ -1,0 +1,26 @@
+name: Bug report
+description: Report installation, display or conversation-switching problems
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Please use sample titles. Do not upload real chats, profile exports, tokens or raw debugger output."
+  - type: input
+    id: versions
+    attributes:
+      label: Environment
+      description: macOS version, Apple chip, Studio version, desktop app version and Aurora version
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Steps, expected behavior and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Sanitized diagnostics
+      description: Optional reviewed doctor output or a screenshot using synthetic names

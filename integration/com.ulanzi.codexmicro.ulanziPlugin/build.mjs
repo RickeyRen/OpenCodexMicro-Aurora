@@ -1,11 +1,15 @@
 import { copyFile, mkdir, rm, writeFile } from "node:fs/promises";
 import { build } from "esbuild";
 import { resolve } from "node:path";
+import { buildKeyArt } from "./build-key-art.mjs";
+import { buildRuntime } from "./build-runtime.mjs";
 
 const packageRoot = resolve(".");
 const repositoryRoot = resolve(packageRoot, "../..");
 const installerRoot = resolve(packageRoot, "installer");
 
+await buildRuntime();
+await buildKeyArt();
 await mkdir("dist", { recursive: true });
 await build({
   bundle: true,

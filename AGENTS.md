@@ -13,9 +13,9 @@ loopback-only Bridge:
 Codex Desktop -> Codex Bridge.app / sidecar -> Ulanzi Studio plugin -> device
 ```
 
-The Ulanzi-maintained implementation scope is limited to
+The inherited Ulanzi implementation scope is limited to
 `integration/com.ulanzi.codexmicro.ulanziPlugin/`. The plugin consumes state
-and action interfaces exposed by the existing Bridge. Ulanzi did not design,
+and action interfaces exposed by the existing Bridge. Aurora modifications are independently maintained by RickeyRen. Ulanzi did not design,
 specify, develop, or maintain CDP or Codex's CDP implementation. Read
 `NOTICE.md` before making attribution or responsibility claims.
 
@@ -52,6 +52,11 @@ installation from the presence of this repository.
 4. Report the plugin and Bridge verification results separately. Do not
    reinstall a valid plugin unless the user explicitly requests an update or
    repair.
+
+Use `npm run doctor -- --lang en` (or `zh`) for read-only connection diagnostics.
+Do not use `/health` as a read-only check: it forces a refresh and may execute
+the CDP runtime integration. Never interrupt ChatGPT or change its launch mode
+without the user's explicit authorization.
 
 Follow the authorization, application-shutdown, verification, and scope
 boundaries in each selected `SKILL.md`. Do not restore or invoke the removed
